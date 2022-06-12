@@ -41,7 +41,7 @@ class Author extends Sequelize.Model {
   }
   /* 다른 모델과의 관계 */
   static associate(db) {
-    db.author.belongsTo(db.book, { foreignKey: 'book_id', targetKey: 'id' });
+    db.author.belongsTo(db.book, { foreignKey: 'book_id' });
   }
 }
 
