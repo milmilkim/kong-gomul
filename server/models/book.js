@@ -61,7 +61,10 @@ class Book extends Sequelize.Model {
   }
   /* 다른 모델과의 관계 */
   static associate(db) {
-    db.book.hasMany(db.author, { foreignKey: 'book_id' });
+    db.Book.hasMany(db.Author, { foreignKey: 'book_id' });
+    db.Book.hasMany(db.Publisher, { foreignKey: 'book_id' });
+    db.Book.hasMany(db.Genre, { foreignKey: 'book_id' });
+    db.Book.hasMany(db.Keyword, { foreignKey: 'book_id' });
   }
 }
 

@@ -16,23 +16,17 @@ CREATE TABLE IF NOT EXISTS author (
     book_id INT NOT NULL,
     name varchar(30),
     PRIMARY KEY(id),
-    FOREIGN KEY(book_id) REFERENCES book(id)
+    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
+
+
 
 CREATE TABLE IF NOT EXISTS publisher (
     id INT NOT NULL AUTO_INCREMENT,
     book_id INT NOT NULL,
     name varchar(30) NOT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY(book_id) REFERENCES book(id)
-);
-
-CREATE TABLE IF NOT EXISTS publisher (
-    id INT NOT NULL AUTO_INCREMENT,
-    book_id INT NOT NULL,
-    name varchar(30) NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(book_id) REFERENCES book(id)
+    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS keyword (
@@ -40,7 +34,7 @@ CREATE TABLE IF NOT EXISTS keyword (
     book_id INT NOT NULL,
     keyword varchar(20) NOT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY(book_id) REFERENCES book(id)
+    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS genre (
@@ -48,7 +42,7 @@ CREATE TABLE IF NOT EXISTS genre (
     book_id INT NOT NULL,
     genre varchar(20) NOT NULL,
     PRIMARY KEY(id),
-    FOREIGN KEY(book_id) REFERENCES book(id)
+    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 INSERT INTO book(ridi_url, isbn, title, thumbnail, published_date, category, introduce, is_adult)
@@ -110,4 +104,3 @@ VALUES (
     1,
     '코믹'
 );
-
