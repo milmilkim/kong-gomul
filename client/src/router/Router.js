@@ -1,5 +1,7 @@
 import { Routes, Route } from "react-router-dom";
 
+import Test from "../pages/Test";
+
 import Main from "../pages/Main";
 import Join from "../pages/Join";
 import NotFound from "../pages/NotFound";
@@ -12,6 +14,7 @@ const Router = () => {
       <Routes>
         <Route element={<Layout />}>
           <Route path="/" element={<Main />} />
+          <Route path="/test" element={<Test />} />
         </Route>
         {/*레이아웃이 적용되지 않는 페이지*/}
         <Route path="/join" element={<Join />} />
