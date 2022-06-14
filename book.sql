@@ -108,7 +108,7 @@ VALUES (
 CREATE TABLE IF NOT EXISTS member (
     id INT NOT NULL AUTO_INCREMENT,
     user_id varchar(20) NOT NULL UNIQUE,
-    password varchar(20) NOT NULL,
+    password varchar(255) NOT NULL,
     nickname varchar(20) NOT NULL,
     email varchar(20) NOT NULL UNIQUE,
     introduce varchar(240),

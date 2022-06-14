@@ -79,10 +79,10 @@ export const getBook = async (req, res) => {
 };
 
 /*여러 책 한번에 추가*/
-export const addBook = async (res, req) => {
+export const addBook = async (req, res) => {
   const data = req.body || null;
   if (data !== null) {
-    const res = await book.bulkCreate(data, {
+    const books = await book.bulkCreate(data, {
       include: [
         {
           model: author,
@@ -103,15 +103,15 @@ export const addBook = async (res, req) => {
       ],
     });
 
-    req.send(res);
+    res.send(books);
   } else {
-    req.json({ msg: '아무일도 없었습니다..' });
+    res.json({ msg: '아무일도 없었습니다..' });
   }
 };
 
-export const deleteBook = async (res, req) => {
+export const deleteBook = async (req, res) => {
   const { id } = res.params;
   await book.destroy({ where: { id: id } });
 
-  req.send({ msg: 'ok' });
+  res.send({ msg: 'ok' });
 };
