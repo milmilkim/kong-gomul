@@ -76,9 +76,9 @@ const SearchBooks = memo(() => {
             data.map((book, index) => (
               <BooksItem book={book} key={index} className="searchBooksItem">
                 <div className="booksItemTitle">{book.title}</div>
-                <span>{book.authors?.map((author) => author + " ")}</span>
-                <span>{book.publishers?.map((publisher) => publisher + " ")}</span>
-                <span>{book.genre}</span>
+                <span>{book.authors?.map((author) => author.name + " ")}</span>
+                <span>{book.publishers?.map((publisher) => publisher.name + " ")}</span>
+                <span>{book.genres?.map((genre) => genre.genre + " ")}</span>
               </BooksItem>
             ))}
         </ItemList>
