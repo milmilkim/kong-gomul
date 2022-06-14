@@ -14,9 +14,12 @@ dotenv.config();
 app.use(cors());
 app.set('port', process.env.PORT || 3001);
 
-app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use(express.json());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+);
 // sequelize
 //   .sync({ force: false }) //true면 서버 실행마다 테이블 재생성
 //   .then(() => {
@@ -25,6 +28,9 @@ app.use(bodyParser.urlencoded({ extended: true }));
 //   .catch((err) => {
 //     console.error(err);
 //   });
+
+// set the secret key variable for jwt
+app.set('jwt-secret', process.env.SECRET);
 
 app.get('/', (req, res) => {
   res.json('hello world!');

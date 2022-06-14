@@ -1,7 +1,7 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class author extends Model {
+export default class review extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
     id: {
@@ -18,13 +18,21 @@ export default class author extends Model {
         key: 'id'
       }
     },
-    name: {
-      type: DataTypes.STRING(30),
-      allowNull: true
+    member_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'member',
+        key: 'id'
+      }
+    },
+    rating: {
+      type: DataTypes.FLOAT,
+      allowNull: false
     }
   }, {
     sequelize,
-    tableName: 'author',
+    tableName: 'review',
     timestamps: false,
     indexes: [
       {
@@ -40,6 +48,13 @@ export default class author extends Model {
         using: "BTREE",
         fields: [
           { name: "book_id" },
+        ]
+      },
+      {
+        name: "member_id",
+        using: "BTREE",
+        fields: [
+          { name: "member_id" },
         ]
       },
     ]

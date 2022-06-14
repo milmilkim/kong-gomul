@@ -1,5 +1,6 @@
 import express from 'express';
 import book from './book/index.js';
+import auth from './auth/index.js';
 
 const api = express.Router();
 
@@ -8,5 +9,6 @@ api.get('/', (req, res) => {
 });
 
 api.use('/book', book);
+api.use('/auth', auth);
 
 export default api;

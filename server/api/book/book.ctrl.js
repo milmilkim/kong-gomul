@@ -1,5 +1,5 @@
 import { db } from '../../models/index.js';
-const { Book, Author, Genre, Keyword, Publisher } = db;
+const { book, author, genre, keyword, publisher } = db;
 
 /* 예외 처리 추가해야 됨... */
 
@@ -10,7 +10,7 @@ export const getBookList = async (req, res) => {
 
   console.log(req.query);
 
-  const book = await Book.findAll({
+  const books = await book.findAll({
     offset: (page - 1) * size,
     limit: size,
     where: {
@@ -18,92 +18,100 @@ export const getBookList = async (req, res) => {
     },
     include: [
       {
-        model: Author,
+        model: author,
+        as: 'authors',
         attributes: ['name'],
       },
       {
-        model: Publisher,
+        model: publisher,
+        as: 'publishers',
         attributes: ['name'],
       },
       {
-        model: Keyword,
+        model: keyword,
+        as: 'keywords',
         attributes: ['keyword'],
       },
       {
-        model: Genre,
+        model: genre,
+        as: 'genres',
         attributes: ['genre'],
       },
     ],
     order: [
       ['id', 'ASC'],
-      [Author, 'id', 'ASC'],
+      ['authors', 'id', 'ASC'],
     ],
   });
-  res.send(book);
+  res.send(books);
 };
 
 export const getBook = async (req, res) => {
   const { id } = req.params;
-  const book = await Book.findOne({
+  const _book = await book.findOne({
     where: { id: id },
     include: [
       {
-        model: Author,
+        model: author,
+        as: 'authors',
         attributes: ['name'],
       },
       {
-        model: Publisher,
+        model: publisher,
+        as: 'publishers',
         attributes: ['name'],
       },
       {
-        model: Keyword,
+        model: keyword,
+        as: 'keywords',
         attributes: ['keyword'],
       },
       {
-        model: Genre,
+        model: genre,
+        as: 'genres',
         attributes: ['genre'],
       },
     ],
-    order: [[Author, 'id', 'ASC']],
+    order: [['authors', 'id', 'ASC']],
   });
 
-  res.send(book);
+  res.send(_book);
 };
 
 /*여러 책 한번에 추가*/
-export const addBook = async (res, req) => {
+export const addBook = async (req, res) => {
   const data = req.body || null;
   if (data !== null) {
-    const book = await Book.bulkCreate(data, {
+    const books = await book.bulkCreate(data, {
       include: [
         {
-          model: Author,
-          as: 'Authors',
+          model: author,
+          as: 'authors',
         },
         {
-          model: Publisher,
-          as: 'Publishers',
+          model: publisher,
+          as: 'publishers',
         },
         {
-          model: Keyword,
-          as: 'Keywords',
+          model: keyword,
+          as: 'keywords',
         },
         {
-          model: Genre,
-          as: 'Genres',
+          model: genre,
+          as: 'genres',
         },
       ],
     });
 
-    req.send(book);
+    res.send(books);
   } else {
-    req.json({ msg: '아무일도 없었습니다..' });
+    res.json({ msg: '아무일도 없었습니다..' });
   }
 };
 
-export const deleteBook = async (res, req) => {
+export const deleteBook = async (req, res) => {
   const { id } = res.params;
-  await Book.destroy({ where: { id: id } });
+  await book.destroy({ where: { id: id } });
 
-  req.send({ msg: 'ok' });
+  res.send({ msg: 'ok' });
 };

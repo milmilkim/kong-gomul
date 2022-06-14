@@ -1,11 +1,13 @@
 import React, { memo, useState, useEffect } from "react";
 import Login from "../components/Login";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const Test = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+
+  const navigate = useNavigate();
 
   const getBookList = async () => {
     try {
@@ -29,10 +31,26 @@ const Test = memo(() => {
     setIsOpen((isOpen) => !isOpen);
   };
 
+  const isLogin = () => {
+    return !!window.localStorage.getItem("accessToken");
+  };
+
   return (
     <div style={{ height: "1000vh" }}>
       <h1>테스트를 위한 페이지</h1>
-      <button onClick={handleButton}>로그인</button>
+
+      {isLogin() ? (
+        <button
+          onClick={() => {
+            window.localStorage.removeItem("accessToken");
+            navigate("/test");
+          }}
+        >
+          로그아웃
+        </button>
+      ) : (
+        <button onClick={handleButton}>로그인</button>
+      )}
       <Login isOpen={isOpen} setIsOpen={setIsOpen} />
 
       {data !== null ? (
