@@ -107,11 +107,13 @@ VALUES (
 
 CREATE TABLE IF NOT EXISTS member (
     id INT NOT NULL AUTO_INCREMENT,
-    user_id varchar(20) NOT NULL,
-    nickname varchar(20),
-    email varchar(20) NOT NULL,
+    user_id varchar(20) NOT NULL UNIQUE,
+    password varchar(20) NOT NULL,
+    nickname varchar(20) NOT NULL,
+    email varchar(20) NOT NULL UNIQUE,
     introduce varchar(240),
-    birthdate date,
+    birth_year year(4),
+    gender char(1),
     PRIMARY KEY(id)
 );
 
@@ -120,7 +122,9 @@ CREATE TABLE IF NOT EXISTS review (
     book_id int NOT NULL,
     member_id int NOT NULL,
     rating float NOT NULL,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(member_id) REFERENCES member(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
 CREATE TABLE IF NOT EXISTS comment (
@@ -128,25 +132,30 @@ CREATE TABLE IF NOT EXISTS comment (
     book_id int NOT NULL,
     member_id int NOT NULL,
     contents text,
-    PRIMARY KEY(id)
+    PRIMARY KEY(id),
+    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(member_id) REFERENCES member(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
+alter table review add unique (book_id, member_id);
+alter table comment add unique (book_id, member_id);
 
 
-
-INSERT INTO member(user_id, nickname, email, introduce, birthdate)
+INSERT INTO member(user_id, password, nickname, email, introduce, birth_year, gender)
 values (
-    'world',
-    '지나가던 리즈',
+    'hello',
+    'password',
+    '지나가는리즈',
     'aa@ab.com',
-    '지나갑니다',
-    '1997-11-30'
+    '가는중',
+    '1997',
+    'F'
 );
 
 INSERT INTO review(book_id, member_id, rating)
 VALUES (
     1,
-    2,
+    1,
     5.0
 );
 
@@ -157,6 +166,5 @@ VALUES(
     '정말 재미있네요...'
 )
 
-select b.title, m.nickname, r.rating from book b, member m, review r where b.id = 1 and r.book_id = 1 and m.id = 1;
 
-select b.title, avg(r.rating) from book b, review r where b.id =1;
+
