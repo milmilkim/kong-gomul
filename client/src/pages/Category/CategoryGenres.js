@@ -61,8 +61,8 @@ const CategoryGenreContainer = styled.div`
 `;
 
 const CategoryGenres = memo(() => {
-  const [romanceBookdata, setRomanceBookdata] = useState(null);
-  const [fantasyBookdata, setFantasyBookdata] = useState(null);
+  const [romanceBookData, setRomanceBookData] = useState(null);
+  const [fantasyBookData, setFantasyBookData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
 
   const getBookList = async () => {
@@ -78,8 +78,8 @@ const CategoryGenres = memo(() => {
         },
       });
 
-      setRomanceBookdata(res.data);
-      setFantasyBookdata(res2.data);
+      setRomanceBookData(res.data);
+      setFantasyBookData(res2.data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -129,8 +129,8 @@ const CategoryGenres = memo(() => {
             modules={[Navigation]}
           >
             {/* 로맨스 책 리스트 */}
-            {romanceBookdata &&
-              romanceBookdata.map((book, index) => (
+            {romanceBookData &&
+              romanceBookData.map((book, index) => (
                 <SwiperSlide key={index}>
                   <BooksItem book={book} itemWidth="100%" />
                 </SwiperSlide>
@@ -170,8 +170,8 @@ const CategoryGenres = memo(() => {
             modules={[Navigation]}
           >
             {/* 판타지 책 리스트 */}
-            {fantasyBookdata &&
-              fantasyBookdata.map((book, index) => (
+            {fantasyBookData &&
+              fantasyBookData.map((book, index) => (
                 <SwiperSlide key={index}>
                   <BooksItem book={book} itemWidth="100%" />
                 </SwiperSlide>
