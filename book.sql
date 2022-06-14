@@ -104,3 +104,59 @@ VALUES (
     1,
     '코믹'
 );
+
+CREATE TABLE IF NOT EXISTS member (
+    id INT NOT NULL AUTO_INCREMENT,
+    user_id varchar(20) NOT NULL,
+    nickname varchar(20),
+    email varchar(20) NOT NULL,
+    introduce varchar(240),
+    birthdate date,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS review (
+    id INT NOT NULL AUTO_INCREMENT,
+    book_id int NOT NULL,
+    member_id int NOT NULL,
+    rating float NOT NULL,
+    PRIMARY KEY(id)
+);
+
+CREATE TABLE IF NOT EXISTS comment (
+    id INT NOT NULL AUTO_INCREMENT,
+    book_id int NOT NULL,
+    member_id int NOT NULL,
+    contents text,
+    PRIMARY KEY(id)
+);
+
+
+
+
+INSERT INTO member(user_id, nickname, email, introduce, birthdate)
+values (
+    'world',
+    '지나가던 리즈',
+    'aa@ab.com',
+    '지나갑니다',
+    '1997-11-30'
+);
+
+INSERT INTO review(book_id, member_id, rating)
+VALUES (
+    1,
+    2,
+    5.0
+);
+
+INSERT INTO comment(book_id, member_id, contents)
+VALUES(
+    1,
+    1,
+    '정말 재미있네요...'
+)
+
+select b.title, m.nickname, r.rating from book b, member m, review r where b.id = 1 and r.book_id = 1 and m.id = 1;
+
+select b.title, avg(r.rating) from book b, review r where b.id =1;

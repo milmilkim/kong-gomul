@@ -23,7 +23,7 @@ const ModalContainer = styled.div`
   }
 `;
 
-const Modal = ({ children, isOpen, setIsOpen, width, height, background }) => {
+const Modal = ({ children, isOpen, setIsOpen, width, height }) => {
   const ref = useRef();
 
   const closeModal = (e) => {
@@ -49,7 +49,6 @@ const Modal = ({ children, isOpen, setIsOpen, width, height, background }) => {
 Modal.defaultProps = {
   width: 300,
   height: 500,
-  background: false,
 };
 
 export default Modal;

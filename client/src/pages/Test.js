@@ -5,7 +5,6 @@ import axios from "axios";
 const Test = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
   const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
   const getBookList = async () => {
     try {

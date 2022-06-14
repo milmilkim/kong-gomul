@@ -19,24 +19,28 @@ export const getBookList = async (req, res) => {
     include: [
       {
         model: Author,
+        as: 'authors',
         attributes: ['name'],
       },
       {
         model: Publisher,
+        as: 'publishers',
         attributes: ['name'],
       },
       {
         model: Keyword,
+        as: 'keywords',
         attributes: ['keyword'],
       },
       {
         model: Genre,
+        as: 'genres',
         attributes: ['genre'],
       },
     ],
     order: [
       ['id', 'ASC'],
-      [Author, 'id', 'ASC'],
+      ['authors', 'id', 'ASC'],
     ],
   });
   res.send(book);
@@ -78,19 +82,19 @@ export const addBook = async (res, req) => {
       include: [
         {
           model: Author,
-          as: 'Authors',
+          as: 'authors',
         },
         {
           model: Publisher,
-          as: 'Publishers',
+          as: 'publishers',
         },
         {
           model: Keyword,
-          as: 'Keywords',
+          as: 'keywords',
         },
         {
           model: Genre,
-          as: 'Genres',
+          as: 'genres',
         },
       ],
     });
