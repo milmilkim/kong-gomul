@@ -1,48 +1,48 @@
-import Sequelize from 'sequelize';
+import _sequelize from 'sequelize';
+const { Model, Sequelize } = _sequelize;
 
-class Keyword extends Sequelize.Model {
-  /* 테이블에 대한 설정 */
-  static init(sequelize) {
-    return super.init(
+export default class keyword extends Model {
+  static init(sequelize, DataTypes) {
+  return super.init({
+    id: {
+      autoIncrement: true,
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      primaryKey: true
+    },
+    book_id: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+      references: {
+        model: 'book',
+        key: 'id'
+      }
+    },
+    keyword: {
+      type: DataTypes.STRING(20),
+      allowNull: false
+    }
+  }, {
+    sequelize,
+    tableName: 'keyword',
+    timestamps: false,
+    indexes: [
       {
-        id: {
-          autoIncrement: true,
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          primaryKey: true,
-        },
-        book_id: {
-          type: Sequelize.INTEGER,
-          allowNull: false,
-          references: {
-            model: 'book',
-            key: 'id',
-          },
-        },
-        keyword: {
-          type: Sequelize.STRING(20),
-          allowNull: false,
-        },
+        name: "PRIMARY",
+        unique: true,
+        using: "BTREE",
+        fields: [
+          { name: "id" },
+        ]
       },
       {
-        sequelize,
-        tableName: 'keyword',
-        timestamps: false,
-        indexes: [
-          {
-            name: 'PRIMARY',
-            unique: true,
-            using: 'BTREE',
-            fields: [{ name: 'id' }],
-          },
-        ],
-      }
-    );
-  }
-  /* 다른 모델과의 관계 */
-  static associate(db) {
-    db.Keyword.belongsTo(db.Book, { onDelete: 'CASCADE', onUpdate: 'CASCADE' });
+        name: "book_id",
+        using: "BTREE",
+        fields: [
+          { name: "book_id" },
+        ]
+      },
+    ]
+  });
   }
 }
-
-export default Keyword;
