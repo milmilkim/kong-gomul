@@ -20,7 +20,9 @@ const Login = ({ isOpen, setIsOpen }) => {
     try {
       const res = await axios.post("http://localhost:3001/api/auth/login", loginData);
       const accessToken = res.data.accessToken;
+      console.log(accessToken);
       window.localStorage.setItem("accessToken", accessToken);
+      setIsOpen(false);
       navigate("/");
     } catch (err) {
       console.error(err);
@@ -41,27 +43,27 @@ const Login = ({ isOpen, setIsOpen }) => {
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true}>
       <h1>로그인</h1>
       <form onSubmit={handleSubmit} onChange={handleChange}>
-        <input type="text" name="user_id"></input>
-        <input type="password" name="password"></input>
+        <input type="text" name="user_id" placeholder="아이디"></input>
+        <input type="password" name="password" placeholder="비밀번호"></input>
         <button type="submit">로그인</button>
       </form>
-      <hr />
-      <button
+      <p
         onClick={() => {
           setIsOpen2((isOpen2) => !isOpen2);
         }}
       >
+        {" "}
         아이디 찾기
-      </button>
-      <button
+      </p>
+      <p
         onClick={() => {
           setIsOpen3((isOpen3) => !isOpen3);
         }}
       >
         비밀번호 재설정
-      </button>
-      <hr />
-      <button>소셜로그인</button>
+      </p>
+      {/* <hr />
+      <button>소셜로그인</button> */}
       <Modal isOpen={isOpen2} setIsOpen={setIsOpen2} width={300} height={300}>
         <h1>아이디 찾기</h1>
         <input type="text"></input>
