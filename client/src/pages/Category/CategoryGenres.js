@@ -60,7 +60,54 @@ const CategoryGenreContainer = styled.div`
   }
 `;
 
+/* Swiper 컴포넌트 */
+const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
+  return (
+    <>
+      <h5 className="categoryGenreTitle">#{title}</h5>
+      <div className="swiperContainer">
+        <Swiper
+          slidesPerView={5}
+          navigation={{
+            clickable: true,
+            nextEl: `.${clsName}-button-next`,
+            prevEl: `.${clsName}-button-prev`,
+          }}
+          onInit={(swiper) => {
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
+            swiper.navigation.init();
+            swiper.navigation.update();
+          }}
+          modules={[Navigation]}
+        >
+          {/* 책 리스트 */}
+          {data &&
+            data.map((book, index) => (
+              <SwiperSlide key={index}>
+                <BooksItem book={book} itemWidth="100%" />
+              </SwiperSlide>
+            ))}
+        </Swiper>
+
+        {/* prev btn */}
+        <div className={`swiper-button-prev .${clsName}-button-prev`} ref={prevRef}>
+          <FaAngleLeft />
+          <span>Prev</span>
+        </div>
+
+        {/* next btn */}
+        <div className={`swiper-button-next .${clsName}-button-next`} ref={nextRef}>
+          <span>Next</span>
+          <FaAngleRight />
+        </div>
+      </div>
+    </>
+  );
+};
+
 const CategoryGenres = memo(() => {
+  const [comicBookData, setcomicBookData] = useState(null);
   const [romanceBookData, setRomanceBookData] = useState(null);
   const [fantasyBookData, setFantasyBookData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -69,17 +116,23 @@ const CategoryGenres = memo(() => {
     try {
       const res = await axios.get("http://localhost:3001/api/book", {
         params: {
-          category: "로판 e북",
+          category: "만화 e북",
         },
       });
       const res2 = await axios.get("http://localhost:3001/api/book", {
+        params: {
+          category: "로판 e북",
+        },
+      });
+      const res3 = await axios.get("http://localhost:3001/api/book", {
         params: {
           category: "판타지 웹소설",
         },
       });
 
-      setRomanceBookData(res.data);
-      setFantasyBookData(res2.data);
+      setcomicBookData(res.data);
+      setRomanceBookData(res2.data);
+      setFantasyBookData(res3.data);
     } catch (e) {
       console.error(e);
     } finally {
@@ -98,6 +151,8 @@ const CategoryGenres = memo(() => {
   }, []);
 
   /* prev, next button ref */
+  const comicPrevRef = useRef(null);
+  const comicNextRef = useRef(null);
   const romancePrevRef = useRef(null);
   const romanceNextRef = useRef(null);
   const fantasyPrevRef = useRef(null);
@@ -109,87 +164,32 @@ const CategoryGenres = memo(() => {
       <Spinner visible={isLoading} />
 
       <CategoryGenreContainer>
+        {/* 만화 */}
+        <CategorySwiper
+          title="만화"
+          clsName="comic"
+          prevRef={comicPrevRef}
+          nextRef={comicNextRef}
+          data={comicBookData}
+        />
+
         {/* 로맨스 */}
-        <h5 className="categoryGenreTitle">#로맨스</h5>
-        <div className="swiperContainer">
-          <Swiper
-            className="genreSwiper"
-            slidesPerView={5}
-            navigation={{
-              clickable: true,
-              nextEl: ".genreSwiper-button-next",
-              prevEl: ".genreSwiper-button-prev",
-            }}
-            onInit={(swiper) => {
-              swiper.params.navigation.prevEl = romancePrevRef.current;
-              swiper.params.navigation.nextEl = romanceNextRef.current;
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            modules={[Navigation]}
-          >
-            {/* 로맨스 책 리스트 */}
-            {romanceBookData &&
-              romanceBookData.map((book, index) => (
-                <SwiperSlide key={index}>
-                  <BooksItem book={book} itemWidth="100%" />
-                </SwiperSlide>
-              ))}
-          </Swiper>
-
-          {/* prev btn */}
-          <div className="genreSwiper-button-prev swiper-button-prev" ref={romancePrevRef}>
-            <FaAngleLeft />
-            <span>Prev</span>
-          </div>
-
-          {/* next btn */}
-          <div className="genreSwiper-button-next swiper-button-next" ref={romanceNextRef}>
-            <span>Next</span>
-            <FaAngleRight />
-          </div>
-        </div>
+        <CategorySwiper
+          title="로맨스"
+          clsName="romance"
+          prevRef={romancePrevRef}
+          nextRef={romanceNextRef}
+          data={romanceBookData}
+        />
 
         {/* 판타지 */}
-        <h5 className="categoryGenreTitle">#판타지</h5>
-        <div className="swiperContainer">
-          <Swiper
-            className="fantasySwiper"
-            slidesPerView={5}
-            navigation={{
-              clickable: true,
-              nextEl: ".fantasySwiper-button-next",
-              prevEl: ".fantasySwiper-button-prev",
-            }}
-            onInit={(swiper) => {
-              swiper.params.navigation.prevEl = fantasyPrevRef.current;
-              swiper.params.navigation.nextEl = fantasyNextRef.current;
-              swiper.navigation.init();
-              swiper.navigation.update();
-            }}
-            modules={[Navigation]}
-          >
-            {/* 판타지 책 리스트 */}
-            {fantasyBookData &&
-              fantasyBookData.map((book, index) => (
-                <SwiperSlide key={index}>
-                  <BooksItem book={book} itemWidth="100%" />
-                </SwiperSlide>
-              ))}
-          </Swiper>
-
-          {/* prev btn */}
-          <div className="fantasySwiper-button-prev swiper-button-prev" ref={fantasyPrevRef}>
-            <FaAngleLeft />
-            <span>Prev</span>
-          </div>
-
-          {/* next btn */}
-          <div className="fantasySwiper-button-next swiper-button-next" ref={fantasyNextRef}>
-            <span>Next</span>
-            <FaAngleRight />
-          </div>
-        </div>
+        <CategorySwiper
+          title="판타지"
+          clsName="fantasy"
+          prevRef={fantasyPrevRef}
+          nextRef={fantasyNextRef}
+          data={fantasyBookData}
+        />
       </CategoryGenreContainer>
     </>
   );
