@@ -8,6 +8,8 @@ import logo from "../../assets/img/title_gray.png";
 import Search from "../Sub-components/Search";
 
 const HeaderContainer = styled.header`
+  padding-top: 15px;
+
   .flex-row {
     justify-content: space-between;
     align-items: center;
@@ -15,8 +17,8 @@ const HeaderContainer = styled.header`
 
   .title-logo {
     display: block;
-    width: 90px;
-    height: 30px;
+    width: 100px;
+    height: 40px;
     margin-right: 40px;
     background-image: url(${logo});
     background-size: contain;
