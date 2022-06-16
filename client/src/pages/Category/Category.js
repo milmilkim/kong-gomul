@@ -16,15 +16,13 @@ const CategoryContainer = styled.div`
   margin: 0 auto;
 
   .bookItemContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-
-    .bookItemTitle {
-      font-size: 1.25rem;
-      font-weight: 700;
-      margin-bottom: 1rem;
+    .booksItemInner {
+      align-items: center;
+      .bookItemTitle {
+        font-size: 1.25rem;
+        font-weight: 700;
+        margin-bottom: 1rem;
+      }
     }
   }
 `;
@@ -91,9 +89,10 @@ const Category = memo(() => {
           {comicBookData &&
             comicBookData
               .map((book, index) => (
-                <div className="bookItemContainer">
-                  <BooksItem book={book} itemWidth="100%" />
-                  <h4 className="bookItemTitle">코믹</h4>
+                <div className="bookItemContainer" key={index}>
+                  <BooksItem book={book} itemWidth="100%" itemHref="/category/genres">
+                    <h4 className="bookItemTitle">만화</h4>
+                  </BooksItem>
                 </div>
               ))
               .slice(0, 1)}
@@ -103,8 +102,9 @@ const Category = memo(() => {
             romanceBookData
               .map((book, index) => (
                 <div className="bookItemContainer" key={index}>
-                  <BooksItem book={book} itemWidth="100%" itemHref="/category/genres" />
-                  <h4 className="bookItemTitle">로맨스</h4>
+                  <BooksItem book={book} itemWidth="100%" itemHref="/category/genres">
+                    <h4 className="bookItemTitle">로맨스</h4>
+                  </BooksItem>
                 </div>
               ))
               .slice(0, 1)}
@@ -114,8 +114,9 @@ const Category = memo(() => {
             fantasyBookData
               .map((book, index) => (
                 <div className="bookItemContainer" key={index}>
-                  <BooksItem book={book} itemWidth="100%" />
-                  <h4 className="bookItemTitle">판타지</h4>
+                  <BooksItem book={book} itemWidth="100%" itemHref="/category/genres">
+                    <h4 className="bookItemTitle">판타지</h4>
+                  </BooksItem>
                 </div>
               ))
               .slice(0, 1)}
