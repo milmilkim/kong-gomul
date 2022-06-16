@@ -1,4 +1,4 @@
-import React, { memo } from "react";
+import React, { memo, useState } from "react";
 import { Link } from "react-router-dom";
 
 import styled from "styled-components";
@@ -6,6 +6,8 @@ import styled from "styled-components";
 import logo from "../../assets/img/title_gray.png";
 
 import Search from "../Sub-components/Search";
+
+import Login from "../Login";
 
 const HeaderContainer = styled.header`
   padding-top: 15px;
@@ -50,6 +52,11 @@ const HeaderContainer = styled.header`
 `;
 
 const Header = memo(() => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleButton = (e) => {
+    setIsOpen((isOpen) => !isOpen);
+  };
   return (
     <HeaderContainer>
       <div className="inner">
@@ -84,11 +91,9 @@ const Header = memo(() => {
 
           <nav className="nav-menu">
             <ul>
-              <li>
-                <Link to="#" noreferrer="">
-                  로그인
-                </Link>
-              </li>
+              <li onClick={handleButton}>로그인</li>
+              <Login isOpen={isOpen} setIsOpen={setIsOpen} />
+
               <li>
                 <Link to="#" noreferrer="">
                   회원가입

@@ -24,6 +24,7 @@ import CategoryGenres from "../pages/Category/CategoryGenres";
 import NotFound from "../pages/NotFound";
 
 import Layout from "../components/Layout/Layout";
+import Category from "../pages/Category/Category";
 
 const Router = () => {
   return (
@@ -51,6 +52,7 @@ const Router = () => {
 
           {/* 카테고리 페이지 */}
           <Route path="/category">
+            <Route index element={<Category />} />
             <Route path="genres" element={<CategoryGenres />} />
           </Route>
 

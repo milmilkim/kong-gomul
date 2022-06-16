@@ -58,13 +58,13 @@ const BooksItemContainer = styled.li`
   }
 `;
 
-const BooksItem = ({ book, itemWidth, children }) => {
+const BooksItem = ({ book: { ridi_url, thumbnail, title }, itemWidth, children }) => {
   return (
     <BooksItemContainer itemWidth={itemWidth}>
-      <a href={book.ridiUrl}>
+      <a href={ridi_url}>
         <div className="booksItemInner">
           <div className="booksItemImage">
-            <img src={book.thumbnail} alt={book.title} />
+            <img src={thumbnail} alt={title} />
           </div>
           {children}
         </div>

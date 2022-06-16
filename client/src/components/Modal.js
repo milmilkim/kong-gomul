@@ -20,6 +20,29 @@ const ModalContainer = styled.div`
     background-color: #fff;
     position: absolute;
     padding: 30px;
+    border-radius: 10px;
+
+    h1 {
+      font-size: 24px;
+    }
+
+    input {
+      width: 100%;
+      border: none;
+      background-color: #ddd;
+      padding: 10px;
+      margin-top: 5px;
+    }
+
+    button {
+      width: 100%;
+      background-color: #1ed760;
+      border: none;
+      padding: 10px;
+      margin-top: 10px;
+      color: #fff;
+      color: pointer;
+    }
   }
 `;
 
