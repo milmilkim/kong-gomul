@@ -1,5 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import Container from "../components/Layout/Container";
+
 export default function Withdrawal() {
   const completed = new URL(window.location.href).searchParams.get("completed");
 
@@ -12,19 +14,19 @@ export default function Withdrawal() {
 
   if (completed === "true") {
     return (
-      <>
+      <Container>
         <h1>Good Bye</h1>
         <p>탈퇴가 완료되었습니다</p>
-      </>
+      </Container>
     );
   } else {
     return (
-      <>
+      <Container>
         <h1>정말 탈퇴하시겠어요?</h1>
         <hr />
         <button onClick={() => navigate("/")}>아니요</button>
         <button onClick={deleteUser}>네</button>
-      </>
+      </Container>
     );
   }
 }

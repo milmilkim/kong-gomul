@@ -16,6 +16,7 @@ const generateToken = (existingMember) => {
         id: existingMember.id,
         user_id: existingMember.user_id,
         nickname: existingMember.nickname,
+        profile_image: existingMember.profile_image,
       },
       process.env.SECRET,
       {

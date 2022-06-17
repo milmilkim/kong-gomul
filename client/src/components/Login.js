@@ -1,8 +1,10 @@
 import Modal from "./Modal";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../config/axios";
+
+import { useDispatch } from "react-redux";
+import { tokenVerify } from "../slices/AuthSlice";
 
 /* 소셜로그인 ==================================================== */
 
@@ -29,23 +31,25 @@ const Login = ({ isOpen, setIsOpen }) => {
     password: null,
   });
 
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    try {
-      const res = await axios.post("http://localhost:3001/api/auth/login", loginData);
-      const accessToken = res.data.accessToken;
-      console.log(accessToken);
-      window.localStorage.setItem("accessToken", accessToken);
-      setIsOpen(false);
-      navigate("/");
-    } catch (err) {
-      console.error(err);
-      Swal.fire(err.response.data.message);
-    }
-  };
+      try {
+        const res = await axios.post("http://localhost:3001/api/auth/login", loginData);
+        const accessToken = res.data.accessToken;
+        window.localStorage.setItem("accessToken", accessToken);
+        dispatch(tokenVerify(accessToken));
+        setIsOpen(false);
+      } catch (err) {
+        console.error(err);
+        Swal.fire(err.response.data.message);
+      }
+    },
+    [loginData, dispatch, setIsOpen]
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
