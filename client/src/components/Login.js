@@ -6,6 +6,8 @@ import axios from "../config/axios";
 import { useDispatch } from "react-redux";
 import { tokenVerify } from "../slices/AuthSlice";
 
+import Spinner from "./spinner";
+
 /* 소셜로그인 ==================================================== */
 
 /* 카카오 */
@@ -31,21 +33,27 @@ const Login = ({ isOpen, setIsOpen }) => {
     password: null,
   });
 
-  const dispatch = useDispatch();
+  const [isLoading, setIsLoading] = useState(false);
 
+  const dispatch = useDispatch();
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
 
       try {
+        setIsLoading(true);
         const res = await axios.post("http://localhost:3001/api/auth/login", loginData);
         const accessToken = res.data.accessToken;
+        const refreshToken = res.data.refreshToken;
         window.localStorage.setItem("accessToken", accessToken);
+        window.localStorage.setItem("refreshToken", refreshToken); //localStorage에 토큰을 저장함
         dispatch(tokenVerify(accessToken));
         setIsOpen(false);
       } catch (err) {
         console.error(err);
         Swal.fire(err.response.data.message);
+      } finally {
+        setIsLoading(false);
       }
     },
     [loginData, dispatch, setIsOpen]
@@ -62,6 +70,8 @@ const Login = ({ isOpen, setIsOpen }) => {
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true}>
+      <Spinner visible={isLoading} />
+
       <h1>로그인</h1>
       <form onSubmit={handleSubmit} onChange={handleChange}>
         <input type="text" name="user_id" placeholder="아이디"></input>

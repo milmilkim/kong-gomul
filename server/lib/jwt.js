@@ -20,7 +20,7 @@ const generateToken = (existingMember) => {
       },
       process.env.SECRET,
       {
-        expiresIn: '1d',
+        expiresIn: '1h',
       },
       (err, token) => {
         if (err) {
@@ -33,4 +33,25 @@ const generateToken = (existingMember) => {
   });
 };
 
-export { generateToken };
+const generateRefreshToken = (existingMember) => {
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      {
+        id: existingMember.id,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: '7d',
+      },
+      (err, token) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(token);
+        }
+      }
+    );
+  });
+};
+
+export { generateToken, generateRefreshToken };
