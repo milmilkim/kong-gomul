@@ -4,7 +4,6 @@ import { generateToken } from '../../lib/jwt.js';
 
 import dotenv from 'dotenv';
 import axios from 'axios';
-import { response } from 'express';
 
 dotenv.config();
 
@@ -134,6 +133,73 @@ export const loginWithKakao = async (req, res) => {
         profile_image: kakaoUser.properties.profile_image,
         email: kakaoUser.kakao_account.email || null,
         platform: 'kakao',
+      });
+
+      const accessToken = await generateToken(newMember);
+      res.json({
+        success: true,
+        accessToken,
+      });
+    } else {
+      const accessToken = await generateToken(existingMember);
+      res.json({
+        success: true,
+        accessToken,
+      });
+    }
+  } catch (err) {
+    res.status(403).json({
+      message: err.message,
+    });
+  }
+};
+
+/*
+    GET /api/auth/loginWithGoogle?code=${code}
+*/
+
+export const loginWithGoogle = async (req, res) => {
+  const { code } = req.query; //쿼리로 인가코드를 받아옴
+
+  try {
+    const {
+      data: { access_token: googleAccessToken },
+    } = await axios.post(
+      'https://oauth2.googleapis.com/token',
+      {},
+      {
+        params: {
+          grant_type: 'authorization_code',
+          client_id: process.env.GOOGLE_CLIENT_ID,
+          client_secret: process.env.GOOGLE_CLIENT_SECRET,
+          redirect_uri: process.env.GOOGLE_REDIRECT_URI + '?platform=google',
+          code: code,
+        },
+      }
+    ); //액세스 토큰을 받아온다
+
+    console.log(googleAccessToken);
+
+    const { data: googleUser } = await axios('https://www.googleapis.com/oauth2/v2/userinfo', {
+      headers: {
+        Authorization: `Bearer ${googleAccessToken}`,
+      },
+    }); //유저 정보를 받아온다
+
+    let existingMember = null;
+    existingMember = await member.findOne({
+      where: {
+        user_id: googleUser.id,
+      },
+    });
+
+    if (existingMember === null) {
+      const newMember = await member.create({
+        user_id: googleUser.id,
+        nickname: googleUser.name,
+        profile_image: googleUser.picture || null,
+        email: googleUser.email || null,
+        platform: 'google',
       });
 
       const accessToken = await generateToken(newMember);

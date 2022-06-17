@@ -69,7 +69,6 @@ const Login = ({ isOpen, setIsOpen }) => {
           setIsOpen2((isOpen2) => !isOpen2);
         }}
       >
-        {" "}
         아이디 찾기
       </p>
       <p
@@ -80,8 +79,8 @@ const Login = ({ isOpen, setIsOpen }) => {
         비밀번호 재설정
       </p>
       <hr />
-      <a href={KAKAO_AUTH_URI}>카카오톡으로 로그인(구현중)</a>
-      <a href={GOOGLE_AUTH_URI}>구글로 로그인(구현중)</a>
+      <a href={KAKAO_AUTH_URI}>카카오톡으로 로그인</a>
+      <a href={GOOGLE_AUTH_URI}>구글로 로그인</a>
       <Modal isOpen={isOpen2} setIsOpen={setIsOpen2} width={300} height={300}>
         <h1>아이디 찾기</h1>
         <input type="text"></input>
