@@ -4,10 +4,13 @@ import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 import logo from "../../assets/img/title_gray.png";
+import profileImage from "../../assets/img/default.jpg";
 
 import Search from "../Sub-components/Search";
 
 import Login from "../Login";
+
+import { useSelector } from "react-redux";
 
 const HeaderContainer = styled.header`
   .flex-row {
@@ -27,6 +30,9 @@ const HeaderContainer = styled.header`
   }
 
   .nav-menu {
+    .profile_image img {
+      border-radius: 30px;
+    }
     &:first-of-type {
       font-size: 14px;
       font-weight: bold;
@@ -44,6 +50,7 @@ const HeaderContainer = styled.header`
       & > li {
         display: inline-block;
         margin-right: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -51,6 +58,8 @@ const HeaderContainer = styled.header`
 
 const Header = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { isLogin, info } = useSelector((state) => state.auth);
 
   const handleButton = (e) => {
     setIsOpen((isOpen) => !isOpen);
@@ -89,14 +98,22 @@ const Header = memo(() => {
 
           <nav className="nav-menu">
             <ul>
-              <li onClick={handleButton}>로그인</li>
+              {isLogin ? (
+                <li className="profile_image">
+                  <img src={info.profile_image || profileImage} alt={info.nickname} width="35" />
+                  {info.nickname}
+                </li>
+              ) : (
+                <>
+                  <li onClick={handleButton}>로그인</li>{" "}
+                  <li>
+                    <Link to="#" noreferrer="">
+                      회원가입
+                    </Link>
+                  </li>
+                </>
+              )}
               <Login isOpen={isOpen} setIsOpen={setIsOpen} />
-
-              <li>
-                <Link to="#" noreferrer="">
-                  회원가입
-                </Link>
-              </li>
             </ul>
           </nav>
         </div>
