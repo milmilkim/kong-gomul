@@ -19,8 +19,8 @@ export default class book extends Model {
       allowNull: true
     },
     title: {
-      type: DataTypes.STRING(30),
-      allowNull: false
+      type: DataTypes.STRING(50),
+      allowNull: true
     },
     thumbnail: {
       type: DataTypes.STRING(200),

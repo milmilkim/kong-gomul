@@ -1,8 +1,27 @@
 import Modal from "./Modal";
-import { useState } from "react";
+import { useCallback, useState } from "react";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import axios from "../config/axios";
+
+import { useDispatch } from "react-redux";
+import { tokenVerify } from "../slices/AuthSlice";
+
+/* 소셜로그인 ==================================================== */
+
+/* 카카오 */
+const KAKAO_REST_API_KEY = process.env.REACT_APP_KAKAO_REST_API_KEY;
+const KAKAO_REDIRECT_URI = process.env.REACT_APP_KAKAO_REDIRECT_URI + "?platform=kakao";
+
+const KAKAO_AUTH_URI = `https://kauth.kakao.com/oauth/authorize?client_id=${KAKAO_REST_API_KEY}&redirect_uri=${KAKAO_REDIRECT_URI}&response_type=code`;
+
+/* 구글 */
+
+const GOOGLE_CLIENT_ID = process.env.REACT_APP_GOOGLE_CLIENT_ID;
+const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI + "?platform=google";
+
+const GOOGLE_AUTH_URI = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile`;
+
+/*=============================================================== */
 
 const Login = ({ isOpen, setIsOpen }) => {
   const [isOpen2, setIsOpen2] = useState(false);
@@ -12,23 +31,25 @@ const Login = ({ isOpen, setIsOpen }) => {
     password: null,
   });
 
-  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = useCallback(
+    async (e) => {
+      e.preventDefault();
 
-    try {
-      const res = await axios.post("http://localhost:3001/api/auth/login", loginData);
-      const accessToken = res.data.accessToken;
-      console.log(accessToken);
-      window.localStorage.setItem("accessToken", accessToken);
-      setIsOpen(false);
-      navigate("/");
-    } catch (err) {
-      console.error(err);
-      Swal.fire(err.response.data.message);
-    }
-  };
+      try {
+        const res = await axios.post("http://localhost:3001/api/auth/login", loginData);
+        const accessToken = res.data.accessToken;
+        window.localStorage.setItem("accessToken", accessToken);
+        dispatch(tokenVerify(accessToken));
+        setIsOpen(false);
+      } catch (err) {
+        console.error(err);
+        Swal.fire(err.response.data.message);
+      }
+    },
+    [loginData, dispatch, setIsOpen]
+  );
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -52,7 +73,6 @@ const Login = ({ isOpen, setIsOpen }) => {
           setIsOpen2((isOpen2) => !isOpen2);
         }}
       >
-        {" "}
         아이디 찾기
       </p>
       <p
@@ -62,8 +82,9 @@ const Login = ({ isOpen, setIsOpen }) => {
       >
         비밀번호 재설정
       </p>
-      {/* <hr />
-      <button>소셜로그인</button> */}
+      <hr />
+      <a href={KAKAO_AUTH_URI}>카카오톡으로 로그인</a>
+      <a href={GOOGLE_AUTH_URI}>구글로 로그인</a>
       <Modal isOpen={isOpen2} setIsOpen={setIsOpen2} width={300} height={300}>
         <h1>아이디 찾기</h1>
         <input type="text"></input>

@@ -1,3 +1,8 @@
+/**
+ * jwt 유효성을 검사하는 미들웨어
+ * 검사가 완료되면 유저 정보를 디코딩함
+ */
+
 import jwt from 'jsonwebtoken';
 import dotenv from 'dotenv';
 
