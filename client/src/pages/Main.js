@@ -1,5 +1,8 @@
-import React, { memo } from "react";
+import React, { memo, useEffect } from "react";
 import books from "../assets/json/book.json";
+
+import { useSelector, useDispatch } from "react-redux";
+import { getBookList } from "../slices/BookListSlice";
 
 import styled from "styled-components";
 
@@ -8,24 +11,47 @@ const MainContainer = styled.main`
 `;
 
 const Main = memo(() => {
+  const dispatch = useDispatch();
+  const { data, loading, error } = useSelector((state) => state.booklist);
+  useEffect(() => {
+    dispatch(
+      getBookList({
+        page: 1,
+        size: 5,
+      })
+    );
+  }, [dispatch]);
+
+  console.log(data);
+
   return (
     <MainContainer>
-      {/* 데이터베이스에서 5개를 읽어와서 list 출력해야 함 */}
-
       <div className="inner">
+        {error ? (
+          <h1>Oops~! Error~!</h1>
+        ) : (
+          data && (
+            <>
+              <h1>성공!</h1>
+            </>
+          )
+        )}
+      </div>
+
+      {/* <div className="inner">
         {books.map((book, index) => (
           <ul key={index}>
             <a href={book.ridiUrl}>
-              <li>{book.title}</li>
-              <li>{book.authors.join(", ")}</li>
               <li>
                 <img width="100" src={book.thumbnail} alt={book.title} />
               </li>
+              <li>{book.title}</li>
+              <li>{book.authors.join(", ")}</li>
               <li>{book.categories.join(", ")}</li>
             </a>
           </ul>
         ))}
-      </div>
+      </div> */}
     </MainContainer>
   );
 });

@@ -108,40 +108,42 @@ const Search = memo(() => {
 
   return (
     <SearchContainer>
-      <div className="searchResult">
-        <div className="searchResultBar">
-          {/* 검색창 */}
-          <form onSubmit={onSubmit} className="searchForm">
-            <input type="text" value={value} onChange={onChange} />
-            <div className="searchResultBtn">
-              <FaSearch />
+      <div className="inner">
+        <div className="searchResult">
+          <div className="searchResultBar">
+            {/* 검색창 */}
+            <form onSubmit={onSubmit} className="searchForm">
+              <input type="text" value={value} onChange={onChange} />
+              <div className="searchResultBtn">
+                <FaSearch />
+              </div>
+            </form>
+          </div>
+
+          <div className="searchResultBooks">
+            <div className="searchResultBooksLeft">
+              <span>책</span>
             </div>
-          </form>
+            <div className="searchResultBooksRight">
+              {/* 검색결과 아이템 하드코딩*/}
+              <SearchResultItem />
+              <SearchResultItem />
+            </div>
+          </div>
+
+          <div className="searchResultUsers">
+            <div className="searchResultUsersLeft">
+              <span>유저</span>
+            </div>
+            <div className="searchResultUsersRight">
+              {/* 검색결과 아이템 하드코딩*/}
+              <SearchResultItem />
+            </div>
+          </div>
         </div>
 
-        <div className="searchResultBooks">
-          <div className="searchResultBooksLeft">
-            <span>책</span>
-          </div>
-          <div className="searchResultBooksRight">
-            {/* 검색결과 아이템 하드코딩*/}
-            <SearchResultItem />
-            <SearchResultItem />
-          </div>
-        </div>
-
-        <div className="searchResultUsers">
-          <div className="searchResultUsersLeft">
-            <span>유저</span>
-          </div>
-          <div className="searchResultUsersRight">
-            {/* 검색결과 아이템 하드코딩*/}
-            <SearchResultItem />
-          </div>
-        </div>
+        <Outlet />
       </div>
-
-      <Outlet />
     </SearchContainer>
   );
 });

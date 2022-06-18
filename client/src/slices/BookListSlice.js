@@ -19,9 +19,9 @@ export const getBookList = createAsyncThunk(
       } else {
         result = await axios.get(
           `${URL}
-          ?page=${payload.params?.page ? payload.params?.page : params.page}
-          &size=${payload.params?.size ? payload.params?.size : params.size}
-          &category=${payload.params?.category ? payload.params?.category : params.category}`
+          ?page=${payload.page ? payload.page : params.page}
+          &size=${payload.size ? payload.size : params.size}
+          &category=${payload.category ? payload.category : ""}`
         );
       }
     } catch (err) {
