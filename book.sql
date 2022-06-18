@@ -132,4 +132,21 @@ CREATE TABLE IF NOT EXISTS wish (
 
 
 
+SELECT r.rating, r.book_id, r.member_id, r.id, book.title
+FROM
+(
+    SELECT
+       r.rating, r.book_id, r.id, r.member_id,
+        ROW_NUMBER() OVER(PARTITION BY r.rating
+                          ORDER BY r.id DESC) rn
+    FROM review r, book
+    WHERE r.member_id = 27 AND book.id = r.book_id
+) r, book
+WHERE r.rn <= 5 AND book.id = r.book_id
+ORDER BY r.rating DESC
 
+SELECT r.rating, r.book_id, r.member_id, r.id, book.title
+FROM review r, book
+WHERE book.id = r.book_id AND r.rating = 5 AND r.member_id = 27
+LIMIT 3
+OFFSET 2
