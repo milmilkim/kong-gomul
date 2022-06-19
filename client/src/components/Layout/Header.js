@@ -1,13 +1,16 @@
 import React, { memo, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import styled from "styled-components";
 
 import logo from "../../assets/img/title_gray.png";
+import profileImage from "../../assets/img/default.jpg";
 
 import Search from "../Sub-components/Search";
 
 import Login from "../Login";
+
+import { useSelector } from "react-redux";
 
 const HeaderContainer = styled.header`
   padding-top: 15px;
@@ -19,16 +22,16 @@ const HeaderContainer = styled.header`
 
   .title-logo {
     display: block;
-    width: 100px;
-    height: 40px;
     margin-right: 40px;
-    background-image: url(${logo});
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    img {
+      width: 100px;
+    }
   }
 
   .nav-menu {
+    .profile_image img {
+      border-radius: 30px;
+    }
     &:first-of-type {
       font-size: 14px;
       font-weight: bold;
@@ -46,6 +49,7 @@ const HeaderContainer = styled.header`
       & > li {
         display: inline-block;
         margin-right: 10px;
+        cursor: pointer;
       }
     }
   }
@@ -53,6 +57,8 @@ const HeaderContainer = styled.header`
 
 const Header = memo(() => {
   const [isOpen, setIsOpen] = useState(false);
+
+  const { isLogin, info } = useSelector((state) => state.auth);
 
   const handleButton = (e) => {
     setIsOpen((isOpen) => !isOpen);
@@ -62,27 +68,28 @@ const Header = memo(() => {
       <div className="inner">
         <div className="flex-row">
           <div className="title-logo">
-            <h1 className="blind-text">
-              <a href="/">콩고물</a>
-            </h1>
+            <a href="/">
+              <h1 className="blind-text">콩고물</h1>
+              <img src={logo} alt="콩고물" />
+            </a>
           </div>
 
           <nav className="nav-menu">
             <ul>
               <li>
-                <Link to="#" noreferrer="">
+                <NavLink to="/category" noreferrer="">
                   로맨스
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to="#" noreferrer="">
+                <NavLink to="/category" noreferrer="">
                   판타지
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to="#" noreferrer="">
+                <NavLink to="/category" noreferrer="">
                   만화
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </nav>
@@ -91,14 +98,22 @@ const Header = memo(() => {
 
           <nav className="nav-menu">
             <ul>
-              <li onClick={handleButton}>로그인</li>
+              {isLogin ? (
+                <li className="profile_image">
+                  <img src={info.profile_image || profileImage} alt={info.nickname} width="35" />
+                  {info.nickname}
+                </li>
+              ) : (
+                <>
+                  <li onClick={handleButton}>로그인</li>{" "}
+                  <li>
+                    <Link to="/join" noreferrer="">
+                      회원가입
+                    </Link>
+                  </li>
+                </>
+              )}
               <Login isOpen={isOpen} setIsOpen={setIsOpen} />
-
-              <li>
-                <Link to="#" noreferrer="">
-                  회원가입
-                </Link>
-              </li>
             </ul>
           </nav>
         </div>

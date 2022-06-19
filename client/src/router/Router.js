@@ -1,10 +1,11 @@
 import { Routes, Route } from "react-router-dom";
 
 import Test from "../pages/Test";
-
 import Main from "../pages/Main";
 import Join from "../pages/Join";
 import Withdrawal from "../pages/Withdrawal";
+
+import Oauth from "../pages/Oauth";
 
 /* 내 서재 페이지 */
 import Library from "../pages/Library/Library";
@@ -31,7 +32,16 @@ const Router = () => {
     <>
       <Routes>
         <Route element={<Layout />}>
+          {/*메인 */}
           <Route path="/" element={<Main />} />
+          {/*테스트용 페이지 */}
+          <Route path="/test" element={<Test />} />
+          {/* OAuth */}
+          <Route path="/oauth" element={<Oauth />} />
+          {/*회원 가입 */}
+          <Route path="/join" element={<Join />} />
+          {/*회원 탈퇴 */}
+          <Route path="/widthdrawal" element={<Withdrawal />} />
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>
@@ -55,9 +65,6 @@ const Router = () => {
             <Route index element={<Category />} />
             <Route path="genres" element={<CategoryGenres />} />
           </Route>
-
-          <Route path="/test" element={<Test />} />
-          <Route path="widthdrawal" element={<Withdrawal />} />
         </Route>
         {/*레이아웃이 적용되지 않는 페이지*/}
         <Route path="/join" element={<Join />} />

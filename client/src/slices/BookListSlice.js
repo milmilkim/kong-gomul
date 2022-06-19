@@ -8,6 +8,9 @@ const params = {
   category: null,
 };
 
+/**
+ * description: 서적 리스트를 가져온다.
+ */
 export const getBookList = createAsyncThunk(
   "BookListSlice/getBookList",
   async (payload = null, { rejectWithValue }) => {
