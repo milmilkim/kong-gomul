@@ -26,6 +26,7 @@ import NotFound from "../pages/NotFound";
 
 import Layout from "../components/Layout/Layout";
 import Category from "../pages/Category/Category";
+import MyPage from "../pages/Personal/MyPage";
 
 const Router = () => {
   return (
@@ -42,6 +43,9 @@ const Router = () => {
           <Route path="/join" element={<Join />} />
           {/*회원 탈퇴 */}
           <Route path="/widthdrawal" element={<Withdrawal />} />
+
+          {/*프로필 페이지 */}
+          <Route path="/mypage" element={<MyPage />} />
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>
