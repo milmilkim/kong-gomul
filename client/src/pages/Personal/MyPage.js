@@ -4,6 +4,8 @@ import icon from "../../assets/img/icon.png";
 
 import styled from "styled-components";
 
+import BooksItem from "../../components/BooksItem";
+
 const ProfileContainer = styled.div`
   text-align: center;
 
@@ -135,6 +137,7 @@ const Profile = () => {
           <p>최근 조회한 작품</p>
           <button className="more-btn">더보기</button>
           {/* axios로 불러온 책 데이터 */}
+          {/* <BooksItem /> */}
         </section>
       </div>
     </ProfileContainer>
