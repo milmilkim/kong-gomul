@@ -3,11 +3,20 @@ import { Link } from "react-router-dom";
 import icon from "../../assets/img/icon.png";
 
 import styled from "styled-components";
+import { GoGear } from "react-icons/go";
 
-import BooksItem from "../../components/BooksItem";
+// import BooksItem from "../../components/BooksItem";
 
 const ProfileContainer = styled.div`
   text-align: center;
+
+  button {
+    appearance: none;
+    outline: none;
+    border: none;
+    background-color: transparent;
+    cursor: pointer;
+  }
 
   section {
     width: 600px;
@@ -38,6 +47,11 @@ const ProfileContainer = styled.div`
         img {
           width: 80px;
         }
+      }
+
+      .edit-btn {
+        width: 25px;
+        height: 25px;
       }
     }
 
@@ -79,6 +93,7 @@ const ProfileContainer = styled.div`
 
       p {
         font-weight: bold;
+        margin-bottom: 20px;
       }
 
       .more-btn {
@@ -89,11 +104,14 @@ const ProfileContainer = styled.div`
         position: absolute;
         top: 12px;
         right: 0;
-        appearance: none;
-        outline: none;
-        border: none;
         background-color: #333;
         color: #eee;
+      }
+
+      .recent-list {
+        li {
+          margin-right: 40px;
+        }
       }
     }
   }
@@ -111,6 +129,9 @@ const Profile = () => {
             <h2>여기에 닉네임</h2>
             <p>여기에 한마디</p>
           </div>
+          <button type="button">
+            <GoGear className="edit-btn" />
+          </button>
         </section>
 
         <section className="con2">
@@ -136,6 +157,23 @@ const Profile = () => {
         <section className="con3">
           <p>최근 조회한 작품</p>
           <button className="more-btn">더보기</button>
+          <ul className="recent-list flex-row">
+            <li>
+              <a href="#">
+                <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
+              </a>
+            </li>
+            <li>
+              <a href="#">
+                <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
+              </a>
+            </li>
+          </ul>
           {/* axios로 불러온 책 데이터 */}
           {/* <BooksItem /> */}
         </section>

@@ -6,7 +6,7 @@ import styled from "styled-components";
 import logo from "../../assets/img/title_gray.png";
 import profileImage from "../../assets/img/default.jpg";
 
-import Search from "../Sub-components/Search";
+import Search from "../Search";
 
 import Login from "../Login";
 
