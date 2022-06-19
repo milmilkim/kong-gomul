@@ -1,6 +1,6 @@
 import express from 'express';
 import authMiddleware from '../../middlewares/auth.js';
-import { getMyLibrary } from './library.ctrl.js';
+import { getLibrary } from './library.ctrl.js';
 
 const library = express.Router();
 
@@ -9,6 +9,8 @@ library.get('/', (req, res) => {
 });
 
 library.use('/me', authMiddleware);
-library.get('/me', getMyLibrary);
+library.get('/me', getLibrary);
+
+library.get('/:id', getLibrary);
 
 export default library;

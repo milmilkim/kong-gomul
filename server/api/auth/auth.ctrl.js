@@ -182,7 +182,7 @@ export const loginWithKakao = async (req, res) => {
       refreshToken,
     });
   } catch (err) {
-    res.status(401).json({ success: false, message: 'token sign fail' });
+    res.status(401).json({ success: false, message: '유효하지 않은 토큰입니다' });
   }
 };
 

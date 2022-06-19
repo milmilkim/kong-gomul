@@ -10,9 +10,7 @@ router.get('/', (res, req) => {
 });
 
 router.post('/join', join);
-
 router.post('/login', login);
-
 router.get('/kakao', loginWithKakao);
 router.get('/google', loginWithGoogle);
 
