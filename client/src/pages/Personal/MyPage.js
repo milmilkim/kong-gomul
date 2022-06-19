@@ -1,6 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+
 import icon from "../../assets/img/icon.png";
+import ProfileEdit from "../../components/ProfileEdit";
 
 import styled from "styled-components";
 import { GoGear } from "react-icons/go";
@@ -118,6 +120,12 @@ const ProfileContainer = styled.div`
 `;
 
 const Profile = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleButton = (e) => {
+    setIsOpen((isOpen) => !isOpen);
+  };
+
   return (
     <ProfileContainer>
       <div className="inner">
@@ -129,9 +137,11 @@ const Profile = () => {
             <h2>여기에 닉네임</h2>
             <p>여기에 한마디</p>
           </div>
+          {/* 프로필 수정 버튼 */}
           <button type="button">
-            <GoGear className="edit-btn" />
+            <GoGear className="edit-btn" onClick={handleButton} />
           </button>
+          <ProfileEdit isOpen={isOpen} setIsOpen={setIsOpen} />
         </section>
 
         <section className="con2">
