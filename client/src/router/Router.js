@@ -7,6 +7,12 @@ import Withdrawal from "../pages/Withdrawal";
 
 import Oauth from "../pages/Oauth";
 
+/* 마이페이지 */
+import MyPage from "../pages/Personal/MyPage";
+
+/* 책 상세페이지 */
+import BookInfo from "../pages/BookInfo/BookInfo";
+
 /* 내 서재 페이지 */
 import Library from "../pages/Library/Library";
 import LibraryAll from "../pages/Library/LibraryAll";
@@ -26,7 +32,6 @@ import NotFound from "../pages/NotFound";
 
 import Layout from "../components/Layout/Layout";
 import Category from "../pages/Category/Category";
-import MyPage from "../pages/Personal/MyPage";
 
 const Router = () => {
   return (
@@ -46,6 +51,9 @@ const Router = () => {
 
           {/*프로필 페이지 */}
           <Route path="/mypage" element={<MyPage />} />
+
+          {/*북 상세페이지 */}
+          <Route path="/bookinfo" element={<BookInfo />} />
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>

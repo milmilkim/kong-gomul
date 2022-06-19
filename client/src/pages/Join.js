@@ -1,5 +1,5 @@
 import React, { memo } from "react";
-import RegexHelper from "../components/Sub-components/RegexHelper";
+import RegexHelper from "../components/Regex/RegexHelper";
 
 import styled from "styled-components";
 
