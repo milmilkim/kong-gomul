@@ -1,4 +1,5 @@
 import React, { memo } from "react";
+import RegexHelper from "../components/Sub-components/RegexHelper";
 
 import styled from "styled-components";
 
@@ -15,6 +16,7 @@ const JoinContainer = styled.div`
     input[type="checkbox"] {
       vertical-align: middle;
     }
+
     label {
       font-size: 12px;
       line-height: 1;
@@ -82,10 +84,15 @@ const JoinContainer = styled.div`
         width: 169px;
       }
     }
+
+    .alert-text {
+    }
   }
 `;
 
 const Join = memo(() => {
+  // const maxLength = RegexHelper.maxLength();
+
   return (
     <JoinContainer>
       <div className="inner">
@@ -94,9 +101,9 @@ const Join = memo(() => {
           <p>필수 입력</p>
           <div className="form-container">
             {/* 아이디 입력 */}
-            <input type="text" placeholder="아이디" required />
+            <input type="text" placeholder="아이디" required onBlur={(e) => console.log("test")} />
             {/* 이메일 입력 */}
-            <input type="email" placeholder="이메일" required />
+            <input type="email" placeholder="이메일" required onBlur={(e) => console.log("test")} />
             <button
               type="button"
               className="email-btn"
