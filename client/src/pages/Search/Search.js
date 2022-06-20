@@ -51,7 +51,7 @@ const SearchContainer = styled.div`
         border-radius: 3px;
         padding: 0 1rem;
         line-height: 2rem;
-        background-color: #4cd137;
+        background-color: ${(props) => props.theme.color.primaryColor};
         color: #fff;
         cursor: pointer;
       }
