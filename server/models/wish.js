@@ -1,7 +1,7 @@
 import _sequelize from 'sequelize';
 const { Model, Sequelize } = _sequelize;
 
-export default class comment extends Model {
+export default class wish extends Model {
   static init(sequelize, DataTypes) {
   return super.init({
     id: {
@@ -25,14 +25,10 @@ export default class comment extends Model {
         model: 'member',
         key: 'id'
       }
-    },
-    contents: {
-      type: DataTypes.TEXT,
-      allowNull: true
     }
   }, {
     sequelize,
-    tableName: 'comment',
+    tableName: 'wish',
     timestamps: false,
     indexes: [
       {
@@ -44,7 +40,7 @@ export default class comment extends Model {
         ]
       },
       {
-        name: "book_id",
+        name: "id_book_member",
         unique: true,
         using: "BTREE",
         fields: [
