@@ -9,18 +9,19 @@ import dotenv from 'dotenv';
 
 dotenv.config();
 
-const generateToken = (existingMember) => {
+const generateToken = (member) => {
+  const { id, user_id, nickname, profile_image } = member;
   return new Promise((resolve, reject) => {
     jwt.sign(
       {
-        id: existingMember.id,
-        user_id: existingMember.user_id,
-        nickname: existingMember.nickname,
-        profile_image: existingMember.profile_image,
+        id,
+        user_id,
+        nickname,
+        profile_image,
       },
       process.env.SECRET,
       {
-        expiresIn: '1d',
+        expiresIn: '1h',
       },
       (err, token) => {
         if (err) {
@@ -33,4 +34,25 @@ const generateToken = (existingMember) => {
   });
 };
 
-export { generateToken };
+const generateRefreshToken = (member) => {
+  return new Promise((resolve, reject) => {
+    jwt.sign(
+      {
+        id: member.id,
+      },
+      process.env.SECRET,
+      {
+        expiresIn: '7d',
+      },
+      (err, token) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(token);
+        }
+      }
+    );
+  });
+};
+
+export { generateToken, generateRefreshToken };

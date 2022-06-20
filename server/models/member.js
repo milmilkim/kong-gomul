@@ -47,6 +47,10 @@ export default class member extends Model {
     profile_image: {
       type: DataTypes.STRING(2083),
       allowNull: true
+    },
+    refresh_token: {
+      type: DataTypes.STRING(1000),
+      allowNull: true
     }
   }, {
     sequelize,

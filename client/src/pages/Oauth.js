@@ -8,6 +8,7 @@ import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import { tokenVerify } from "../slices/AuthSlice";
 import Spinner from "../components/spinner";
+import Container from "../components/Layout/Container";
 
 export default function Oauth() {
   const [error, setError] = useState(null);
@@ -29,7 +30,10 @@ export default function Oauth() {
           },
         });
         const accessToken = res.data.accessToken;
+        const refreshToken = res.data.refreshToken;
         window.localStorage.setItem("accessToken", accessToken); //localStorage에 토큰을 저장함
+        window.localStorage.setItem("refreshToken", refreshToken);
+
         dispatch(tokenVerify());
         navigate("/");
       } catch (err) {
@@ -43,10 +47,10 @@ export default function Oauth() {
   }, [code, platform, navigate, dispatch]);
 
   return (
-    <div>
+    <Container>
       <Spinner visible={isLoading} />
       <h1>로그인중</h1>
       <p>{error}</p>
-    </div>
+    </Container>
   );
 }
