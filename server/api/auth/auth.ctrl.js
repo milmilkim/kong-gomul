@@ -1,6 +1,6 @@
 import { db } from '../../models/index.js';
 import encrypt from '../../lib/encrypt.js';
-import { generateToken } from '../../lib/jwt.js';
+import { generateRefreshToken, generateToken } from '../../lib/jwt.js';
 
 import dotenv from 'dotenv';
 import axios from 'axios';
@@ -53,6 +53,7 @@ export const join = async (req, res) => {
 };
 
 /*
+    로컬 로그인
     POST /api/auth/login
     {
         user_id,
@@ -72,9 +73,13 @@ export const login = async (req, res) => {
     } else {
       //jwt 토큰 발급
       const accessToken = await generateToken(existingMember);
+      const refreshToken = await generateRefreshToken(existingMember);
+      await member.update({ refresh_token: refreshToken }, { where: { user_id } });
+
       res.json({
         success: true,
         accessToken,
+        refreshToken,
       });
     }
   } catch (err) {
@@ -93,6 +98,30 @@ export const check = async (req, res) => {
     success: true,
     info: req.decoded,
   });
+};
+
+/*
+    GET /api/auth/refresh
+    리프레쉬 토큰으로 새 토큰 발급해준다
+*/
+
+export const checkRefresh = async (req, res) => {
+  const { id } = req.decoded;
+
+  try {
+    let existingMember = null;
+    existingMember = await member.findOne({ where: { id } });
+
+    if (existingMember !== null && existingMember.refresh_token === req.token) {
+      const accessToken = await generateToken(existingMember);
+
+      res.send({ success: true, accessToken });
+    } else {
+      throw new Error('유효하지 않은 토큰입니다');
+    }
+  } catch (err) {
+    res.status(401).json({ success: false, message: err.message });
+  }
 };
 
 /*
@@ -126,6 +155,9 @@ export const loginWithKakao = async (req, res) => {
       },
     });
 
+    let accessToken;
+    let refreshToken;
+
     if (existingMember === null) {
       const newMember = await member.create({
         user_id: kakaoUser.id,
@@ -135,22 +167,22 @@ export const loginWithKakao = async (req, res) => {
         platform: 'kakao',
       });
 
-      const accessToken = await generateToken(newMember);
-      res.json({
-        success: true,
-        accessToken,
-      });
+      accessToken = await generateToken(newMember);
+      refreshToken = await generateRefreshToken(newMember);
     } else {
-      const accessToken = await generateToken(existingMember);
-      res.json({
-        success: true,
-        accessToken,
-      });
+      accessToken = await generateToken(existingMember);
+      refreshToken = await generateRefreshToken(existingMember);
     }
-  } catch (err) {
-    res.status(403).json({
-      message: err.message,
+
+    await member.update({ refresh_token: refreshToken }, { where: { user_id: kakaoUser.id } });
+
+    res.json({
+      success: true,
+      accessToken,
+      refreshToken,
     });
+  } catch (err) {
+    res.status(401).json({ success: false, message: '유효하지 않은 토큰입니다' });
   }
 };
 

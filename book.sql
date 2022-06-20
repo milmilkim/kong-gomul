@@ -105,66 +105,48 @@ VALUES (
     '코믹'
 );
 
-CREATE TABLE IF NOT EXISTS member (
-    id INT NOT NULL AUTO_INCREMENT,
-    user_id varchar(20) NOT NULL UNIQUE,
-    password varchar(255) NOT NULL,
-    nickname varchar(20) NOT NULL,
-    email varchar(20) NOT NULL UNIQUE,
-    introduce varchar(240),
-    birth_year year(4),
-    gender char(1),
-    PRIMARY KEY(id)
-);
 
-CREATE TABLE IF NOT EXISTS review (
-    id INT NOT NULL AUTO_INCREMENT,
-    book_id int NOT NULL,
-    member_id int NOT NULL,
-    rating float NOT NULL,
-    PRIMARY KEY(id),
-    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE,
-    FOREIGN KEY(member_id) REFERENCES member(id) ON DELETE CASCADE ON UPDATE CASCADE
-);
 
-CREATE TABLE IF NOT EXISTS comment (
+CREATE TABLE IF NOT EXISTS REVIEW (
     id INT NOT NULL AUTO_INCREMENT,
     book_id int NOT NULL,
     member_id int NOT NULL,
     contents text,
+    rating float NOT NULL default 0,
+    is_spoiler boolean default false,
     PRIMARY KEY(id),
+    UNIQUE KEY id_book_member (book_id, member_id),
     FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE,
     FOREIGN KEY(member_id) REFERENCES member(id) ON DELETE CASCADE ON UPDATE CASCADE
 );
 
-alter table review add unique (book_id, member_id);
-alter table comment add unique (book_id, member_id);
-
-
-INSERT INTO member(user_id, password, nickname, email, introduce, birth_year, gender)
-values (
-    'hello',
-    'password',
-    '지나가는리즈',
-    'aa@ab.com',
-    '가는중',
-    '1997',
-    'F'
-);
-
-INSERT INTO review(book_id, member_id, rating)
-VALUES (
-    1,
-    1,
-    5.0
-);
-
-INSERT INTO comment(book_id, member_id, contents)
-VALUES(
-    1,
-    1,
-    '정말 재미있네요...'
+CREATE TABLE IF NOT EXISTS wish (
+    id INT NOT NULL AUTO_INCREMENT,
+    book_id INT NOT NULL,
+    member_id INT NOT NULL,
+    PRIMARY KEY(id),
+    UNIQUE KEY id_book_member (book_id, member_id),
+    FOREIGN KEY(book_id) REFERENCES book(id) ON DELETE CASCADE ON UPDATE CASCADE,
+    FOREIGN KEY(member_id) REFERENCES member(id) ON DELETE CASCADE ON UPDATE CASCADE
 )
 
 
 
+SELECT r.rating, r.book_id, r.member_id, r.id, book.title
+FROM
+(
+    SELECT
+       r.rating, r.book_id, r.id, r.member_id,
+        ROW_NUMBER() OVER(PARTITION BY r.rating
+                          ORDER BY r.id DESC) rn
+    FROM review r, book
+    WHERE r.member_id = 27 AND book.id = r.book_id
+) r, book
+WHERE r.rn <= 5 AND book.id = r.book_id
+ORDER BY r.rating DESC
+
+SELECT r.rating, r.book_id, r.member_id, r.id, book.title
+FROM review r, book
+WHERE book.id = r.book_id AND r.rating = 5 AND r.member_id = 27
+LIMIT 3
+OFFSET 2

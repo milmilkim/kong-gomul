@@ -26,9 +26,19 @@ export default class review extends Model {
         key: 'id'
       }
     },
+    contents: {
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
     rating: {
       type: DataTypes.FLOAT,
-      allowNull: false
+      allowNull: false,
+      defaultValue: 0
+    },
+    is_spoiler: {
+      type: DataTypes.BOOLEAN,
+      allowNull: true,
+      defaultValue: 0
     }
   }, {
     sequelize,
@@ -44,10 +54,12 @@ export default class review extends Model {
         ]
       },
       {
-        name: "book_id",
+        name: "id_book_member",
+        unique: true,
         using: "BTREE",
         fields: [
           { name: "book_id" },
+          { name: "member_id" },
         ]
       },
       {
