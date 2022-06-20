@@ -24,8 +24,8 @@ const LibraryNavContainer = styled.nav`
       }
 
       a.active {
-        color: #4cd137;
-        border-bottom: 3px solid #4cd137;
+        color: ${(props) => props.theme.color.primaryColor};
+        border-bottom: 3px solid ${(props) => props.theme.color.primaryColor};
       }
     }
   }
