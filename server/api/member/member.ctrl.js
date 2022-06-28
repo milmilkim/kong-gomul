@@ -52,7 +52,7 @@ export const deleteMember = async (req, res) => {
 };
 
 /*
-    프로필 조회
+    남의 프로필 조회
     get /api/member/:id
 */
 export const getMember = async (req, res) => {
@@ -60,6 +60,9 @@ export const getMember = async (req, res) => {
   let profile = null;
 
   try {
+    if (!id) {
+      throw new Error('아이디가 없습니다');
+    }
     profile = await member.findOne({
       where: { id },
       attributes: ['nickname', 'introduce', 'profile_image', 'is_public'],
@@ -72,4 +75,32 @@ export const getMember = async (req, res) => {
   } catch (err) {
     res.status(403).json({ message: err.message });
   }
+};
+
+/*
+    내 프로필 조회
+    get /api/member/me
+*/
+
+export const getMyProfile = async (req, res) => {
+  const { id } = req.decoded;
+
+  try {
+    const profile = await member.findOne({
+      where: { id },
+      attributes: {
+        exclude: ['password', 'refresh_token'],
+      },
+    });
+    if (profile === null) {
+      throw new Error('id가 존재하지 않습니다');
+    }
+    res.send(profile);
+  } catch (err) {
+    res.status(403).json({ message: err.message });
+  }
+};
+
+export const updateProfile = async (req, res) => {
+  next();
 };
