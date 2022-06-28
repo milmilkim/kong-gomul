@@ -32,8 +32,7 @@ export default class review extends Model {
     },
     rating: {
       type: DataTypes.FLOAT,
-      allowNull: false,
-      defaultValue: 0
+      allowNull: true
     },
     is_spoiler: {
       type: DataTypes.BOOLEAN,

@@ -1,4 +1,4 @@
-import { db, sequelize } from '../../models/index.js';
+import { db } from '../../models/index.js';
 import qs from 'qs';
 import axios from 'axios';
 import dotenv from 'dotenv';
@@ -6,6 +6,11 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const { member } = db;
+
+/*
+    탈퇴
+    DELETE /api/member
+*/
 
 export const deleteMember = async (req, res) => {
   const { id } = req.decoded;
@@ -43,5 +48,28 @@ export const deleteMember = async (req, res) => {
       success: false,
       message: err.message,
     });
+  }
+};
+
+/*
+    프로필 조회
+    get /api/member/:id
+*/
+export const getMember = async (req, res) => {
+  const { id } = req.params;
+  let profile = null;
+
+  try {
+    profile = await member.findOne({
+      where: { id },
+      attributes: ['nickname', 'introduce', 'profile_image', 'is_public'],
+    });
+
+    if (profile === null) {
+      throw new Error('존재하지 않는 아이디입니다');
+    }
+    res.send(profile);
+  } catch (err) {
+    res.status(403).json({ message: err.message });
   }
 };

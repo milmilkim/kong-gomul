@@ -2,22 +2,40 @@ import { db, sequelize } from '../../models/index.js';
 
 const { book, author, genre, keyword, publisher, review, member } = db;
 
+const avg = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\`)`;
+const count = `(SELECT AVG(rating) FROM review WHERE book_id = \`book\`.\`id\`)`;
+
 export const getBookList = async (req, res) => {
+  const where = {};
   const page = parseInt(req.query.page) || 1;
   const size = parseInt(req.query.size) || 10;
-  const category = req.query.category || '만화 e북';
-  const avg = sequelize.fn('AVG', sequelize.col('reviews.rating'));
+
+  const { category, id, sort } = req.query;
+
+  category && (where.category = category);
+  id && (where.id = id.split('+'));
+
+  let order;
+
+  if (sort === 'rating') {
+    order = sequelize.literal(`avg_rating desc`);
+  } else if (sort === 'count') {
+    order = sequelize.literal(`avg_count desc`);
+  } else {
+    order = [['id', 'ASC']];
+  }
 
   const books = await book.findAll({
     subQuery: false,
     offset: (page - 1) * size,
     limit: size,
-    where: {
-      category: category,
-    },
+    where,
     attributes: {
-      include: [[avg, 'rating_avg']],
-      group: 'reviews.book_id',
+      include: [
+        [sequelize.literal(avg), 'avg_count'],
+        [sequelize.literal(count), 'avg_rating'],
+      ],
+      exclude: ['introduce', 'isbn', 'ridi_url', 'published_date'],
     },
     include: [
       {
@@ -30,28 +48,18 @@ export const getBookList = async (req, res) => {
         as: 'publishers',
         attributes: ['name'],
       },
-      {
-        model: keyword,
-        as: 'keywords',
-        attributes: ['keyword'],
-      },
-      {
-        model: genre,
-        as: 'genres',
-        attributes: ['genre'],
-      },
-      {
-        model: review,
-        attributes: [],
-        as: 'reviews',
-        group: 'id',
-      },
+      // {
+      //   model: keyword,
+      //   as: 'keywords',
+      //   attributes: ['keyword'],
+      // },
+      // {
+      //   model: genre,
+      //   as: 'genres',
+      //   attributes: ['genre'],
+      // },
     ],
-    order: [
-      ['id', 'ASC'],
-      ['authors', 'id', 'ASC'],
-    ],
-    group: ['id'],
+    order: [order, ['authors', 'id', 'ASC']],
   });
   res.send(books);
 };
@@ -59,18 +67,14 @@ export const getBookList = async (req, res) => {
 export const getBook = async (req, res) => {
   const { id } = req.params;
 
-  const ratings = await review.findAll({
-    where: {
-      book_id: id,
+  const bookInfo = await book.findOne({
+    where: { id },
+    attributes: {
+      include: [
+        [sequelize.literal(avg), 'avg_count'],
+        [sequelize.literal(count), 'avg_rating'],
+      ],
     },
-    attributes: [
-      [sequelize.fn('AVG', sequelize.col('rating')), 'rating_avg'],
-      [sequelize.fn('COUNT', sequelize.col('rating')), 'rating_count'],
-    ],
-  });
-
-  const _book = await book.findOne({
-    where: { id: id },
     include: [
       {
         model: author,
@@ -110,7 +114,7 @@ export const getBook = async (req, res) => {
     order: [['authors', 'id', 'ASC']],
   });
 
-  res.send({ book: _book, ratings: ratings });
+  res.send({ book_info: bookInfo });
 };
 
 /*여러 책 한번에 추가*/
