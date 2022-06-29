@@ -29,9 +29,6 @@ app.use(
 //     console.error(err);
 //   });
 
-// set the secret key variable for jwt
-app.set('jwt-secret', process.env.SECRET);
-
 app.get('/', (req, res) => {
   res.json('hello world!');
 });
