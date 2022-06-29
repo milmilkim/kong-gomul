@@ -1,10 +1,11 @@
-import React from "react";
+import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 import BooksThumb from "../../components/BooksThumb";
 import Review from "../../components/ReviewThumb";
 import ReviewThumb from "../../components/ReviewThumb";
+import ReviewWrite from "../../components/ReviewWrite";
 
 const BookInfoContainer = styled.div`
   padding: 30px 0;
@@ -88,6 +89,12 @@ const BookInfoContainer = styled.div`
 `;
 
 const BookInfo = () => {
+  const [isOpen, setIsOpen] = useState(false);
+
+  const handleButton = (e) => {
+    setIsOpen((isOpen) => !isOpen);
+  };
+
   return (
     <BookInfoContainer>
       <div className="inner">
@@ -121,9 +128,10 @@ const BookInfo = () => {
         </section>
         <section className="review">
           <h3>리뷰</h3>
-          <button type="button" className="review-btn">
+          <button type="button" className="review-btn" onClick={handleButton}>
             리뷰 작성
           </button>
+          <ReviewWrite isOpen={isOpen} setIsOpen={setIsOpen} />
           {/* 리뷰 데이터 받아와서 대체 */}
           <ul className="flex-row">
             <li>
