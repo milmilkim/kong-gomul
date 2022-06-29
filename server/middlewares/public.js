@@ -5,15 +5,20 @@
 import { db } from '../models/index.js';
 const { member } = db;
 
-const checkPublic = async (req, res) => {
-  const { id } = req.params.id;
+const checkPublic = async (req, res, next) => {
+  const { id } = req.params;
+  let _member = null;
 
   try {
-    const { is_public: isPublic } = await member.findOne({ id });
-    if (!isPublic) {
-      throw new Error('서재가 비공개로 설정되어 있습니다');
+    _member = await member.findOne({ where: { id } });
+
+    if (_member === null) {
+      throw new Error('존재하지 않는 사용자입니다');
+    } else if (_member.is_public === false) {
+      throw new Error('비공개 상태입니다');
+    } else {
+      next();
     }
-    next();
   } catch (err) {
     res.status(403).json({ success: false, message: err.message });
   }
