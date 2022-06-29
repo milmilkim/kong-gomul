@@ -37,7 +37,7 @@ export default class member extends Model {
       allowNull: true
     },
     gender: {
-      type: DataTypes.CHAR(1),
+      type: DataTypes.ENUM('F','M'),
       allowNull: true
     },
     platform: {
@@ -51,11 +51,16 @@ export default class member extends Model {
     refresh_token: {
       type: DataTypes.STRING(1000),
       allowNull: true
+    },
+    is_public: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: 1
     }
   }, {
     sequelize,
     tableName: 'member',
-    timestamps: false,
+    timestamps: true,
     indexes: [
       {
         name: "PRIMARY",
