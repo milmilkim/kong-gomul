@@ -11,7 +11,8 @@ import Oauth from "../pages/Oauth";
 import MyPage from "../pages/Personal/MyPage";
 
 /* 책 상세페이지 */
-import BookInfo from "../pages/BookInfo/BookInfo";
+import BookInfo from "../pages/Book/BookInfo";
+import Review from "../pages/Book/Review";
 
 /* 내 서재 페이지 */
 import Library from "../pages/Library/Library";
@@ -52,8 +53,10 @@ const Router = () => {
           {/*프로필 페이지 */}
           <Route path="/mypage" element={<MyPage />} />
 
-          {/*북 상세페이지 */}
+          {/*책 상세페이지 */}
           <Route path="/bookinfo" element={<BookInfo />} />
+          {/*리뷰 상세페이지 */}
+          <Route path="/review" element={<Review />} />
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>

@@ -1,3 +1,4 @@
+// 타이틀, 저자, 출판사와 함께 북 썸네일 표시
 import React from "react";
 import styled, { css } from "styled-components";
 
@@ -19,6 +20,8 @@ const BooksThumbContainer = styled.div`
         .category {
           font-size: 14px;
         }
+        .thumbnail {
+        }
         .title {
           font-size: 20px;
           margin-bottom: 15px;
@@ -36,16 +39,16 @@ const BooksThumbContainer = styled.div`
       return css`
         .category {
           text-align: center;
-          font-size: 14px;
+          font-size: 12px;
         }
         .thumbnail {
           display: block;
-          margin: 0 auto 20px;
+          margin: 0 auto 12px;
           width: 100px;
         }
         .title {
-          font-size: 20px;
-          margin-bottom: 15px;
+          font-size: 16px;
+          margin-bottom: 12px;
         }
         .author {
           font-size: 12px;
