@@ -3,6 +3,7 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 
 import { Bars } from "react-loader-spinner";
+import theme from "../theme";
 
 const TransLayer = styled.div`
   position: fixed;
@@ -39,7 +40,7 @@ function Spinner({ visible, color, width, height }) {
 
 Spinner.defaultProps = {
   visible: false,
-  color: "#1ED760",
+  color: theme.color.primaryColor,
   width: 100,
   height: 100,
 };

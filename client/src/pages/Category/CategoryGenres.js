@@ -40,7 +40,7 @@ const CategoryGenreContainer = styled.div`
       align-items: center;
       width: 100px;
       height: 50px;
-      background-color: #4cd137;
+      background-color: ${(props) => props.theme.color.primaryColor};
       color: #fff;
       border-radius: 100px;
       z-index: 9999;
@@ -165,31 +165,37 @@ const CategoryGenres = memo(() => {
 
       <CategoryGenreContainer>
         {/* 만화 */}
-        <CategorySwiper
-          title="만화"
-          clsName="comic"
-          prevRef={comicPrevRef}
-          nextRef={comicNextRef}
-          data={comicBookData}
-        />
+        {comicBookData && (
+          <CategorySwiper
+            title="만화"
+            clsName="comic"
+            prevRef={comicPrevRef}
+            nextRef={comicNextRef}
+            data={comicBookData}
+          />
+        )}
 
         {/* 로맨스 */}
-        <CategorySwiper
-          title="로맨스"
-          clsName="romance"
-          prevRef={romancePrevRef}
-          nextRef={romanceNextRef}
-          data={romanceBookData}
-        />
+        {romanceBookData && (
+          <CategorySwiper
+            title="로맨스"
+            clsName="romance"
+            prevRef={romancePrevRef}
+            nextRef={romanceNextRef}
+            data={romanceBookData}
+          />
+        )}
 
         {/* 판타지 */}
-        <CategorySwiper
-          title="판타지"
-          clsName="fantasy"
-          prevRef={fantasyPrevRef}
-          nextRef={fantasyNextRef}
-          data={fantasyBookData}
-        />
+        {fantasyBookData && (
+          <CategorySwiper
+            title="판타지"
+            clsName="fantasy"
+            prevRef={fantasyPrevRef}
+            nextRef={fantasyNextRef}
+            data={fantasyBookData}
+          />
+        )}
       </CategoryGenreContainer>
     </>
   );
