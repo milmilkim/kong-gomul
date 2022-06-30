@@ -99,10 +99,12 @@ const Header = memo(() => {
           <nav className="nav-menu">
             <ul>
               {isLogin ? (
-                <li className="profile_image">
-                  <img src={info.profile_image || profileImage} alt={info.nickname} width="35" />
-                  {info.nickname}
-                </li>
+                <Link to="/mypage">
+                  <li className="profile_image">
+                    <img src={info.profile_image || profileImage} alt={info.nickname} width="35" />
+                    {info.nickname}
+                  </li>
+                </Link>
               ) : (
                 <>
                   <li onClick={handleButton}>로그인</li>{" "}
