@@ -24,19 +24,16 @@ export const join = async (req, res) => {
   const newMember = req.body;
 
   let existingMember = null;
-  existingMember = await member.findOne({
-    where: {
-      user_id: newMember.user_id,
-    },
-  });
-
-  if (existingMember !== null) {
-    res.status(403).json({
-      message: '이미 존재하는 아이디입니다~_~!!',
-    });
-  }
-
   try {
+    existingMember = await member.findOne({
+      where: {
+        user_id: newMember.user_id,
+      },
+    });
+
+    if (existingMember !== null) {
+      throw new Error('이미 존재하는 아이디입니다');
+    }
     await member.create({
       ...newMember,
       password: encrypt(newMember.password),
@@ -68,7 +65,11 @@ export const login = async (req, res) => {
     let existingMember = null;
     existingMember = await member.findOne({ where: { user_id } });
 
-    if (existingMember === null || existingMember.platform !== 'local' || existingMember.password !== encrypt(password)) {
+    if (
+      existingMember === null ||
+      existingMember.platform !== 'local' ||
+      existingMember.password !== encrypt(password)
+    ) {
       throw new Error('아이디와 비밀번호를 확인하세요');
     } else {
       //jwt 토큰 발급
