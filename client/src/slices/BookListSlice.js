@@ -1,0 +1,70 @@
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+const URL = "http://localhost:3001/api/book";
+const params = {
+  page: 1,
+  size: 5,
+  category: null,
+};
+
+/**
+ * description: 서적 리스트를 가져온다.
+ */
+export const getBookList = createAsyncThunk(
+  "BookListSlice/getBookList",
+  async (payload = null, { rejectWithValue }) => {
+    let result = null;
+
+    try {
+      if (payload === null) {
+        result = await axios.get(`${URL}?page=${params.page}&size=${params.size}`);
+      } else {
+        result = await axios.get(
+          `${URL}
+          ?page=${payload.page ? payload.page : params.page}
+          &size=${payload.size ? payload.size : params.size}
+          &category=${payload.category ? payload.category : ""}`
+        );
+      }
+    } catch (err) {
+      result = rejectWithValue(err.response);
+    }
+
+    return result;
+  }
+);
+
+const BookListSlice = createSlice({
+  name: "booklist",
+  initialState: {
+    data: null,
+    loading: false,
+    error: null,
+  },
+  reducer: {},
+  extraReducers: {
+    [getBookList.pending]: (state, { payload }) => {
+      return { state, loading: true };
+    },
+    [getBookList.fulfilled]: (state, { payload }) => {
+      return {
+        data: payload?.data,
+        loading: false,
+        error: null,
+      };
+    },
+    [getBookList.rejected]: (state, { payload }) => {
+      return {
+        data: payload?.data,
+        loading: false,
+        error: {
+          code: payload?.status ? payload.status : 500,
+          message: payload?.statusText ? payload.statusText : "Server Error",
+        },
+      };
+    },
+  },
+});
+
+export default BookListSlice.reducer;
