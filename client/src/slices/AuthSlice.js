@@ -29,6 +29,12 @@ const AuthSlice = createSlice({
     nickname: null,
     error: null,
   },
+  reducers: {
+    setIsLogin: (state, action) => {
+      console.log("dgdgd");
+      return { isLogin: action.payload };
+    },
+  },
   extraReducers: {
     [tokenVerify.pending]: (state, { payload }) => {
       return { ...state, isLoading: true };
@@ -56,3 +62,4 @@ const AuthSlice = createSlice({
 });
 
 export default AuthSlice.reducer; //리듀서 객체 내보내기
+export const { setIsLogin } = AuthSlice.actions;

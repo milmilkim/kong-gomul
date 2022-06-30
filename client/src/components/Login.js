@@ -42,7 +42,7 @@ const Login = ({ isOpen, setIsOpen }) => {
 
       try {
         setIsLoading(true);
-        const res = await axios.post("http://localhost:3001/api/auth/login", loginData);
+        const res = await axios.post("/api/auth/login", loginData);
         const accessToken = res.data.accessToken;
         const refreshToken = res.data.refreshToken;
         window.localStorage.setItem("accessToken", accessToken);
