@@ -13,9 +13,10 @@ export const getSearchResult = async (req, res) => {
   try {
     const size = parseInt(req.query.size) || 5; // 한 페이지당 보여줄 검색결과수, 최대 5개
     const page = parseInt(req.query.page) || 1; // 페이지 수
+    const searchType = req.query.type || 'book'; // 책, 유저검색 
 
     // 책 검색
-    if (req.query.type == "book") {
+    if (searchType == "book") {
       result = await book.findAll({
         where: {
           title: {
@@ -26,7 +27,7 @@ export const getSearchResult = async (req, res) => {
         offset: size * (page - 1),
       });
     } // 유저 검색
-    else {
+    else if(searchType == 'user') {
       result = await member.findAll({
         attributes: ['nickname', 'introduce', 'profile_image'], // 닉네임, 소개, 프로필이미지
         where: {
