@@ -5,6 +5,7 @@ import library from './library/index.js';
 import member from './member/index.js';
 import review from './review/index.js';
 import search from './search/index.js';
+import image from './image/index.js';
 
 const api = express.Router();
 
@@ -23,5 +24,7 @@ api.use('/member', member);
 api.use('/review', review);
 
 api.use('/search', search);
+
+api.use('/image', image);
 
 export default api;
