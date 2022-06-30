@@ -10,9 +10,10 @@ export const getReviewList = async (req, res) => {
   try {
     const size = parseInt(req.query.size) || 5; // 한 페이지당 보여줄 리뷰 수
     const page = parseInt(req.query.page) || 1; // 페이지 수
-
+    const order  =  req.query.order || 'rating';
+    
     const result = await review.findAll({
-      order: [[req.query.order, "DESC"]], // 별점순, 최신순 정렬
+      order: [[order, "DESC"]], // 별점순, 최신순 정렬
       limit: size,
       offset: size * (page - 1),
     });
