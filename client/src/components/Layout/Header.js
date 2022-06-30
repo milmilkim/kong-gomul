@@ -1,18 +1,20 @@
 import React, { memo, useState } from "react";
-import { Link } from "react-router-dom";
+import { NavLink, Link } from "react-router-dom";
 
 import styled from "styled-components";
 
 import logo from "../../assets/img/title_gray.png";
 import profileImage from "../../assets/img/default.jpg";
 
-import Search from "../Sub-components/Search";
+import Search from "../Search";
 
 import Login from "../Login";
 
 import { useSelector } from "react-redux";
 
 const HeaderContainer = styled.header`
+  padding-top: 15px;
+
   .flex-row {
     justify-content: space-between;
     align-items: center;
@@ -20,13 +22,10 @@ const HeaderContainer = styled.header`
 
   .title-logo {
     display: block;
-    width: 90px;
-    height: 30px;
     margin-right: 40px;
-    background-image: url(${logo});
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center;
+    img {
+      width: 100px;
+    }
   }
 
   .nav-menu {
@@ -69,27 +68,28 @@ const Header = memo(() => {
       <div className="inner">
         <div className="flex-row">
           <div className="title-logo">
-            <h1 className="blind-text">
-              <a href="/">콩고물</a>
-            </h1>
+            <a href="/">
+              <h1 className="blind-text">콩고물</h1>
+              <img src={logo} alt="콩고물" />
+            </a>
           </div>
 
           <nav className="nav-menu">
             <ul>
               <li>
-                <Link to="#" noreferrer="">
+                <NavLink to="/category" noreferrer="">
                   로맨스
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to="#" noreferrer="">
+                <NavLink to="/category" noreferrer="">
                   판타지
-                </Link>
+                </NavLink>
               </li>
               <li>
-                <Link to="#" noreferrer="">
+                <NavLink to="/category" noreferrer="">
                   만화
-                </Link>
+                </NavLink>
               </li>
             </ul>
           </nav>
@@ -107,7 +107,7 @@ const Header = memo(() => {
                 <>
                   <li onClick={handleButton}>로그인</li>{" "}
                   <li>
-                    <Link to="#" noreferrer="">
+                    <Link to="/join" noreferrer="">
                       회원가입
                     </Link>
                   </li>

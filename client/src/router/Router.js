@@ -7,6 +7,13 @@ import Withdrawal from "../pages/Withdrawal";
 
 import Oauth from "../pages/Oauth";
 
+/* 마이페이지 */
+import MyPage from "../pages/Personal/MyPage";
+
+/* 책 상세페이지 */
+import BookInfo from "../pages/Book/BookInfo";
+import Review from "../pages/Book/Review";
+
 /* 내 서재 페이지 */
 import Library from "../pages/Library/Library";
 import LibraryAll from "../pages/Library/LibraryAll";
@@ -38,8 +45,18 @@ const Router = () => {
           <Route path="/test" element={<Test />} />
           {/* OAuth */}
           <Route path="/oauth" element={<Oauth />} />
+          {/*회원 가입 */}
+          <Route path="/join" element={<Join />} />
           {/*회원 탈퇴 */}
           <Route path="/widthdrawal" element={<Withdrawal />} />
+
+          {/*프로필 페이지 */}
+          <Route path="/mypage" element={<MyPage />} />
+
+          {/*책 상세페이지 */}
+          <Route path="/bookinfo" element={<BookInfo />} />
+          {/*리뷰 상세페이지 */}
+          <Route path="/review" element={<Review />} />
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>
