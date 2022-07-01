@@ -68,10 +68,10 @@ const Header = memo(() => {
       <div className="inner">
         <div className="flex-row">
           <div className="title-logo">
-            <a href="/">
+            <Link to="/">
               <h1 className="blind-text">콩고물</h1>
               <img src={logo} alt="콩고물" />
-            </a>
+            </Link>
           </div>
 
           <nav className="nav-menu">
