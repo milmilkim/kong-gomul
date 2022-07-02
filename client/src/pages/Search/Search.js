@@ -185,8 +185,8 @@ const Search = memo(() => {
           </div>
         )}
       </div>
-
       <Outlet />
+      </div>
     </SearchContainer>
   );
 });
