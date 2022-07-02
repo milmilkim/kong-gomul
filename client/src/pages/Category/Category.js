@@ -4,7 +4,6 @@
 import axios from "axios";
 import React, { memo, useEffect, useState } from "react";
 import styled from "styled-components";
-import { NavLink } from "react-router-dom";
 
 /* Components */
 import BooksItem from "../../components/BooksItem";
