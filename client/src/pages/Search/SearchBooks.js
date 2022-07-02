@@ -2,7 +2,7 @@
  * 책 검색결과 페이지
  */
 import axios from "axios";
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import styled from "styled-components";
 
 /* Components */
@@ -32,18 +32,12 @@ const SearchBooks = memo(() => {
 
   // Search 페이지에서 입력한 input 값
   const qs = useQueryString();
-  const title = qs.title;
+  const { query, type } = qs;
 
-  const getBookList = async () => {
+  // 검색결과 리스트 가져오기
+  const getBookList = useCallback(async () => {
     try {
-      /**
-      // Search 페이지에서 입력한 input 값으로 데이터 요청
-      // 미구현, 커밋 안하고 테스트만 해봄
-      const res = await axios.get(`http://localhost:3001/api/book/${title}`);
-      /*/
-      const res = await axios.get(`http://localhost:3001/api/book/`);
-      /**/
-
+      const res = await axios.get(`http://localhost:3001/api/search/books?query=${query}&type=${type}`);
       setData(res.data);
     } catch (e) {
       console.error(e);
@@ -51,7 +45,7 @@ const SearchBooks = memo(() => {
       // ajax 로딩 종료
       setIsLoading(false);
     }
-  };
+  }, [query, type]);
 
   // 페이지가 열렸을 때,
   useEffect(() => {
@@ -60,7 +54,7 @@ const SearchBooks = memo(() => {
 
     // axios 요청을 한다.
     getBookList();
-  }, []);
+  }, [getBookList]);
 
   return (
     <>
@@ -70,15 +64,14 @@ const SearchBooks = memo(() => {
       <SearchBooksContainer>
         <h5 className="searchBooksTitle">검색결과</h5>
         <hr />
-
         <ItemList>
           {data &&
-            data.map((book, index) => (
-              <BooksItem book={book} key={index} className="searchBooksItem">
-                <div className="booksItemTitle">{book.title}</div>
-                <span>{book.authors?.map((author) => author.name + " ")}</span>
-                <span>{book.publishers?.map((publisher) => publisher.name + " ")}</span>
-                <span>{book.genres?.map((genre) => genre.genre + " ")}</span>
+            data.map((d, i) => (
+              <BooksItem book={d} key={i} className="searchBooksItem">
+                <div className="booksItemTitle">{d.title}</div>
+                <span>{d.authors?.map((author) => author.name + " ")}</span>
+                <span>{d.publishers?.map((publisher) => publisher.name + " ")}</span>
+                <span>{d.genres?.map((genre) => genre.genre + " ")}</span>
               </BooksItem>
             ))}
         </ItemList>
