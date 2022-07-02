@@ -1,9 +1,10 @@
 /**
  * 검색 페이지
  */
-import React, { memo, useState } from "react";
+import React, { memo, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 
 /* Components */
@@ -39,6 +40,13 @@ const SearchContainer = styled.div`
           font-size: 1.125rem;
           font-weight: 700;
         }
+      }
+
+      .searchSelect {
+        width: 100px;
+        padding: 0.8em 0.5em;
+        border: 1px solid #e9e9e9;
+        margin-right: 1rem;
       }
 
       .searchResultBtn {
@@ -96,14 +104,42 @@ const SearchContainer = styled.div`
 `;
 
 const Search = memo(() => {
+  let keyword = useRef(""); //검색어
+  const [selectedSearchType, setSelectedSearchType] = useState("books"); // 선택된 검색타입(책, 유저)
+  const [searchResult, setSearchResult] = useState(null); // 검색결과
+
   const navigate = useNavigate();
+  let timer;
 
-  const [value, setValue] = useState("");
-  const onChange = (e) => setValue(e.target.value);
+  // 검색어 자동완성 이벤트
+  const onChangeKeyword = () => {
+    if (timer) {
+      clearTimeout(timer);
+    }
+    timer = setTimeout(async () => {
+      const res = await axios.get(
+        `http://localhost:3001/api/search?query=${keyword?.current?.value}&type=${selectedSearchType}`
+      );
+      setSearchResult(res.data);
+    });
+  };
 
-  const onSubmit = (e) => {
+  // 검색타입 선택 이벤트
+  const onChangeSelectBox = (e) => {
+    setSelectedSearchType(e.target.value);
+    keyword.current.value = "";
+  };
+
+  // 검색 이벤트
+  const onSearch = async (e) => {
     e.preventDefault();
-    navigate(`/search/books?title=${value}`);
+
+    // 검색어가 있을 경우, 페이지 이동
+    if (keyword.current.value === "") {
+      alert("검색어를 입력하세요");
+    } else {
+      navigate(`/search/${selectedSearchType}?query=${keyword.current.value}&type=${selectedSearchType}`);
+    }
   };
 
   return (
@@ -111,34 +147,43 @@ const Search = memo(() => {
       <div className="searchResult">
         <div className="searchResultBar">
           {/* 검색창 */}
-          <form onSubmit={onSubmit} className="searchForm">
-            <input type="text" value={value} onChange={onChange} />
-            <div className="searchResultBtn">
+          <form onSubmit={onSearch} className="searchForm">
+            <input
+              type="text"
+              ref={keyword}
+              onChange={(e) => {
+                if (e.target.value.length >= 2) {
+                  onChangeKeyword();
+                }
+              }}
+            />
+
+            {/* 검색타입 선택 */}
+            <select onChange={onChangeSelectBox} className="searchSelect">
+              <option value="books">책</option>
+              <option value="users">유저</option>
+            </select>
+
+            {/* 검색버튼 */}
+            <button className="searchResultBtn">
               <FaSearch />
-            </div>
+            </button>
           </form>
         </div>
 
-        <div className="searchResultBooks">
-          <div className="searchResultBooksLeft">
-            <span>책</span>
+        {/* 검색어 자동완성 결과 */}
+        {(searchResult === [] || searchResult) && (
+          <div className="searchResultBooks">
+            <div className="searchResultBooksLeft">
+              <span>검색결과</span>
+            </div>
+            <div className="searchResultBooksRight">
+              {searchResult.map((result, index) => (
+                <SearchResultItem key={index} result={result} />
+              ))}
+            </div>
           </div>
-          <div className="searchResultBooksRight">
-            {/* 검색결과 아이템 하드코딩*/}
-            <SearchResultItem />
-            <SearchResultItem />
-          </div>
-        </div>
-
-        <div className="searchResultUsers">
-          <div className="searchResultUsersLeft">
-            <span>유저</span>
-          </div>
-          <div className="searchResultUsersRight">
-            {/* 검색결과 아이템 하드코딩*/}
-            <SearchResultItem />
-          </div>
-        </div>
+        )}
       </div>
 
       <Outlet />
