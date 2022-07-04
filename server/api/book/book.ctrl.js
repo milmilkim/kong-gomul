@@ -35,7 +35,7 @@ export const getBookList = async (req, res) => {
         [sequelize.literal(avg), 'avg_count'],
         [sequelize.literal(count), 'avg_rating'],
       ],
-      exclude: ['introduce', 'isbn', 'ridi_url', 'published_date'],
+      exclude: ['introduce', 'isbn', 'published_date'],
     },
     include: [
       {
