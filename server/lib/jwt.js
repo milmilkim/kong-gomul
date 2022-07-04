@@ -10,7 +10,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const generateToken = (member) => {
-  const { id, user_id, nickname, profile_image } = member;
+  const { id, user_id, nickname, profile_image, platform } = member;
   return new Promise((resolve, reject) => {
     jwt.sign(
       {
@@ -18,6 +18,7 @@ const generateToken = (member) => {
         user_id,
         nickname,
         profile_image,
+        platform,
       },
       process.env.SECRET,
       {

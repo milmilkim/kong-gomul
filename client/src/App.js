@@ -19,8 +19,9 @@ function App() {
         dispatch(tokenVerify());
       } catch (err) {
         console.log(err);
-        // dispatch(setIsLogin(false));
       }
+    } else {
+      dispatch(setIsLogin(false));
     }
   }, [dispatch]);
 

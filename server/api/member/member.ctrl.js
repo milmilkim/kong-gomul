@@ -13,20 +13,17 @@ const { member } = db;
 */
 
 export const deleteMember = async (req, res) => {
-  const { id } = req.decoded;
+  const { id, platform, user_id } = req.decoded;
 
   try {
-    const deleteMember = await member.destroy({
+    await member.destroy({
       where: {
         id,
       },
     });
-    //db에서 계정 삭제
-
-    const { platform } = deleteMember;
 
     if (platform === 'kakao') {
-      const data = { target_id_type: 'user_id', target_id: 'id' };
+      const data = { target_id_type: 'user_id', target_id: user_id };
 
       await axios({
         method: 'POST',
@@ -41,7 +38,6 @@ export const deleteMember = async (req, res) => {
 
     res.send({
       success: true,
-      member: deleteMember,
     });
   } catch (err) {
     res.status(500).json({

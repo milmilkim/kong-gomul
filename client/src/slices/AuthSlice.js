@@ -7,11 +7,7 @@ import axios from "../config/axios";
 export const tokenVerify = createAsyncThunk("AuthSlice/tokenVerify", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
-    result = await axios.get("api/auth/check", {
-      headers: {
-        "x-access-token": payload || window.localStorage.getItem("accessToken"),
-      },
-    });
+    result = await axios.get("api/auth/check");
   } catch (err) {
     result = rejectWithValue(err.response);
   }
@@ -30,7 +26,9 @@ const AuthSlice = createSlice({
   },
   reducers: {
     setIsLogin: (state, action) => {
-      return { isLogin: action.payload };
+      if (action.payload === false) {
+        return { isLogin: action.payload };
+      }
     },
   },
   extraReducers: {
