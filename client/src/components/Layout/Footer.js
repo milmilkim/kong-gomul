@@ -4,6 +4,8 @@ import styled from "styled-components";
 
 const HeaderContainer = styled.footer`
   font-size: 12px;
+  padding: 15px 0;
+  border-top: 1px solid ${(props) => props.theme.color.borderColor};
 
   strong {
     font-weight: bold;
@@ -24,7 +26,6 @@ const Footer = memo(() => {
   return (
     <HeaderContainer>
       <div className="inner">
-        <hr />
         <div className="flex-row">
           <div>
             <p>

@@ -211,8 +211,6 @@ export const loginWithGoogle = async (req, res) => {
       }
     ); //액세스 토큰을 받아온다
 
-    console.log(googleAccessToken);
-
     const { data: googleUser } = await axios('https://www.googleapis.com/oauth2/v2/userinfo', {
       headers: {
         Authorization: `Bearer ${googleAccessToken}`,
@@ -226,7 +224,11 @@ export const loginWithGoogle = async (req, res) => {
       },
     });
 
+    let accessToken = null;
+    let refreshToken = null;
+
     if (existingMember === null) {
+      //유저가 존재하지 않으면
       const newMember = await member.create({
         user_id: googleUser.id,
         nickname: googleUser.name,
@@ -235,18 +237,18 @@ export const loginWithGoogle = async (req, res) => {
         platform: 'google',
       });
 
-      const accessToken = await generateToken(newMember);
-      res.json({
-        success: true,
-        accessToken,
-      });
+      accessToken = await generateToken(newMember);
+      refreshToken = await generateRefreshToken(newMember);
     } else {
-      const accessToken = await generateToken(existingMember);
-      res.json({
-        success: true,
-        accessToken,
-      });
+      accessToken = await generateToken(existingMember);
+      refreshToken = await generateRefreshToken(existingMember);
     }
+
+    res.json({
+      success: true,
+      accessToken,
+      refreshToken,
+    });
   } catch (err) {
     res.status(403).json({
       message: err.message,

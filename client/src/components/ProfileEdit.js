@@ -6,7 +6,7 @@ import { useState } from "react";
 
 import styled from "styled-components";
 
-import { useNavigate } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import { useDispatch } from "react-redux";
 import { setIsLogin } from "../slices/AuthSlice";
@@ -39,7 +39,9 @@ const ProfileEdit = ({ isOpen, setIsOpen }) => {
         <input type="text" placeholder="한마디 수정" />
         <label for="profile-open">프로필 공개</label>
         <input type="checkbox" id="profile-open" />
-        <button>탈퇴</button>
+        <Link to="/withdrawal">
+          <button>탈퇴</button>
+        </Link>
         <button>저장</button>
       </form>
       <button onClick={logout}>로그아웃</button>
