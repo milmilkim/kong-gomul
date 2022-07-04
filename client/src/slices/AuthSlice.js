@@ -26,7 +26,9 @@ const AuthSlice = createSlice({
   },
   reducers: {
     setIsLogin: (state, action) => {
-      return { isLogin: action.payload };
+      if (action.payload === false) {
+        return { isLogin: action.payload };
+      }
     },
   },
   extraReducers: {

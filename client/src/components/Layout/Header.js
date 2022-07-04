@@ -13,7 +13,9 @@ import Login from "../Login";
 import { useSelector } from "react-redux";
 
 const HeaderContainer = styled.header`
-  padding-top: 15px;
+  padding: 15px 0;
+  border-bottom: 1px solid ${(props) => props.theme.color.borderColor};
+  margin-bottom: 10px;
 
   .flex-row {
     justify-content: space-between;
@@ -29,9 +31,19 @@ const HeaderContainer = styled.header`
   }
 
   .nav-menu {
-    .profile_image img {
-      border-radius: 30px;
+    .login-info {
+      .profile_image img {
+        border-radius: 30px;
+      }
+
+      li.join {
+        border-radius: 5px;
+        border: 1px solid #a2a2a2;
+        padding: 10px;
+        font-weight: bold;
+      }
     }
+
     &:first-of-type {
       font-size: 14px;
       font-weight: bold;
@@ -97,18 +109,17 @@ const Header = memo(() => {
           <Search />
 
           <nav className="nav-menu">
-            <ul>
+            <ul className="login-info">
               {isLogin ? (
                 <Link to="/mypage">
                   <li className="profile_image">
                     <img src={info.profile_image || profileImage} alt={info.nickname} width="35" />
-                    {info.nickname}
                   </li>
                 </Link>
               ) : (
                 <>
                   <li onClick={handleButton}>로그인</li>{" "}
-                  <li>
+                  <li className="join">
                     <Link to="/join" noreferrer="">
                       회원가입
                     </Link>
@@ -119,7 +130,6 @@ const Header = memo(() => {
             </ul>
           </nav>
         </div>
-        <hr />
       </div>
     </HeaderContainer>
   );
