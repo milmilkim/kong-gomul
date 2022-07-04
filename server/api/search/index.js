@@ -1,8 +1,10 @@
 import express from 'express';
-import { getSearchResult } from './search.ctrl.js';
+import { getAutoSearchResult, getSearchResult } from './search.ctrl.js';
 
 const router = express.Router();
 
-router.get('/', getSearchResult);
+router.get('/', getAutoSearchResult);
+router.get('/books', getSearchResult);
+router.get('/users', getSearchResult);
 
 export default router;
