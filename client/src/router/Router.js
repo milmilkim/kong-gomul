@@ -48,7 +48,7 @@ const Router = () => {
           {/*회원 가입 */}
           <Route path="/join" element={<Join />} />
           {/*회원 탈퇴 */}
-          <Route path="/widthdrawal" element={<Withdrawal />} />
+          <Route path="/withdrawal" element={<Withdrawal />} />
 
           {/*프로필 페이지 */}
           <Route path="/mypage" element={<MyPage />} />
