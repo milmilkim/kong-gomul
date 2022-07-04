@@ -17,20 +17,25 @@ const SearchResultItemcontainer = styled.div`
       border-radius: 5px;
       margin-right: 1rem;
       overflow: hidden;
+
+      img {
+        display: block;
+        width: 100%;
+      }
     }
   }
 `;
 
-const SearchResultItem = () => {
+const SearchResultItem = ({ result }) => {
   return (
     <SearchResultItemcontainer>
-      <a href="/">
+      <a href={result?.ridi_url || "/"}>
         <div className="searchResultItems">
           <div className="searchItemImage">
-            <img src="https://via.placeholder.com/75x100" alt="placeholder" />
+            <img src={result?.thumbnail || result?.profile_image} alt={result?.title || result?.nickname} />
           </div>
           <div className="searchItemInfo">
-            <h5 className="searchItemInfoTitle">lorem</h5>
+            <h5 className="searchItemInfoTitle">{result?.title || result?.nickname}</h5>
           </div>
         </div>
       </a>

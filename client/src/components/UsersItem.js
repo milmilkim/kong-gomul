@@ -49,23 +49,25 @@ const UsersItemContainer = styled.li`
   }
 `;
 
-const UsersItem = ({ children }) => {
+const UsersItem = ({ user }) => {
   return (
-    <UsersItemContainer>
-      <Link to="/">
-        <div className="usersItemInner">
-          <div className="userImage">
-            <img src="https://via.placeholder.com/75" alt="placeholder" />
+    user && (
+      <UsersItemContainer>
+        <Link to="/">
+          <div className="usersItemInner">
+            <div className="userImage">
+              <img src={user.profile_image} alt={user.nickname} />
+            </div>
+            <div className="userInfo">
+              <h5 className="userInfoTitle">{user.nickname}</h5>
+              <p>
+                평가 <span>{user?.reviews?.length}</span>
+              </p>
+            </div>
           </div>
-          <div className="userInfo">
-            <h5 className="userInfoTitle">lorem</h5>
-            <p>
-              평가 <span>999</span>
-            </p>
-          </div>
-        </div>
-      </Link>
-    </UsersItemContainer>
+        </Link>
+      </UsersItemContainer>
+    )
   );
 };
 
