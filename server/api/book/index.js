@@ -7,5 +7,4 @@ router.get('/', getBookList);
 router.get('/:id', getBook);
 router.post('/', addBook);
 router.delete('/:id', deleteBook);
-
 export default router;
