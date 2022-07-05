@@ -1,19 +1,31 @@
 import { db, sequelize } from '../../models/index.js';
-
+import { Op } from 'sequelize';
 const { book, author, genre, keyword, publisher, review, member } = db;
 
 const avg = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\`)`;
 const count = `(SELECT AVG(rating) FROM review WHERE book_id = \`book\`.\`id\`)`;
 
 export const getBookList = async (req, res) => {
-  const where = {};
   const page = parseInt(req.query.page) || 1;
   const size = parseInt(req.query.size) || 10;
 
-  const { category, id, sort } = req.query;
+  const { category, id, sort, genre: _genre } = req.query;
 
-  category && (where.category = category);
-  id && (where.id = id.split('+'));
+  const category_attr = {};
+
+  const where = {
+    category: category_attr,
+  };
+
+  if (category) {
+    category_attr[Op.eq] = category;
+  } else {
+    category_attr[Op.not] = null;
+  }
+
+  if (id) {
+    where.id = id.split('+');
+  }
 
   let order;
 
@@ -25,10 +37,13 @@ export const getBookList = async (req, res) => {
     order = [['id', 'ASC']];
   }
 
+  let duplicating = true;
+  if (_genre) {
+    where['$genres.genre$'] = _genre;
+    duplicating = false;
+  }
+
   const books = await book.findAll({
-    subQuery: false,
-    offset: (page - 1) * size,
-    limit: size,
     where,
     attributes: {
       include: [
@@ -42,24 +57,29 @@ export const getBookList = async (req, res) => {
         model: author,
         as: 'authors',
         attributes: ['name'],
+        separate: true,
       },
       {
         model: publisher,
         as: 'publishers',
         attributes: ['name'],
+        separate: true,
       },
       // {
       //   model: keyword,
       //   as: 'keywords',
       //   attributes: ['keyword'],
       // },
-      // {
-      //   model: genre,
-      //   as: 'genres',
-      //   attributes: ['genre'],
-      // },
+      {
+        model: genre,
+        as: 'genres',
+        attributes: ['genre'],
+        duplicating,
+      },
     ],
-    order: [order, ['authors', 'id', 'ASC']],
+    order: [order],
+    offset: (page - 1) * size,
+    limit: size,
   });
   res.send(books);
 };
