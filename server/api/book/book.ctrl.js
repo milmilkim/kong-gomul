@@ -117,6 +117,35 @@ export const getBook = async (req, res) => {
   res.send({ book_info: bookInfo });
 };
 
+/* 책 아이디로 리뷰 불러오기 */
+
+export const getBookReview = async (req, res) => {
+  const bookId = req.params.id;
+  const page = req.params.page || 1;
+  const size = req.params.size || 10;
+
+  try {
+    const reviews = await review.findAll({
+      where: {
+        book_id: bookId,
+      },
+      limit: size,
+      offset: (size - 1) * page,
+      include: [
+        {
+          model: member,
+          as: 'member',
+          attributes: ['nickname', 'id', 'profile_image'],
+        },
+      ],
+    });
+
+    res.send(reviews);
+  } catch (err) {
+    res.status(403).json({ message: err.message });
+  }
+};
+
 /*여러 책 한번에 추가*/
 export const addBook = async (req, res) => {
   const data = req.body || null;
