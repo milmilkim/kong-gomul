@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useRef } from "react";
+import { FaTimes } from "react-icons/fa";
 
 const ModalContainer = styled.div`
   background-color: rgba(0, 0, 0, 0.5);
@@ -22,8 +23,18 @@ const ModalContainer = styled.div`
     padding: 30px;
     border-radius: 10px;
 
+    .top {
+      width: 100%;
+      text-align: right;
+      font-size: 1.5rem;
+      top: 0;
+      right: 0;
+      cursor: pointer;
+    }
+
     h1 {
       font-size: 24px;
+      margin-bottom: 10px;
     }
 
     input {
@@ -36,17 +47,17 @@ const ModalContainer = styled.div`
 
     button {
       width: 100%;
-      background-color: #1ed760;
+      background-color: ${(props) => props.theme.color.primaryColor};
       border: none;
       padding: 10px;
       margin-top: 10px;
       color: #fff;
-      color: pointer;
+      cursor: pointer;
     }
   }
 `;
 
-const Modal = ({ children, isOpen, setIsOpen, width, height }) => {
+const Modal = ({ children, isOpen, setIsOpen, width, height, closeButton }) => {
   const ref = useRef();
 
   const closeModal = (e) => {
@@ -61,6 +72,16 @@ const Modal = ({ children, isOpen, setIsOpen, width, height }) => {
       {isOpen && (
         <ModalContainer width={width} height={height} onClick={closeModal}>
           <div className="modal" ref={ref}>
+            {closeButton && (
+              <div className="top">
+                <FaTimes
+                  onClick={() => {
+                    setIsOpen(false);
+                  }}
+                />
+              </div>
+            )}
+
             {children}
           </div>
         </ModalContainer>
@@ -72,6 +93,7 @@ const Modal = ({ children, isOpen, setIsOpen, width, height }) => {
 Modal.defaultProps = {
   width: 300,
   height: 500,
+  closeButton: true,
 };
 
 export default Modal;
