@@ -86,7 +86,6 @@ export const getBookList = async (req, res) => {
 
 export const getBook = async (req, res) => {
   const { id } = req.params;
-
   const bookInfo = await book.findOne({
     where: { id },
     attributes: {
@@ -137,20 +136,25 @@ export const getBook = async (req, res) => {
   res.send({ book_info: bookInfo });
 };
 
-/* 책 아이디로 리뷰 불러오기 */
+/**
+ * GET
+ * api/book/review/:id
+ * */
 
 export const getBookReview = async (req, res) => {
   const bookId = req.params.id;
   const page = req.params.page || 1;
   const size = req.params.size || 10;
+  const sort = req.params.sort || 'id';
 
   try {
     const reviews = await review.findAll({
+      limit: size,
+      offset: (page - 1) * size,
+      order: [[sort, 'desc']],
       where: {
         book_id: bookId,
       },
-      limit: size,
-      offset: (size - 1) * page,
       include: [
         {
           model: member,

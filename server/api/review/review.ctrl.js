@@ -1,6 +1,6 @@
-import { db } from "../../models/index.js";
+import { db } from '../../models/index.js';
 
-const { review } = db;
+const { review, member } = db;
 
 /**
  *  모든 리뷰 가져오기
@@ -10,10 +10,17 @@ export const getReviewList = async (req, res) => {
   try {
     const size = parseInt(req.query.size) || 5; // 한 페이지당 보여줄 리뷰 수
     const page = parseInt(req.query.page) || 1; // 페이지 수
-    const order  =  req.query.order || 'rating';
-    
+    const order = req.query.order || 'rating';
+
     const result = await review.findAll({
-      order: [[order, "DESC"]], // 별점순, 최신순 정렬
+      order: [[order, 'DESC']], // 별점순, 최신순 정렬
+      include: [
+        {
+          model: member,
+          as: 'member',
+          attributes: ['nickname', 'id', 'profile_image'],
+        },
+      ],
       limit: size,
       offset: size * (page - 1),
     });
@@ -32,6 +39,13 @@ export const getReview = async (req, res) => {
   try {
     const result = await review.findAll({
       where: { id: req.params.id },
+      include: [
+        {
+          model: member,
+          as: 'member',
+          attributes: ['nickname', 'id', 'profile_image'],
+        },
+      ],
     });
 
     res.send(result);
