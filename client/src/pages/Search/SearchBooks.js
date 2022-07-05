@@ -1,9 +1,12 @@
 /**
  * 책 검색결과 페이지
  */
-import axios from "axios";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import styled from "styled-components";
+
+/* Slice */
+import { getSearchResult } from "../../slices/SearchSlice";
 
 /* Components */
 import BooksItem from "../../components/BooksItem";
@@ -27,39 +30,28 @@ const SearchBooksContainer = styled.div`
 `;
 
 const SearchBooks = memo(() => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => state.search); // 검색결과, 로딩여부
 
   // Search 페이지에서 입력한 input 값
   const qs = useQueryString();
   const { query, type } = qs;
 
-  // 검색결과 리스트 가져오기
-  const getBookList = useCallback(async () => {
-    try {
-      const res = await axios.get(`http://localhost:3001/api/search/books?query=${query}&type=${type}`);
-      setData(res.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // ajax 로딩 종료
-      setIsLoading(false);
-    }
-  }, [query, type]);
-
   // 페이지가 열렸을 때,
   useEffect(() => {
-    // 로딩 시작을 하고
-    setIsLoading(true);
-
     // axios 요청을 한다.
-    getBookList();
-  }, [getBookList]);
+    dispatch(
+      getSearchResult({
+        query: query,
+        type: type,
+      })
+    );
+  }, [dispatch, query, type]);
 
   return (
     <>
       {/* Spinner */}
-      <Spinner visible={isLoading} />
+      <Spinner visible={loading} />
 
       <SearchBooksContainer>
         <h5 className="searchBooksTitle">검색결과</h5>

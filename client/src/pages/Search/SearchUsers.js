@@ -1,12 +1,15 @@
 /**
  * 유저 검색결과 페이지
  */
-import axios from "axios";
-import React, { memo, useCallback, useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import Spinner from "../../components/spinner";
+
+/* Slice */
+import { getSearchResult } from "../../slices/SearchSlice";
 
 /* Components */
+import Spinner from "../../components/spinner";
 import UserItem from "../../components/UsersItem";
 import { useQueryString } from "../../hooks/useQueryString";
 
@@ -30,39 +33,28 @@ const SearchUsersContainer = styled.div`
 `;
 
 const SearchUsers = memo(() => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => state.search); // 검색결과, 로딩여부
 
   // Search 페이지에서 입력한 input 값
   const qs = useQueryString();
   const { query, type } = qs;
 
-  // 유저 리스트 가져오기
-  const getUserList = useCallback(async () => {
-    try {
-      const res = await axios.get(`http://localhost:3001/api/search/users?query=${query}&type=${type}`);
-      setData(res.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // ajax 로딩 종료
-      setIsLoading(false);
-    }
-  }, [query, type]);
-
   // 페이지가 열렸을 때,
   useEffect(() => {
-    // 로딩 시작을 하고
-    setIsLoading(true);
-
     // axios 요청을 한다.
-    getUserList();
-  }, [getUserList]);
+    dispatch(
+      getSearchResult({
+        query: query,
+        type: type,
+      })
+    );
+  }, [dispatch, query, type]);
 
   return (
     <>
       {/* Spinner */}
-      <Spinner visible={isLoading} />
+      <Spinner visible={loading} />
 
       <SearchUsersContainer>
         <h5 className="searchUsersTitle">검색결과</h5>
