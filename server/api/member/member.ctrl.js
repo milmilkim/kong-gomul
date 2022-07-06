@@ -29,6 +29,10 @@ export const updateMember = async (req, res) => {
       regexHelper.maxLength(info.nickname, 20, '닉네임은 20자까지 입력할 수 있습니다');
     }
 
+    if (info.hasOwnProperty('introduce')) {
+      regexHelper.maxLength(info.introduce, 240, '자기소개는 240자 까지만 입력 할 수 있습니다');
+    }
+
     if (info.hasOwnProperty('gender')) {
       //성별 유효성 검사
       regexHelper.gender(info.gender, '성별을 확인하세요');
