@@ -74,7 +74,7 @@ class RegexHelper {
   gender(field, msg) {
     const content = field;
 
-    if (field !== 'F' && field !== 'M') {
+    if (content !== 'F' && field !== 'M') {
       throw new BadRequestException(msg, field);
     }
   }

@@ -2,6 +2,7 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import { sequelize } from './models/index.js';
 
@@ -21,6 +22,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cookieParser());
 // sequelize
 //   .sync({ force: false }) //true면 서버 실행마다 테이블 재생성
 //   .then(() => {
@@ -31,7 +33,7 @@ app.use(
 //   });
 
 app.get('/', (req, res) => {
-  res.json('hello world!');
+  res.json('hello world');
 });
 
 app.use('/api', api);
