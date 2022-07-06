@@ -8,6 +8,11 @@ import { tokenVerify } from "../slices/AuthSlice";
 
 import Spinner from "./spinner";
 
+import styled from "styled-components";
+
+import kakaoLogo from "../assets/img/kakao-logo.png";
+import googleLogo from "../assets/img/google-logo.png";
+
 /* 소셜로그인 ==================================================== */
 
 /* 카카오 */
@@ -24,6 +29,82 @@ const GOOGLE_REDIRECT_URI = process.env.REACT_APP_GOOGLE_REDIRECT_URI + "?platfo
 const GOOGLE_AUTH_URI = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${GOOGLE_CLIENT_ID}&redirect_uri=${GOOGLE_REDIRECT_URI}&response_type=code&scope=https://www.googleapis.com/auth/userinfo.email+https://www.googleapis.com/auth/userinfo.profile`;
 
 /*=============================================================== */
+
+const LoginContainer = styled.div`
+  .inquiry {
+    margin: 20px 0 20px 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+
+    & div {
+      margin: 5px 0;
+      cursor: pointer;
+
+      &:hover {
+        color: ${(props) => props.theme.color.primaryColor};
+      }
+    }
+  }
+`;
+const StyledSocialLogin = styled.div`
+  width: 100%;
+  position: relative;
+
+  hr {
+    border: none;
+
+    &::before {
+      width: 100%;
+      height: 1px;
+      content: " ";
+      position: absolute;
+      border-bottom: 1px solid ${(props) => props.theme.color.borderColor};
+      top: 5px;
+    }
+    &::after {
+      content: "OR";
+      text-align: center;
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      padding: 0 10px;
+      width: 20px;
+      background-color: #fff;
+    }
+  }
+
+  .social-icons {
+    margin-top: 30px;
+    display: flex;
+    justify-content: space-around;
+
+    .item {
+      text-indent: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+
+      width: 50px;
+      height: 50px;
+      background-position: center;
+      background-size: 50%;
+      background-repeat: no-repeat;
+      border-radius: 50%;
+      border: 1px solid ${(props) => props.theme.color.borderColor};
+
+      &.kakao {
+        background-image: url(${kakaoLogo});
+        background-color: #fee500;
+      }
+
+      &.google {
+        background-image: url(${googleLogo});
+        background-color: #fff;
+      }
+    }
+  }
+`;
 
 const Login = ({ isOpen, setIsOpen }) => {
   const [isOpen2, setIsOpen2] = useState(false);
@@ -72,29 +153,44 @@ const Login = ({ isOpen, setIsOpen }) => {
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true}>
       <Spinner visible={isLoading} />
 
-      <h1>로그인</h1>
-      <form onSubmit={handleSubmit} onChange={handleChange}>
-        <input type="text" name="user_id" placeholder="아이디"></input>
-        <input type="password" name="password" placeholder="비밀번호"></input>
-        <button type="submit">로그인</button>
-      </form>
-      <p
-        onClick={() => {
-          setIsOpen2((isOpen2) => !isOpen2);
-        }}
-      >
-        아이디 찾기
-      </p>
-      <p
-        onClick={() => {
-          setIsOpen3((isOpen3) => !isOpen3);
-        }}
-      >
-        비밀번호 재설정
-      </p>
-      <hr />
-      <a href={KAKAO_AUTH_URI}>카카오톡으로 로그인</a>
-      <a href={GOOGLE_AUTH_URI}>구글로 로그인</a>
+      <LoginContainer>
+        <h1>로그인</h1>
+        <form onSubmit={handleSubmit} onChange={handleChange}>
+          <input type="text" name="user_id" placeholder="아이디"></input>
+          <input type="password" name="password" placeholder="비밀번호"></input>
+          <button type="submit">로그인</button>
+        </form>
+
+        <div className="inquiry">
+          <div
+            onClick={() => {
+              setIsOpen2((isOpen2) => !isOpen2);
+            }}
+          >
+            아이디 찾기
+          </div>
+          <div
+            onClick={() => {
+              setIsOpen3((isOpen3) => !isOpen3);
+            }}
+          >
+            비밀번호 재설정
+          </div>
+        </div>
+
+        <StyledSocialLogin>
+          <hr />
+          <div className="social-icons">
+            <a href={KAKAO_AUTH_URI}>
+              <div className="item kakao">카카오로 로그인</div>
+            </a>
+            <a href={GOOGLE_AUTH_URI}>
+              <div className="item google">구글로 로그인</div>
+            </a>
+          </div>
+        </StyledSocialLogin>
+      </LoginContainer>
+
       <Modal isOpen={isOpen2} setIsOpen={setIsOpen2} width={300} height={300}>
         <h1>아이디 찾기</h1>
         <input type="text"></input>

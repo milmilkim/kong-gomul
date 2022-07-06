@@ -1,19 +1,31 @@
 import { db, sequelize } from '../../models/index.js';
-
+import { Op } from 'sequelize';
 const { book, author, genre, keyword, publisher, review, member } = db;
 
 const avg = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\`)`;
 const count = `(SELECT AVG(rating) FROM review WHERE book_id = \`book\`.\`id\`)`;
 
 export const getBookList = async (req, res) => {
-  const where = {};
   const page = parseInt(req.query.page) || 1;
   const size = parseInt(req.query.size) || 10;
 
-  const { category, id, sort } = req.query;
+  const { category, id, sort, genre: _genre } = req.query;
 
-  category && (where.category = category);
-  id && (where.id = id.split('+'));
+  const category_attr = {};
+
+  const where = {
+    category: category_attr,
+  };
+
+  if (category) {
+    category_attr[Op.eq] = category;
+  } else {
+    category_attr[Op.not] = null;
+  }
+
+  if (id) {
+    where.id = id.split('+');
+  }
 
   let order;
 
@@ -25,10 +37,13 @@ export const getBookList = async (req, res) => {
     order = [['id', 'ASC']];
   }
 
+  let duplicating = true;
+  if (_genre) {
+    where['$genres.genre$'] = _genre;
+    duplicating = false;
+  }
+
   const books = await book.findAll({
-    subQuery: false,
-    offset: (page - 1) * size,
-    limit: size,
     where,
     attributes: {
       include: [
@@ -42,24 +57,29 @@ export const getBookList = async (req, res) => {
         model: author,
         as: 'authors',
         attributes: ['name'],
+        separate: true,
       },
       {
         model: publisher,
         as: 'publishers',
         attributes: ['name'],
+        separate: true,
       },
       // {
       //   model: keyword,
       //   as: 'keywords',
       //   attributes: ['keyword'],
       // },
-      // {
-      //   model: genre,
-      //   as: 'genres',
-      //   attributes: ['genre'],
-      // },
+      {
+        model: genre,
+        as: 'genres',
+        attributes: ['genre'],
+        duplicating,
+      },
     ],
-    order: [order, ['authors', 'id', 'ASC']],
+    order: [order],
+    offset: (page - 1) * size,
+    limit: size,
   });
   res.send(books);
 };
@@ -67,6 +87,18 @@ export const getBookList = async (req, res) => {
 export const getBook = async (req, res) => {
   const { id } = req.params;
 
+  //쿠키에 최근 조회한 책 아이디 추가
+  if (req.cookies.book_id) {
+    let book_id = req.cookies.book_id.split('+');
+
+    if (book_id.indexOf(id) === -1 && book_id.length < 21) {
+      book_id.unshift(id);
+      console.log(book_id.join('+'));
+      res.cookie('book_id', book_id.join('+'), { maxAge: 604800000 });
+    }
+  } else {
+    res.cookie('book_id', id, { maxAge: 604800000 });
+  }
   const bookInfo = await book.findOne({
     where: { id },
     attributes: {
@@ -114,7 +146,44 @@ export const getBook = async (req, res) => {
     order: [['authors', 'id', 'ASC']],
   });
 
+  //   res.res.cookie('id', 'value', {
+  //     maxAge:10000
+  //  });
   res.send({ book_info: bookInfo });
+};
+
+/**
+ * GET
+ * api/book/review/:id
+ * */
+
+export const getBookReview = async (req, res) => {
+  const bookId = req.params.id;
+  const page = req.params.page || 1;
+  const size = req.params.size || 10;
+  const sort = req.params.sort || 'id';
+
+  try {
+    const reviews = await review.findAll({
+      limit: size,
+      offset: (page - 1) * size,
+      order: [[sort, 'desc']],
+      where: {
+        book_id: bookId,
+      },
+      include: [
+        {
+          model: member,
+          as: 'member',
+          attributes: ['nickname', 'id', 'profile_image'],
+        },
+      ],
+    });
+
+    res.send(reviews);
+  } catch (err) {
+    res.status(403).json({ message: err.message });
+  }
 };
 
 /*여러 책 한번에 추가*/
