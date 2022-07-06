@@ -6,6 +6,7 @@ import bodyParser from 'body-parser';
 import { sequelize } from './models/index.js';
 
 import api from './api/index.js';
+import BadRequestException from './lib/BadRequestException.js';
 
 const app = express();
 
@@ -35,13 +36,19 @@ app.get('/', (req, res) => {
 
 app.use('/api', api);
 
-app.use((req, res, next) => {
-  res.status(404).json('Not Found');
+app.use((err, req, res, next) => {
+  //에러 처리
+
+  if (err instanceof BadRequestException) {
+    res.status(400);
+    res.json({ message: err.message });
+  } else {
+    res.status(500).json(err.message);
+  }
 });
 
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json(err.message);
+app.use((req, res, next) => {
+  res.status(404).json('Not Found');
 });
 
 app.listen(app.get('port'), () => {
