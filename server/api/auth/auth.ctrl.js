@@ -36,7 +36,7 @@ export const join = async (req, res, next) => {
     regexHelper.value(email, '이메일을 입력하세요');
     regexHelper.email(email, '이메일 형식이 잘못되었습니다');
     regexHelper.id(user_id, '아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)로만 입력할 수 있습니다');
-    regexHelper.password(password, '비밀번는 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다');
+    regexHelper.password(password, '비밀번호는 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다');
 
     //선택 입력
 
