@@ -28,7 +28,7 @@ export default function Withdrawal() {
     } finally {
       setIsLoading(false);
     }
-  }, []);
+  }, [dispatch, navigate]);
 
   if (completed === "true") {
     return (
