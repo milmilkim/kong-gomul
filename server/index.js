@@ -2,10 +2,12 @@ import express from 'express';
 import dotenv from 'dotenv';
 import cors from 'cors';
 import bodyParser from 'body-parser';
+import cookieParser from 'cookie-parser';
 
 import { sequelize } from './models/index.js';
 
 import api from './api/index.js';
+import BadRequestException from './lib/BadRequestException.js';
 
 const app = express();
 
@@ -20,6 +22,7 @@ app.use(
     extended: true,
   })
 );
+app.use(cookieParser());
 // sequelize
 //   .sync({ force: false }) //true면 서버 실행마다 테이블 재생성
 //   .then(() => {
@@ -30,18 +33,24 @@ app.use(
 //   });
 
 app.get('/', (req, res) => {
-  res.json('hello world!');
+  res.json('hello world');
 });
 
 app.use('/api', api);
 
-app.use((req, res, next) => {
-  res.status(404).json('Not Found');
+app.use((err, req, res, next) => {
+  //에러 처리
+
+  if (err instanceof BadRequestException) {
+    res.status(400);
+    res.json({ message: err.message });
+  } else {
+    res.status(500).json(err.message);
+  }
 });
 
-app.use((err, req, res, next) => {
-  console.error(err);
-  res.status(500).json(err.message);
+app.use((req, res, next) => {
+  res.status(404).json('Not Found');
 });
 
 app.listen(app.get('port'), () => {

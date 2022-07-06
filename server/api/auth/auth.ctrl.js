@@ -2,8 +2,12 @@ import { db } from '../../models/index.js';
 import encrypt from '../../lib/encrypt.js';
 import { generateRefreshToken, generateToken } from '../../lib/jwt.js';
 
+import regexHelper from '../../lib/RegexHelper.js';
+
 import dotenv from 'dotenv';
 import axios from 'axios';
+
+import { createNickname } from '../../config/nickname.js';
 
 dotenv.config();
 
@@ -20,8 +24,27 @@ const { member } = db;
         gender,
     }
 */
-export const join = async (req, res) => {
+export const join = async (req, res, next) => {
   const newMember = req.body;
+
+  //유효성 검사
+  const { user_id, password, email, birth_year, gender } = newMember;
+
+  try {
+    regexHelper.value(user_id, 'id를 입력하세요');
+    regexHelper.value(password, '비밀번호를 입력하세요');
+    regexHelper.value(email, '이메일을 입력하세요');
+    regexHelper.email(email, '이메일 형식이 잘못되었습니다');
+    regexHelper.id(user_id, '아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)로만 입력할 수 있습니다');
+    regexHelper.password(password, '비밀번호는 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다');
+
+    //선택 입력
+
+    birth_year && regexHelper.birthYear(birth_year, '출생연도가 잘못되었습니다');
+    gender && regexHelper.gender(gender, '성별을 확인하세요');
+  } catch (err) {
+    next(err);
+  }
 
   let existingMember = null;
   try {
@@ -34,13 +57,15 @@ export const join = async (req, res) => {
     if (existingMember !== null) {
       throw new Error('이미 존재하는 아이디입니다');
     }
-    await member.create({
+    newMember.nickname = createNickname(); //랜덤 닉네임 생성해서 newMember 객체에 추가
+    const _member = await member.create({
       ...newMember,
       password: encrypt(newMember.password),
       platform: 'local',
     });
     res.json({
       message: 'ok',
+      member: _member,
     });
   } catch (err) {
     res.status(403).json({
