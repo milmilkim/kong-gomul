@@ -78,6 +78,6 @@ export const getRecents = async (req, res) => {
       res.status(403).json({ message: err.message });
     }
   } else {
-    res.send({});
+    res.send([]);
   }
 };
