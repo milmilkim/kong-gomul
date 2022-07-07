@@ -6,6 +6,8 @@ const axios = Axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
 
+axios.defaults.withCredentials = true;
+
 axios.interceptors.request.use(
   (request) => {
     request.headers["x-access-token"] = accessToken;
