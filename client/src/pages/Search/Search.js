@@ -3,11 +3,15 @@
  */
 import React, { memo, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
+import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
-import axios from "axios";
 import { FaSearch } from "react-icons/fa";
 
+/* Slice */
+import { getSearchResult } from "../../slices/SearchSlice";
+
 /* Components */
+import Spinner from "../../components/spinner";
 import SearchResultItem from "../../components/SearchResultItem";
 
 /* Styled Components */
@@ -104,9 +108,10 @@ const SearchContainer = styled.div`
 `;
 
 const Search = memo(() => {
-  let keyword = useRef(""); //검색어
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => state.search); // 검색결과, 로딩여부
+  let keyword = useRef(""); // 검색어
   const [selectedSearchType, setSelectedSearchType] = useState("books"); // 선택된 검색타입(책, 유저)
-  const [searchResult, setSearchResult] = useState(null); // 검색결과
 
   const navigate = useNavigate();
   let timer;
@@ -117,10 +122,12 @@ const Search = memo(() => {
       clearTimeout(timer);
     }
     timer = setTimeout(async () => {
-      const res = await axios.get(
-        `http://localhost:3001/api/search?query=${keyword?.current?.value}&type=${selectedSearchType}`
+      dispatch(
+        getSearchResult({
+          query: keyword?.current?.value,
+          type: selectedSearchType,
+        })
       );
-      setSearchResult(res.data);
     });
   };
 
@@ -143,50 +150,53 @@ const Search = memo(() => {
   };
 
   return (
-    <SearchContainer>
-      <div className="searchResult">
-        <div className="searchResultBar">
-          {/* 검색창 */}
-          <form onSubmit={onSearch} className="searchForm">
-            <input
-              type="text"
-              ref={keyword}
-              onChange={(e) => {
-                if (e.target.value.length >= 2) {
-                  onChangeKeyword();
-                }
-              }}
-            />
+    <>
+      <Spinner visible={loading} />
+      <SearchContainer>
+        <div className="searchResult">
+          <div className="searchResultBar">
+            {/* 검색창 */}
+            <form onSubmit={onSearch} className="searchForm">
+              <input
+                type="text"
+                ref={keyword}
+                onChange={(e) => {
+                  if (e.target.value.length >= 2) {
+                    onChangeKeyword();
+                  }
+                }}
+              />
 
-            {/* 검색타입 선택 */}
-            <select onChange={onChangeSelectBox} className="searchSelect">
-              <option value="books">책</option>
-              <option value="users">유저</option>
-            </select>
+              {/* 검색타입 선택 */}
+              <select onChange={onChangeSelectBox} className="searchSelect">
+                <option value="books">책</option>
+                <option value="users">유저</option>
+              </select>
 
-            {/* 검색버튼 */}
-            <button className="searchResultBtn">
-              <FaSearch />
-            </button>
-          </form>
-        </div>
-
-        {/* 검색어 자동완성 결과 */}
-        {(searchResult === [] || searchResult) && (
-          <div className="searchResultBooks">
-            <div className="searchResultBooksLeft">
-              <span>검색결과</span>
-            </div>
-            <div className="searchResultBooksRight">
-              {searchResult.map((result, index) => (
-                <SearchResultItem key={index} result={result} />
-              ))}
-            </div>
+              {/* 검색버튼 */}
+              <button className="searchResultBtn">
+                <FaSearch />
+              </button>
+            </form>
           </div>
-        )}
-      </div>
-      <Outlet />
-    </SearchContainer>
+
+          {/* 검색어 자동완성 결과 */}
+          {data && (
+            <div className="searchResultBooks">
+              <div className="searchResultBooksLeft">
+                <span>검색결과</span>
+              </div>
+              <div className="searchResultBooksRight">
+                {data.map((result, index) => (
+                  <SearchResultItem key={index} result={result} />
+                ))}
+              </div>
+            </div>
+          )}
+        </div>
+        <Outlet />
+      </SearchContainer>
+    </>
   );
 });
 
