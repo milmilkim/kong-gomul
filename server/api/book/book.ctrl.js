@@ -1,6 +1,6 @@
 import { db, sequelize } from '../../models/index.js';
-import { Op } from 'sequelize';
-const { book, author, genre, keyword, publisher, review, member } = db;
+import { Op, Sequelize } from 'sequelize';
+const { book, author, genre, keyword, publisher, review, member, wish } = db;
 
 const avg = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\`)`;
 const count = `(SELECT AVG(rating) FROM review WHERE book_id = \`book\`.\`id\`)`;
@@ -106,11 +106,12 @@ export const getBook = async (req, res) => {
     res.cookie('book_id', id, { maxAge: 604800000 }); //7d
   }
   const bookInfo = await book.findOne({
+    subQuery: false,
     where: { id },
     attributes: {
       include: [
-        [sequelize.literal(avg), 'avg_count'],
-        [sequelize.literal(count), 'avg_rating'],
+        [sequelize.literal(avg), 'avg_rating'],
+        [sequelize.literal(count), 'count_rating'],
       ],
     },
     include: [
@@ -118,25 +119,30 @@ export const getBook = async (req, res) => {
         model: author,
         as: 'authors',
         attributes: ['name'],
+        separate: true,
       },
       {
         model: publisher,
         as: 'publishers',
         attributes: ['name'],
+        separate: true,
       },
       {
         model: keyword,
         as: 'keywords',
         attributes: ['keyword'],
+        separate: true,
       },
       {
         model: genre,
         as: 'genres',
         attributes: ['genre'],
+        separate: true,
       },
       {
         model: review,
         as: 'reviews',
+        separate: true,
         offset: 0,
         limit: 5,
         attributes: ['id', 'rating', 'contents', 'is_spoiler'],
@@ -148,8 +154,13 @@ export const getBook = async (req, res) => {
           },
         ],
       },
+      {
+        model: wish,
+        as: 'wishes',
+        attributes: [[sequelize.fn('COUNT', Sequelize.col('wishes.id')), 'count_wish']],
+      },
     ],
-    order: [['authors', 'id', 'ASC']],
+    group: ['id'],
   });
 
   res.send({ book_info: bookInfo });
