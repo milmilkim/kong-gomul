@@ -40,6 +40,7 @@ const BookInfoContainer = styled.div`
 
         p {
           margin: 20px 0;
+          white-space: pre-line;
         }
 
         .stars {
