@@ -4,6 +4,7 @@
 
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const SearchResultItemcontainer = styled.div`
   .searchResultItems {
@@ -29,7 +30,7 @@ const SearchResultItemcontainer = styled.div`
 const SearchResultItem = ({ result }) => {
   return (
     <SearchResultItemcontainer>
-      <a href={result?.ridi_url || "/"}>
+      <Link to={`/bookinfo/${result?.id}`}>
         <div className="searchResultItems">
           <div className="searchItemImage">
             <img src={result?.thumbnail || result?.profile_image} alt={result?.title || result?.nickname} />
@@ -38,7 +39,7 @@ const SearchResultItem = ({ result }) => {
             <h5 className="searchItemInfoTitle">{result?.title || result?.nickname}</h5>
           </div>
         </div>
-      </a>
+      </Link>
     </SearchResultItemcontainer>
   );
 };

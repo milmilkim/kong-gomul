@@ -4,7 +4,7 @@
 
 import React from "react";
 import styled from "styled-components";
-
+import { Link } from "react-router-dom";
 /* Styled Components */
 const BooksItemContainer = styled.li`
   width: ${(props) => props.itemWidth || "20%"};
@@ -58,17 +58,17 @@ const BooksItemContainer = styled.li`
   }
 `;
 
-const BooksItem = ({ book: { ridi_url, thumbnail, title }, itemWidth, itemHref, children }) => {
+const BooksItem = ({ book: { id, ridi_url, thumbnail, title }, itemWidth, children }) => {
   return (
     <BooksItemContainer itemWidth={itemWidth}>
-      <a href={itemHref || ridi_url}>
+      <Link to={`/bookinfo/${id}`}>
         <div className="booksItemInner">
           <div className="booksItemImage">
             <img src={thumbnail} alt={title} />
           </div>
           {children}
         </div>
-      </a>
+      </Link>
     </BooksItemContainer>
   );
 };

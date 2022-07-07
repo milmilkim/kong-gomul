@@ -13,7 +13,14 @@ const app = express();
 
 dotenv.config();
 
-app.use(cors());
+const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
+app.use(
+  cors({
+    origin: clientUrl,
+    credentials: true,
+  })
+); //cors 설정을 한다..
+
 app.set('port', process.env.PORT || 3001);
 
 app.use(express.json());

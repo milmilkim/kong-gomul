@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import StarRatings from "react-star-ratings";
 
 const ReviewThumbContainer = styled.div`
   display: block;
@@ -14,14 +15,26 @@ const ReviewThumbContainer = styled.div`
   }
 `;
 
-const ReviewThumb = () => {
+const ReviewThumb = ({ review }) => {
+  const { rating, contents, member } = review;
+
   return (
     <ReviewThumbContainer>
-      <p>아이디</p>
-      <p>★★★★★</p>
-      <p>내용</p>
-      <hr />
-      <p>❤</p>
+      <p>{member.nickname}</p>
+      <p>
+        <StarRatings
+          rating={rating}
+          numberOfStars={5}
+          name="rating"
+          starDimension="13px"
+          starSpacing="2px"
+          starRatedColor="#FA722E"
+        />
+        {rating}점
+      </p>
+      <p>{contents}</p>
+      {/* <hr /> */}
+      {/* <p>❤</p> */}
     </ReviewThumbContainer>
   );
 };
