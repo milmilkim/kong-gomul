@@ -1,10 +1,13 @@
 /**
  * 내 서재 별점순 페이지
  */
-import React, { memo, useEffect, useState } from "react";
-import axios from "axios";
+import React, { memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
 import styled from "styled-components";
+
+/* Slice */
+import { getReviewList } from "../../slices/ReviewSlice";
 
 /* Components */
 import BooksItem from "../../components/BooksItem";
@@ -31,73 +34,57 @@ const LibraryRatingsContainer = styled.div`
 `;
 
 const LibraryRatings = memo(() => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => state.review); // 검색결과, 로딩여부
+  const ratingArr = [0, ...Array(10)].map((v, i) => i).reverse(); // 0~10까지 배열
 
-  const getBookList = async () => {
-    try {
-      const res = await axios.get("http://localhost:3001/api/book");
-      setData(res.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // ajax 로딩 종료
-      setIsLoading(false);
-    }
-  };
-
-  // 페이지가 열렸을 때,
   useEffect(() => {
-    // 로딩 시작을 하고
-    setIsLoading(true);
-
-    // axios 요청을 한다.
-    getBookList();
-  }, []);
+    dispatch(
+      getReviewList({
+        member_id: 18, // <--------
+      })
+    );
+  }, [dispatch]);
 
   return (
     <>
       {/* Spinner */}
-      <Spinner visible={isLoading} />
+      <Spinner visible={loading} />
 
       <LibraryRatingsContainer>
         <LibraryNav />
 
-        {/* 평점 5.0 */}
-        <div>
-          <div className="ratingsTitleContainer">
-            <h5 className="ratingsTitle">5.0</h5>
-            <NavLink to="10">
-              <StyledButton>더보기</StyledButton>
-            </NavLink>
-          </div>
+        {ratingArr.map((rating, index) => {
+          const filteredRatingArr =
+            data &&
+            data
+              .filter((book) => book.rating === rating / 2) /* 평점에 따라 분류 */
+              .slice(0, 5); /* 5개만 표시한다. */
 
-          {/* Book List */}
-          <ItemList>{data && data.slice(0, 5).map((book, index) => <BooksItem book={book} key={index} />)}</ItemList>
-          <hr />
-        </div>
+          return (
+            <div key={index}>
+              <div className="ratingsTitleContainer">
+                <h5 className="ratingsTitle">{rating / 2}점</h5>
+                <NavLink to={String(rating / 2)}>
+                  <StyledButton>더보기</StyledButton>
+                </NavLink>
+              </div>
 
-        {/* 평점 4.5 */}
-        <div>
-          <div className="ratingsTitleContainer">
-            <h5 className="ratingsTitle">4.5</h5>
-            <NavLink to="9">
-              <StyledButton>더보기</StyledButton>
-            </NavLink>
-          </div>
-
-          <ItemList>{data && data.slice(0, 5).map((book, index) => <BooksItem book={book} key={index} />)}</ItemList>
-          <hr />
-        </div>
-
-        {/* 평점 4.0 */}
-        {/* 평점 3.5 */}
-        {/* 평점 3.0 */}
-        {/* 평점 2.5 */}
-        {/* 평점 2.0 */}
-        {/* 평점 1.5 */}
-        {/* 평점 1.0 */}
-        {/* 평점 0.5 */}
+              {/* Book List */}
+              <ItemList>
+                {data && filteredRatingArr.length === 0 ? (
+                  <div>평가한 작품이 없습니다.</div> /* 평점이 없을 경우 */
+                ) : (
+                  data &&
+                  filteredRatingArr.map((book, index) => (
+                    <BooksItem book={book.book} key={index} />
+                  )) /* 평점이 있을 경우 */
+                )}
+              </ItemList>
+              <hr />
+            </div>
+          );
+        })}
 
         <Outlet />
       </LibraryRatingsContainer>
