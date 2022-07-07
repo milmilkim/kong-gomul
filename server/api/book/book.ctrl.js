@@ -89,15 +89,21 @@ export const getBook = async (req, res) => {
 
   //쿠키에 최근 조회한 책 아이디 추가
   if (req.cookies.book_id) {
+    //쿠키가 있음
     let book_id = req.cookies.book_id.split('+');
 
-    if (book_id.indexOf(id) === -1 && book_id.length < 21) {
+    if (book_id.indexOf(id) === -1) {
+      //중복이 아님
       book_id.unshift(id);
-      console.log(book_id.join('+'));
-      res.cookie('book_id', book_id.join('+'), { maxAge: 604800000 });
+      if (book_id.length > 20) {
+        //20개 초과
+        book_id.pop();
+      }
+      res.cookie('book_id', book_id.join('+'), { maxAge: 604800000 }); //7d
     }
   } else {
-    res.cookie('book_id', id, { maxAge: 604800000 });
+    //쿠키 없음
+    res.cookie('book_id', id, { maxAge: 604800000 }); //7d
   }
   const bookInfo = await book.findOne({
     where: { id },
@@ -146,9 +152,6 @@ export const getBook = async (req, res) => {
     order: [['authors', 'id', 'ASC']],
   });
 
-  //   res.res.cookie('id', 'value', {
-  //     maxAge:10000
-  //  });
   res.send({ book_info: bookInfo });
 };
 
