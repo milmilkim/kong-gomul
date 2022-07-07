@@ -21,6 +21,7 @@ const BooksThumbContainer = styled.div`
           font-size: 14px;
         }
         .thumbnail {
+          width: 195px;
         }
         .title {
           font-size: 20px;
