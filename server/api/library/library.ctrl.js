@@ -13,11 +13,22 @@ export const getLibrary = async (req, res) => {
     const page = parseInt(req.query.page) || 1;
     const size = parseInt(req.query.size) || 20;
     const rating = parseFloat(req.query.rating) || null;
+    const sort = req.query.sort || null;
+
     const offset = (page - 1) * size;
     let books = null;
     let query = null;
 
-    if (rating === null) {
+    if (rating !== null) {
+      //해당하는 별점의 책만 출력
+      query = `
+        SELECT r.rating, r.book_id, r.member_id, r.id, book.title, book.thumbnail
+        FROM review r, book
+        WHERE book.id = r.book_id AND r.rating = ${rating} AND r.member_id = ${member_id} AND r.rating IS NOT NULL
+        LIMIT ${size}
+        OFFSET ${offset}
+        `;
+    } else if (sort === 'rating') {
       query = `
       SELECT r.rating, r.book_id, book.title, book.thumbnail
         FROM
@@ -36,21 +47,21 @@ export const getLibrary = async (req, res) => {
       query = `
       SELECT r.rating, r.book_id, r.member_id, r.id, book.title, book.thumbnail
       FROM review r, book
-      WHERE book.id = r.book_id AND r.rating = ${rating} AND r.member_id = ${member_id} AND r.rating IS NOT NULL
+      WHERE book.id = r.book_id AND r.member_id = ${member_id} AND r.rating IS NOT NULL
       LIMIT ${size}
       OFFSET ${offset}
       `;
-
-      const bookCount = await review.count({
-        where: {
-          member_id,
-          rating,
-        },
-      });
-
-      res.set({ 'book-count': bookCount });
-      res.set({ 'last-page': Math.ceil(bookCount / size) });
     }
+
+    const bookCount = await review.count({
+      where: {
+        member_id,
+        rating,
+      },
+    });
+
+    res.set({ 'book-count': bookCount });
+    res.set({ 'last-page': Math.ceil(bookCount / size) });
 
     books = await sequelize.query(query, { type: sequelize.QueryTypes.SELECT });
 
