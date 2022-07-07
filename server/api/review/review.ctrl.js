@@ -1,6 +1,6 @@
 import { db } from '../../models/index.js';
+const { review, member, book } = db;
 
-const { review, member } = db;
 
 /**
  *  모든 리뷰 가져오기
@@ -8,22 +8,55 @@ const { review, member } = db;
  */
 export const getReviewList = async (req, res) => {
   try {
-    const size = parseInt(req.query.size) || 5; // 한 페이지당 보여줄 리뷰 수
+    const size = parseInt(req.query.size) || 10; // 한 페이지당 보여줄 리뷰 수
     const page = parseInt(req.query.page) || 1; // 페이지 수
     const order = req.query.order || 'rating';
 
-    const result = await review.findAll({
-      order: [[order, 'DESC']], // 별점순, 최신순 정렬
-      include: [
-        {
-          model: member,
-          as: 'member',
-          attributes: ['nickname', 'id', 'profile_image'],
+    const rating = req.query.rating;
+    let result = null;
+
+    if (rating) {
+      result = await review.findAll({
+        include: [
+          {
+            model: member,
+            as: 'member',
+            where: {
+              id: req.query.member_id,
+            },
+          },
+          {
+            model: book,
+            as: 'book',
+          },
+        ],
+        order: [[order, 'DESC']], // 별점순, 최신순 정렬
+        limit: size,
+        offset: size * (page - 1),
+        where: {
+          rating: req.query.rating,
         },
-      ],
-      limit: size,
-      offset: size * (page - 1),
-    });
+      });
+    } else {
+      result = await review.findAll({
+        include: [
+          {
+            model: member,
+            as: 'member',
+            where: {
+              id: req.query.member_id,
+            },
+          },
+          {
+            model: book,
+            as: 'book',
+          },
+        ],
+        order: [[order, 'DESC']], // 별점순, 최신순 정렬
+        limit: size,
+        offset: size * (page - 1),
+      });
+    }
 
     res.send(result);
   } catch (err) {
