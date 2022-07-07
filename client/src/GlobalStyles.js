@@ -15,7 +15,7 @@ const GlobalStyles = createGlobalStyle`
 
   .inner {
     min-width: 560px;
-    max-width: 935px;
+    max-width: 1200px;
     margin: 0 auto;
   }
 

@@ -1,13 +1,13 @@
 import { db, sequelize } from '../../models/index.js';
 
-const { review } = db;
+const { review, book } = db;
 
 export const getLibrary = async (req, res) => {
   const { id: member_id } = req.decoded || req.params;
 
   try {
     if (member_id === null) {
-      throw new Error('멤버 아이디가 없습니다');
+      throw new Error('아이디가 없습니다');
     }
 
     const page = parseInt(req.query.page) || 1;
@@ -57,5 +57,27 @@ export const getLibrary = async (req, res) => {
     res.send(books);
   } catch (err) {
     res.status(403).json({ message: err.message });
+  }
+};
+
+export const getRecents = async (req, res) => {
+  let book_id = req.cookies.book_id ? req.cookies.book_id.split('+') : null;
+
+  if (book_id) {
+    try {
+      const recents = await book.findAll({
+        where: {
+          id: book_id,
+        },
+        attributes: ['id', 'title', 'thumbnail'],
+        order: sequelize.literal('FIELD(book.id,' + book_id.join(',') + ')'),
+      });
+
+      res.send(recents);
+    } catch (err) {
+      res.status(403).json({ message: err.message });
+    }
+  } else {
+    res.send([]);
   }
 };

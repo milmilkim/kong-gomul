@@ -4,17 +4,12 @@ import axios from "../config/axios";
 /**
  * tokenVerify(): 로컬스토리지의 액세스토큰의 유효성을 검사한다
  */
-export const tokenVerify = createAsyncThunk("AuthSlice/tokenVerify", async (payload) => {
+export const tokenVerify = createAsyncThunk("AuthSlice/tokenVerify", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
-    result = await axios.get("api/auth/check", {
-      headers: {
-        "x-access-token": payload || window.localStorage.getItem("accessToken"),
-      },
-    });
+    result = await axios.get("api/auth/check");
   } catch (err) {
-    result = err.response;
-    console.error(err);
+    result = rejectWithValue(err.response);
   }
 
   return result;
@@ -28,6 +23,13 @@ const AuthSlice = createSlice({
     id: null,
     nickname: null,
     error: null,
+  },
+  reducers: {
+    setIsLogin: (state, action) => {
+      if (action.payload === false) {
+        return { isLogin: action.payload };
+      }
+    },
   },
   extraReducers: {
     [tokenVerify.pending]: (state, { payload }) => {
@@ -47,6 +49,7 @@ const AuthSlice = createSlice({
       return {
         ...state,
         isLoading: false,
+        isLogin: false,
         error: {
           code: payload?.status ? payload.status : 500,
         },
@@ -56,3 +59,4 @@ const AuthSlice = createSlice({
 });
 
 export default AuthSlice.reducer; //리듀서 객체 내보내기
+export const { setIsLogin } = AuthSlice.actions;

@@ -6,12 +6,26 @@ import { useState } from "react";
 
 import styled from "styled-components";
 
+import { useNavigate, Link } from "react-router-dom";
+
+import { useDispatch } from "react-redux";
+import { setIsLogin } from "../slices/AuthSlice";
+
 const EditContainer = styled(Modal)``;
 
 const ProfileEdit = ({ isOpen, setIsOpen }) => {
   const [isLoading, setIsLoading] = useState(false);
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   // 데이터베이스에서 회원정보 가져오기
+
+  const logout = () => {
+    window.localStorage.removeItem("accessToken");
+    window.localStorage.removeItem("refreshToken");
+    navigate("/");
+    dispatch(setIsLogin(false));
+  };
 
   return (
     <EditContainer isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={400}>
@@ -25,9 +39,12 @@ const ProfileEdit = ({ isOpen, setIsOpen }) => {
         <input type="text" placeholder="한마디 수정" />
         <label for="profile-open">프로필 공개</label>
         <input type="checkbox" id="profile-open" />
-        <button>탈퇴</button>
+        <Link to="/withdrawal">
+          <button>탈퇴</button>
+        </Link>
         <button>저장</button>
       </form>
+      <button onClick={logout}>로그아웃</button>
     </EditContainer>
   );
 };

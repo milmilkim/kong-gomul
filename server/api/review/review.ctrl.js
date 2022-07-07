@@ -1,7 +1,6 @@
-import { Op } from 'sequelize';
 import { db } from '../../models/index.js';
-
 const { review, member, book } = db;
+
 
 /**
  *  모든 리뷰 가져오기
@@ -12,6 +11,7 @@ export const getReviewList = async (req, res) => {
     const size = parseInt(req.query.size) || 10; // 한 페이지당 보여줄 리뷰 수
     const page = parseInt(req.query.page) || 1; // 페이지 수
     const order = req.query.order || 'rating';
+
     const rating = req.query.rating;
     let result = null;
 
@@ -72,6 +72,13 @@ export const getReview = async (req, res) => {
   try {
     const result = await review.findAll({
       where: { id: req.params.id },
+      include: [
+        {
+          model: member,
+          as: 'member',
+          attributes: ['nickname', 'id', 'profile_image'],
+        },
+      ],
     });
 
     res.send(result);
