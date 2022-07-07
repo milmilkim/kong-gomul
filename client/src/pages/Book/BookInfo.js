@@ -122,7 +122,7 @@ const BookInfo = () => {
               <BooksThumb
                 size={"big"}
                 thumbnail={data.thumbnail}
-                category={data.category + " > " + data.genres.map((v) => v.genre).join(", ")}
+                category={data.category}
                 title={data.title}
                 author={data.authors.map((v) => v.name).join(", ")}
                 publisher={data.publishers.map((v) => v.name).join(", ")}
