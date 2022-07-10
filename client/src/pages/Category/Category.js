@@ -90,7 +90,7 @@ const Category = memo(() => {
             comicBookData
               .map((book, index) => (
                 <div className="bookItemContainer" key={index}>
-                  <BooksItem book={book} itemWidth="100%" itemHref="/category/genres">
+                  <BooksItem book={book} itemHref="/category/genres" itemWidth="100%">
                     <h4 className="bookItemTitle">만화</h4>
                   </BooksItem>
                 </div>
@@ -102,7 +102,7 @@ const Category = memo(() => {
             romanceBookData
               .map((book, index) => (
                 <div className="bookItemContainer" key={index}>
-                  <BooksItem book={book} itemWidth="100%" itemHref="/category/genres">
+                  <BooksItem book={book} itemHref="/category/genres" itemWidth="100%">
                     <h4 className="bookItemTitle">로맨스</h4>
                   </BooksItem>
                 </div>
@@ -114,7 +114,7 @@ const Category = memo(() => {
             fantasyBookData
               .map((book, index) => (
                 <div className="bookItemContainer" key={index}>
-                  <BooksItem book={book} itemWidth="100%" itemHref="/category/genres">
+                  <BooksItem book={book} itemHref="/category/genres" itemWidth="100%">
                     <h4 className="bookItemTitle">판타지</h4>
                   </BooksItem>
                 </div>
