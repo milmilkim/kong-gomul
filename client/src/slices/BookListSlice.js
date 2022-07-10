@@ -1,12 +1,5 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
-import axios from "axios";
-
-const URL = "http://localhost:3001/api/book";
-const params = {
-  page: 1,
-  size: 5,
-  category: null,
-};
+import axios from "../config/axios";
 
 /**
  * description: 서적 리스트를 가져온다.
@@ -17,16 +10,13 @@ export const getBookList = createAsyncThunk(
     let result = null;
 
     try {
-      if (payload === null) {
-        result = await axios.get(`${URL}?page=${params.page}&size=${params.size}`);
-      } else {
-        result = await axios.get(
-          `${URL}
-          ?page=${payload.page ? payload.page : params.page}
-          &size=${payload.size ? payload.size : params.size}
-          &category=${payload.category ? payload.category : ""}`
-        );
-      }
+      result = await axios.get("api/book", {
+        params: {
+          page: payload.page,
+          size: payload.size,
+          category: payload.category,
+        },
+      });
     } catch (err) {
       result = rejectWithValue(err.response);
     }
