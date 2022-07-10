@@ -1,11 +1,14 @@
 /**
  * 검색 페이지
  */
-import React, { memo, useRef, useState } from "react";
+import React, { memo, useEffect, useRef, useState } from "react";
 import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
+
+/* Hooks */
+import { useQueryString } from "../../hooks/useQueryString";
 
 /* Slice */
 import { getSearchResult } from "../../slices/SearchSlice";
@@ -108,6 +111,7 @@ const SearchContainer = styled.div`
 `;
 
 const Search = memo(() => {
+  const { query } = useQueryString(); // 헤더 검색창에 입력한 검색어 query값
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state) => state.search); // 검색결과, 로딩여부
   let keyword = useRef(""); // 검색어
@@ -148,6 +152,15 @@ const Search = memo(() => {
       navigate(`/search/${selectedSearchType}?query=${keyword.current.value}&type=${selectedSearchType}`);
     }
   };
+
+  // 헤더 검색창 검색 이벤트
+  useEffect(() => {
+    dispatch(
+      getSearchResult({
+        query: query,
+      })
+    );
+  }, [dispatch, query]);
 
   return (
     <>
