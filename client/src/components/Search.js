@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useState } from "react";
 
 import styled from "styled-components";
 import { BiSearch } from "react-icons/bi";
+import { useNavigate } from "react-router-dom";
 
 const SearchBox = styled.div`
   display: block;
@@ -49,13 +50,27 @@ const SearchBox = styled.div`
 `;
 
 const Search = () => {
+  const [keyword, setKeyword] = useState("");
+  const navigate = useNavigate();
+
+  // 검색 이벤트
+  const onSearch = async (e) => {
+    e.preventDefault();
+    setKeyword("");
+    navigate(`/search?query=${keyword}`);
+  };
+
+  const onChange = (e) => {
+    setKeyword(e.target.value);
+  };
+
   return (
     <SearchBox>
-      <form>
+      <form onSubmit={onSearch}>
         <button type="submit">
           <BiSearch className="search-btn" />
         </button>
-        <input type="search" placeholder="도서 검색..." className="search-box" />
+        <input type="search" value={keyword} onChange={onChange} placeholder="도서 검색..." className="search-box" />
       </form>
     </SearchBox>
   );
