@@ -4,7 +4,10 @@
 import React, { memo, useEffect, useRef, useState } from "react";
 import styled from "styled-components";
 import { FaAngleLeft, FaAngleRight } from "react-icons/fa";
-import axios from "axios";
+import { useDispatch, useSelector } from "react-redux";
+
+/* Slice */
+import { getBookList } from "../../slices/BookListSlice";
 
 /* Swiper */
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -69,15 +72,17 @@ const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
         <Swiper
           slidesPerView={5}
           navigation={{
-            clickable: true,
-            nextEl: `.${clsName}-button-next`,
-            prevEl: `.${clsName}-button-prev`,
+            nextEl: nextRef.current,
+            prevEl: nextRef.current,
           }}
           onInit={(swiper) => {
-            swiper.params.navigation.prevEl = prevRef.current;
-            swiper.params.navigation.nextEl = nextRef.current;
-            swiper.navigation.init();
-            swiper.navigation.update();
+            setTimeout(() => {
+              swiper.params.navigation.prevEl = prevRef.current;
+              swiper.params.navigation.nextEl = nextRef.current;
+              swiper.navigation.destroy();
+              swiper.navigation.init();
+              swiper.navigation.update();
+            });
           }}
           modules={[Navigation]}
         >
@@ -107,48 +112,46 @@ const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
 };
 
 const CategoryGenres = memo(() => {
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => state.booklist); // 검색결과, 로딩여부
+
   const [comicBookData, setcomicBookData] = useState(null);
   const [romanceBookData, setRomanceBookData] = useState(null);
   const [fantasyBookData, setFantasyBookData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
 
-  const getBookList = async () => {
-    try {
-      const res = await axios.get("http://localhost:3001/api/book", {
-        params: {
-          category: "만화 e북",
-        },
-      });
-      const res2 = await axios.get("http://localhost:3001/api/book", {
-        params: {
-          category: "로판 e북",
-        },
-      });
-      const res3 = await axios.get("http://localhost:3001/api/book", {
-        params: {
-          category: "판타지 웹소설",
-        },
-      });
-
-      setcomicBookData(res.data);
-      setRomanceBookData(res2.data);
-      setFantasyBookData(res3.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // ajax 로딩 종료
-      setIsLoading(false);
-    }
-  };
-
-  // 페이지가 열렸을 때,
   useEffect(() => {
-    // 로딩 시작을 하고
-    setIsLoading(true);
+    async function fetchData() {
+      const {
+        payload: { data: comicData },
+      } = await dispatch(
+        getBookList({
+          category: "만화 e북",
+        })
+      );
 
-    // axios 요청을 한다.
-    getBookList();
-  }, []);
+      const {
+        payload: { data: romanceData },
+      } = await dispatch(
+        getBookList({
+          category: "로판 e북",
+        })
+      );
+
+      const {
+        payload: { data: fantasyData },
+      } = await dispatch(
+        getBookList({
+          category: "판타지 웹소설",
+        })
+      );
+
+      setcomicBookData(comicData);
+      setRomanceBookData(romanceData);
+      setFantasyBookData(fantasyData);
+    }
+
+    fetchData();
+  }, [dispatch]);
 
   /* prev, next button ref */
   const comicPrevRef = useRef(null);
@@ -161,7 +164,7 @@ const CategoryGenres = memo(() => {
   return (
     <>
       {/* Spinner */}
-      <Spinner visible={isLoading} />
+      <Spinner visible={loading} />
 
       <CategoryGenreContainer>
         {/* 만화 */}
