@@ -155,12 +155,12 @@ const Profile = () => {
                 <Link to="">보고싶어요</Link>
               </p>
             </div>
-            <div>
+            <Link to="/library">
               <img src={icon} alt="서재" />
               <p>
-                <Link to="">서재</Link>
+                서재
               </p>
-            </div>
+            </Link>
           </div>
         </section>
 
