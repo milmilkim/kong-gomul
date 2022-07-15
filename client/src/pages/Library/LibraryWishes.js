@@ -1,11 +1,14 @@
 /**
  * 내 서재 보고싶어요 페이지
  */
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
-import axios from "axios";
+
+/* Slice */
+import { getWishList } from "../../slices/WishSlice";
 
 /* Components */
 import BooksItem from "../../components/BooksItem";
@@ -38,38 +41,21 @@ const LibraryWishesContainer = styled.div`
   }
 `;
 
-const LibraryWishes = memo(() => {
-  const [data, setData] = useState(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const getBookList = async () => {
-    try {
-      const res = await axios.get("http://localhost:3001/api/book");
-      setData(res.data);
-    } catch (e) {
-      console.error(e);
-    } finally {
-      // ajax 로딩 종료
-      setIsLoading(false);
-    }
-  };
-
-  // 페이지가 열렸을 때,
-  useEffect(() => {
-    // 로딩 시작을 하고
-    setIsLoading(true);
-
-    // axios 요청을 한다.
-    getBookList();
-  }, []);
-
-  /* 뒤로가기 */
+const LibraryWishes = memo(({ minHeight = 1 }) => {
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => state.wish);
+
+  useEffect(() => {
+    dispatch(getWishList());
+  }, [dispatch]);
+
+  console.log(data);
 
   return (
     <>
       {/* Spinner */}
-      <Spinner visible={isLoading} />
+      <Spinner visible={loading} />
 
       <LibraryWishesContainer>
         <div className="btnContainer" onClick={() => navigate(-1)}>
@@ -77,19 +63,10 @@ const LibraryWishes = memo(() => {
             <FaArrowLeft>뒤로가기</FaArrowLeft>
           </StyledButton>
         </div>
-
         <h5 className="ratingsWishesTitle">보고싶어요</h5>
         <hr />
-
         {/* Book List */}
-        <ItemList>
-          {data &&
-            data.map((book, index) => (
-              <BooksItem book={book} key={index}>
-                <h3 className="booksItemTitle">{book.title}</h3>
-              </BooksItem>
-            ))}
-        </ItemList>
+        {data && <div>hello</div>}
       </LibraryWishesContainer>
     </>
   );
