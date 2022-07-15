@@ -1,13 +1,14 @@
 /**
  * 내 서재 별점순 페이지
  */
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { NavLink, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 /* Slice */
 import { getReviewList } from "../../slices/ReviewSlice";
+import { getMyProfile } from "../../slices/MemberSlice";
 
 /* Components */
 import BooksItem from "../../components/BooksItem";
@@ -35,16 +36,33 @@ const LibraryRatingsContainer = styled.div`
 
 const LibraryRatings = memo(() => {
   const dispatch = useDispatch();
-  const { data, loading } = useSelector((state) => state.review); // 검색결과, 로딩여부
+  const { loading } = useSelector((state) => state.review); // 로딩여부
   const ratingArr = [0, ...Array(10)].map((v, i) => i).reverse(); // 0~10까지 배열
 
+  const [memberId, setMemberId] = useState(); // 멤버 아이디
+  const [reviewList, setReviewList] = useState(); // 유저가 작성한 리뷰 목록들
+
   useEffect(() => {
-    dispatch(
-      getReviewList({
-        member_id: 18, // <--------
-      })
-    );
-  }, [dispatch]);
+    async function fetchData() {
+      const {
+        payload: {
+          data: { id },
+        },
+      } = await dispatch(getMyProfile()); // 멤버 아이디를 가져온다.
+      setMemberId(id);
+
+      const {
+        payload: { data: reviewData },
+      } = await dispatch(
+        getReviewList({
+          member_id: memberId,
+        })
+      ); // 가져온 멤버 아이디와 일치하는 회원이 작성한 리뷰 목록을 가져온다.
+      setReviewList(reviewData);
+    }
+
+    fetchData();
+  }, [dispatch, memberId]);
 
   return (
     <>
@@ -56,8 +74,8 @@ const LibraryRatings = memo(() => {
 
         {ratingArr.map((rating, index) => {
           const filteredRatingArr =
-            data &&
-            data
+            reviewList &&
+            reviewList
               .filter((book) => book.rating === rating / 2) /* 평점에 따라 분류 */
               .slice(0, 5); /* 5개만 표시한다. */
 
@@ -72,10 +90,10 @@ const LibraryRatings = memo(() => {
 
               {/* Book List */}
               <ItemList>
-                {data && filteredRatingArr.length === 0 ? (
+                {reviewList && filteredRatingArr.length === 0 ? (
                   <div>평가한 작품이 없습니다.</div> /* 평점이 없을 경우 */
                 ) : (
-                  data &&
+                  reviewList &&
                   filteredRatingArr.map((book, index) => (
                     <BooksItem book={book.book} key={index} />
                   )) /* 평점이 있을 경우 */
