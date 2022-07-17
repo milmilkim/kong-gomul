@@ -37,7 +37,7 @@ const CategoryItemList = styled.ul`
 
 const Category = memo(() => {
   const dispatch = useDispatch();
-  const { data, loading } = useSelector((state) => state.booklist); // 검색결과, 로딩여부
+  const { loading } = useSelector((state) => state.booklist); // 검색결과, 로딩여부
 
   const [comicBookData, setcomicBookData] = useState(null);
   const [romanceBookData, setRomanceBookData] = useState(null);

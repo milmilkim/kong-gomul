@@ -149,17 +149,13 @@ const Profile = () => {
             <Link to="/">취향분석</Link>
           </p>
           <div className="flex-row">
-            <div>
+            <Link to="/library/wishes">
               <img src={icon} alt="보고싶어요" />
-              <p>
-                <Link to="">보고싶어요</Link>
-              </p>
-            </div>
+              <p>보고싶어요</p>
+            </Link>
             <Link to="/library">
               <img src={icon} alt="서재" />
-              <p>
-                서재
-              </p>
+              <p>서재</p>
             </Link>
           </div>
         </section>
