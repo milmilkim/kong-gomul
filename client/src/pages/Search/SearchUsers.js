@@ -12,6 +12,7 @@ import { getSearchResult } from "../../slices/SearchSlice";
 import Spinner from "../../components/spinner";
 import UserItem from "../../components/UsersItem";
 import { useQueryString } from "../../hooks/useQueryString";
+import SearchResultNotFound from "../../components/SearchResultNotFound";
 
 /* Styled Components */
 const SearchUsersContainer = styled.div`
@@ -59,7 +60,19 @@ const SearchUsers = memo(() => {
       <SearchUsersContainer>
         <h5 className="searchUsersTitle">검색결과</h5>
         <hr />
-        <ul>{data && data.map((d, i) => <UserItem key={i} user={d} />)}</ul>
+
+        {/* 유저 검색결과 */}
+        {data && (
+          <ul>
+            {data.length === 0 ? (
+              /* 검색 결과가 없을 경우 */
+              <SearchResultNotFound />
+            ) : (
+              /* 검색 결과가 있을 경우 */
+              data.map((d, i) => <UserItem key={i} user={d} />)
+            )}
+          </ul>
+        )}
       </SearchUsersContainer>
     </>
   );
