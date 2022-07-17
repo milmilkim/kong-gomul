@@ -72,10 +72,10 @@ const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
         <Swiper
           slidesPerView={5}
           navigation={{
-            nextEl: nextRef.current,
-            prevEl: nextRef.current,
+            prevEl: prevRef.current ? prevRef.current : undefined,
+            nextEl: nextRef.current ? nextRef.current : undefined,
           }}
-          onInit={(swiper) => {
+          onSwiper={(swiper) => {
             setTimeout(() => {
               swiper.params.navigation.prevEl = prevRef.current;
               swiper.params.navigation.nextEl = nextRef.current;
@@ -96,13 +96,13 @@ const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
         </Swiper>
 
         {/* prev btn */}
-        <div className={`swiper-button-prev .${clsName}-button-prev`} ref={prevRef}>
+        <div className={`swiper-button-prev ${clsName}-button-prev`} ref={prevRef}>
           <FaAngleLeft />
           <span>Prev</span>
         </div>
 
         {/* next btn */}
-        <div className={`swiper-button-next .${clsName}-button-next`} ref={nextRef}>
+        <div className={`swiper-button-next ${clsName}-button-next`} ref={nextRef}>
           <span>Next</span>
           <FaAngleRight />
         </div>
@@ -113,11 +113,19 @@ const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
 
 const CategoryGenres = memo(() => {
   const dispatch = useDispatch();
-  const { data, loading } = useSelector((state) => state.booklist); // 검색결과, 로딩여부
+  const { loading } = useSelector((state) => state.booklist); // 로딩여부
 
   const [comicBookData, setcomicBookData] = useState(null);
   const [romanceBookData, setRomanceBookData] = useState(null);
   const [fantasyBookData, setFantasyBookData] = useState(null);
+
+  /* prev, next button ref */
+  const comicPrevRef = useRef(null);
+  const comicNextRef = useRef(null);
+  const romancePrevRef = useRef(null);
+  const romanceNextRef = useRef(null);
+  const fantasyPrevRef = useRef(null);
+  const fantasyNextRef = useRef(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -152,14 +160,6 @@ const CategoryGenres = memo(() => {
 
     fetchData();
   }, [dispatch]);
-
-  /* prev, next button ref */
-  const comicPrevRef = useRef(null);
-  const comicNextRef = useRef(null);
-  const romancePrevRef = useRef(null);
-  const romanceNextRef = useRef(null);
-  const fantasyPrevRef = useRef(null);
-  const fantasyNextRef = useRef(null);
 
   return (
     <>

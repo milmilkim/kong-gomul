@@ -58,7 +58,7 @@ const BooksItemContainer = styled.li`
   }
 `;
 
-const BooksItem = ({ book: { id, ridi_url, thumbnail, title }, itemWidth, itemHref, children }) => {
+const BooksItem = ({ book: { id, thumbnail, title }, itemWidth, itemHref, children }) => {
   return (
     <BooksItemContainer itemWidth={itemWidth}>
       <Link to={itemHref || `/bookinfo/${id}`}>
