@@ -139,6 +139,7 @@ const Profile = () => {
 
   return (
     <ProfileContainer>
+
       {data && (
         <div className="inner">
           <section className="con1 flex-row">
