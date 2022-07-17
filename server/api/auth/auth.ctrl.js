@@ -42,12 +42,8 @@ export const join = async (req, res, next) => {
 
     birth_year && regexHelper.birthYear(birth_year, '출생연도가 잘못되었습니다');
     gender && regexHelper.gender(gender, '성별을 확인하세요');
-  } catch (err) {
-    next(err);
-  }
 
-  let existingMember = null;
-  try {
+    let existingMember = null;
     existingMember = await member.findOne({
       where: {
         user_id: newMember.user_id,
@@ -68,9 +64,7 @@ export const join = async (req, res, next) => {
       member: _member,
     });
   } catch (err) {
-    res.status(403).json({
-      message: err.message,
-    });
+    next(err);
   }
 };
 
