@@ -10,6 +10,7 @@ import { GoGear } from "react-icons/go";
 import { useSelector, useDispatch } from "react-redux";
 import { getMyProfile } from "../../slices/MemberSlice";
 
+import ProfileImage from "../../components/ProfileImage";
 // import BooksItem from "../../components/BooksItem";
 
 const ProfileContainer = styled.div`
@@ -130,6 +131,7 @@ const Profile = () => {
   };
 
   //리덕스
+
   const dispatch = useDispatch();
   const { data, error, loading } = useSelector((state) => state.member);
 
@@ -144,7 +146,7 @@ const Profile = () => {
         <div className="inner">
           <section className="con1 flex-row">
             <div className="icon-container">
-              <img src={data?.profile_image} alt="나의 프로필" />
+              <ProfileImage src={data.profile_image} alt={data.nickname} />
             </div>
             <div>
               <h2>{data?.nickname}</h2>
@@ -159,7 +161,7 @@ const Profile = () => {
 
           <section className="con2">
             <p className="analysis">
-              <Link to="/">취향분석</Link>
+              <Link to="/mypage/analysis">취향분석</Link>
             </p>
             <div className="flex-row">
               <div>
@@ -179,16 +181,6 @@ const Profile = () => {
             <p>최근 조회한 작품</p>
             <button className="more-btn">더보기</button>
             <ul className="recent-list flex-row">
-              <li>
-                <a href="#">
-                  <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
-                </a>
-              </li>
-              <li>
-                <a href="#">
-                  <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
-                </a>
-              </li>
               <li>
                 <a href="#">
                   <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>

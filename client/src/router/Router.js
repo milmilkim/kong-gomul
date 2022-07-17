@@ -10,6 +10,9 @@ import Oauth from "../pages/Oauth";
 /* 마이페이지 */
 import MyPage from "../pages/Personal/MyPage";
 
+/* 취향 분석 */
+import Analysis from "../pages/Personal/Analysis";
+
 /* 책 상세페이지 */
 import BookInfo from "../pages/Book/BookInfo";
 import Review from "../pages/Book/Review";
@@ -51,7 +54,10 @@ const Router = () => {
           <Route path="/withdrawal" element={<Withdrawal />} />
 
           {/*프로필 페이지 */}
-          <Route path="/mypage" element={<MyPage />} />
+          <Route path="/mypage">
+            <Route index element={<MyPage />}></Route>
+            <Route path="analysis" element={<Analysis />}></Route>
+          </Route>
 
           {/*책 상세페이지 */}
           <Route path="/bookinfo/:id" element={<BookInfo />} />
