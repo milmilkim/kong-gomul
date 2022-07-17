@@ -22,15 +22,20 @@ const ReviewThumb = ({ review }) => {
     <ReviewThumbContainer>
       <p>{member.nickname}</p>
       <p>
-        <StarRatings
-          rating={rating}
-          numberOfStars={5}
-          name="rating"
-          starDimension="13px"
-          starSpacing="2px"
-          starRatedColor="#FA722E"
-        />
-        {rating}점
+        {review.rating && (
+          <>
+            {" "}
+            <StarRatings
+              rating={rating}
+              numberOfStars={5}
+              name="rating"
+              starDimension="13px"
+              starSpacing="2px"
+              starRatedColor="#FA722E"
+            />
+            {rating}점
+          </>
+        )}
       </p>
       <p>{contents}</p>
       {/* <hr /> */}

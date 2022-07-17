@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 
 import icon from "../../assets/img/icon.png";
@@ -6,6 +6,9 @@ import ProfileEdit from "../../components/ProfileEdit";
 
 import styled from "styled-components";
 import { GoGear } from "react-icons/go";
+
+import { useSelector, useDispatch } from "react-redux";
+import { getMyProfile } from "../../slices/MemberSlice";
 
 // import BooksItem from "../../components/BooksItem";
 
@@ -126,64 +129,77 @@ const Profile = () => {
     setIsOpen((isOpen) => !isOpen);
   };
 
+  //리덕스
+  const dispatch = useDispatch();
+  const { data, error, loading } = useSelector((state) => state.member);
+
+  useEffect(() => {
+    dispatch(getMyProfile());
+  }, [dispatch]);
+
   return (
     <ProfileContainer>
-      <div className="inner">
-        <section className="con1 flex-row">
-          <div className="icon-container">
-            <img src={icon} alt="나의 프로필" />
-          </div>
-          <div>
-            <h2>여기에 닉네임</h2>
-            <p>여기에 한마디</p>
-          </div>
-          {/* 프로필 수정 버튼 */}
-          <button type="button">
-            <GoGear className="edit-btn" onClick={handleButton} />
-          </button>
-          <ProfileEdit isOpen={isOpen} setIsOpen={setIsOpen} />
-        </section>
 
-        <section className="con2">
-          <p className="analysis">
-            <Link to="/">취향분석</Link>
-          </p>
-          <div className="flex-row">
-            <Link to="/library/wishes">
-              <img src={icon} alt="보고싶어요" />
-              <p>보고싶어요</p>
-            </Link>
-            <Link to="/library">
-              <img src={icon} alt="서재" />
-              <p>서재</p>
-            </Link>
-          </div>
-        </section>
+      {data && (
+        <div className="inner">
+          <section className="con1 flex-row">
+            <div className="icon-container">
+              <img src={data?.profile_image} alt="나의 프로필" />
+            </div>
+            <div>
+              <h2>{data?.nickname}</h2>
+              <p>{data?.introduce}</p>
+            </div>
+            {/* 프로필 수정 버튼 */}
+            <button type="button">
+              <GoGear className="edit-btn" onClick={handleButton} />
+            </button>
+            <ProfileEdit isOpen={isOpen} setIsOpen={setIsOpen} />
+          </section>
 
-        <section className="con3">
-          <p>최근 조회한 작품</p>
-          <button className="more-btn">더보기</button>
-          <ul className="recent-list flex-row">
-            <li>
-              <a href="#">
-                <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
-              </a>
-            </li>
-            <li>
-              <a href="#">
-                <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
-              </a>
-            </li>
-          </ul>
-          {/* axios로 불러온 책 데이터 */}
-          {/* <BooksItem /> */}
-        </section>
-      </div>
+          <section className="con2">
+            <p className="analysis">
+              <Link to="/">취향분석</Link>
+            </p>
+            <div className="flex-row">
+              <div>
+                <img src={icon} alt="보고싶어요" />
+                <p>
+                  <Link to="">보고싶어요</Link>
+                </p>
+              </div>
+              <Link to="/library">
+                <img src={icon} alt="서재" />
+                <p>서재</p>
+              </Link>
+            </div>
+          </section>
+
+          <section className="con3">
+            <p>최근 조회한 작품</p>
+            <button className="more-btn">더보기</button>
+            <ul className="recent-list flex-row">
+              <li>
+                <a href="#">
+                  <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
+                </a>
+              </li>
+              <li>
+                <a href="#">
+                  <img src="https://via.placeholder.com/75x100" alt="책 이미지"></img>
+                </a>
+              </li>
+            </ul>
+            {/* axios로 불러온 책 데이터 */}
+            {/* <BooksItem /> */}
+          </section>
+        </div>
+      )}
     </ProfileContainer>
   );
 };
