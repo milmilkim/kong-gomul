@@ -13,6 +13,11 @@ const GlobalStyles = createGlobalStyle`
     color: inherit;
   }
 
+  ol, ul, li {
+    list-style: none;
+    padding-left: 0;
+  }
+
   .inner {
     min-width: 560px;
     max-width: 1200px;
