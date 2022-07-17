@@ -1,7 +1,6 @@
 import { db } from '../../models/index.js';
 const { review, member, book } = db;
 
-
 /**
  *  모든 리뷰 가져오기
  *  GET /api/review?order=''&size=''&page=''
@@ -43,9 +42,6 @@ export const getReviewList = async (req, res) => {
           {
             model: member,
             as: 'member',
-            where: {
-              id: req.query.member_id,
-            },
           },
           {
             model: book,
@@ -91,7 +87,7 @@ export const getReview = async (req, res) => {
  * 리뷰 추가하기
  * POST /api/review/:book_id
  */
-export const addReview = async (req, res) => {
+export const addReview = async (req, res, next) => {
   try {
     const result = await review.upsert({
       book_id: req.params.book_id,
@@ -103,7 +99,7 @@ export const addReview = async (req, res) => {
 
     res.send(result);
   } catch (err) {
-    console.error(err);
+    next(err);
   }
 };
 
