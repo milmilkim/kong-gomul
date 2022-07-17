@@ -54,11 +54,6 @@ const Analysis = () => {
     dispatch(getAnalysis());
   }, [dispatch]);
 
-  const maxValue =
-    Object.keys(analysis?.rating?.count).reduce((a, b) =>
-      analysis?.rating?.count[a] > analysis?.rating?.count[b] ? a : b
-    ) || null;
-
   const data = [];
   let j = 0;
   for (let i = 0; i < 11; i++) {
@@ -86,7 +81,7 @@ const Analysis = () => {
           <Section>
             <h2>평가수</h2>
             <ul>
-              {analysis.category.map((v, i) => (
+              {analysis?.category?.map((v, i) => (
                 <li key={i}>
                   <div className="title">{Object.keys(v)}</div>
                   <div className="sub">{v[Object.keys(v)]}</div>
@@ -108,7 +103,7 @@ const Analysis = () => {
                 <div className="sub">별점 개수</div>
               </li>
               <li>
-                <div className="title">{maxValue}</div>
+                <div className="title">{analysis?.rating?.frequent}</div>
                 <div className="sub">많이 준 별점</div>
               </li>
             </ul>
