@@ -7,6 +7,7 @@ import BookInfoSlice from "./slices/BookInfoSlice";
 import MemberSlice from "./slices/MemberSlice";
 import AnalysisSlice from "./slices/AnalysisSlice";
 
+import WishSlice from "./slices/WishSlice";
 const store = configureStore({
   reducer: {
     booklist: BookListSlice,
@@ -16,6 +17,7 @@ const store = configureStore({
     bookInfo: BookInfoSlice,
     member: MemberSlice,
     analysis: AnalysisSlice,
+    wish: WishSlice,
   },
 
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
