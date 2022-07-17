@@ -6,6 +6,7 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
+import logo from "../../assets/img/title_gray.png";
 
 /* Hooks */
 import { useQueryString } from "../../hooks/useQueryString";
@@ -107,6 +108,26 @@ const SearchContainer = styled.div`
         width: 80%;
       }
     }
+
+    .searchResultNotFound {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 200px;
+      height: 200px;
+      padding: 0.5rem;
+
+      img {
+        display: block;
+        width: 100%;
+        margin-bottom: 1rem;
+      }
+
+      p {
+        text-align: center;
+      }
+    }
   }
 `;
 
@@ -199,10 +220,18 @@ const Search = memo(() => {
               <div className="searchResultBooksLeft">
                 <span>검색결과</span>
               </div>
+
               <div className="searchResultBooksRight">
-                {data.map((result, index) => (
-                  <SearchResultItem key={index} result={result} />
-                ))}
+                {data.length === 0 ? (
+                  /* 검색 결과가 없을 경우 */
+                  <div className="searchResultNotFound">
+                    <img src={logo} alt="logo" />
+                    <p>검색결과가 없습니다.</p>
+                  </div>
+                ) : (
+                  /* 검색 결과가 있을 경우 */
+                  data.map((result, index) => <SearchResultItem key={index} result={result} />)
+                )}
               </div>
             </div>
           )}
