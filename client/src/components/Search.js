@@ -54,10 +54,17 @@ const Search = () => {
   const navigate = useNavigate();
 
   // 검색 이벤트
-  const onSearch = async (e) => {
+  const onSearch = (e) => {
     e.preventDefault();
+
+    // 검색어가 있을 경우, 페이지 이동
+    if (keyword === "") {
+      alert("검색어를 입력하세요");
+    } else {
+      navigate(`/search?query=${keyword}`);
+    }
+
     setKeyword("");
-    navigate(`/search?query=${keyword}`);
   };
 
   const onChange = (e) => {
