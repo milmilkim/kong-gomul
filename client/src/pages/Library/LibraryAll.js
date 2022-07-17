@@ -3,6 +3,7 @@
  */
 import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import { CellMeasurer } from "react-virtualized";
 
 /* Slice */
 import { getReviewList } from "../../slices/ReviewSlice";
@@ -13,6 +14,7 @@ import BooksItem from "../../components/BooksItem";
 import ItemList from "../../components/ItemList";
 import LibraryNav from "../../components/LibraryNav";
 import Spinner from "../../components/spinner";
+import { cache, MasonryComponent } from "../../components/MasonryComponent";
 
 const LibraryAll = memo(() => {
   const dispatch = useDispatch();
@@ -20,6 +22,21 @@ const LibraryAll = memo(() => {
 
   const [memberId, setMemberId] = useState(); // 멤버 아이디
   const [reviewList, setReviewList] = useState(); // 유저가 작성한 리뷰 목록들
+
+  /* 무한 스크롤 */
+  const cellRenderer = ({ index, key, parent, style }) => {
+    const book = reviewList[index].book;
+
+    return (
+      <CellMeasurer cache={cache} parent={parent} key={key} index={index}>
+        {({ measure, registerChild }) => (
+          <div style={style} ref={registerChild}>
+            <BooksItem book={book} itemWidth={"100%"} />
+          </div>
+        )}
+      </CellMeasurer>
+    );
+  };
 
   useEffect(() => {
     async function fetchData() {
@@ -52,7 +69,7 @@ const LibraryAll = memo(() => {
       <LibraryNav />
 
       {/* Book List */}
-      <ItemList>{reviewList && reviewList.map((book, index) => <BooksItem book={book.book} key={index} />)}</ItemList>
+      <ItemList>{reviewList && <MasonryComponent data={reviewList} cellRenderer={cellRenderer} />}</ItemList>
     </>
   );
 });
