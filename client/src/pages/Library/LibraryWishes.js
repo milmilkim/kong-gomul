@@ -1,19 +1,12 @@
 /**
  * 내 서재 보고싶어요 페이지
  */
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { useNavigate, Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
-import {
-  WindowScroller,
-  CellMeasurer,
-  CellMeasurerCache,
-  AutoSizer,
-  Masonry,
-  createMasonryCellPositioner,
-} from "react-virtualized";
+import { CellMeasurer } from "react-virtualized";
 
 /* Slice */
 import { getWishList } from "../../slices/WishSlice";
@@ -21,6 +14,8 @@ import { getWishList } from "../../slices/WishSlice";
 /* Components */
 import StyledButton from "../../components/StyledButton";
 import Spinner from "../../components/spinner";
+import BooksItem from "../../components/BooksItem";
+import { cache, MasonryComponent } from "../../components/MasonryComponent";
 
 /* Styled Components */
 const LibraryWishesContainer = styled.div`
@@ -55,25 +50,12 @@ const LibraryWishesContainer = styled.div`
   }
 `;
 
-const cache = new CellMeasurerCache({
-  defaultHeight: 250,
-  defaultWidth: 220,
-  fixedWidth: true,
-});
-
-const cellPositioner = createMasonryCellPositioner({
-  cellMeasurerCache: cache,
-  columnCount: 5,
-  columnWidth: 220,
-  spacer: 20,
-});
-
 const LibraryWishes = memo(() => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state) => state.wish);
-  const masonryRef = useRef(null);
 
+  /* 무한 스크롤 */
   const cellRenderer = ({ index, key, parent, style }) => {
     const book = data?.rows[index].book;
 
@@ -81,30 +63,13 @@ const LibraryWishes = memo(() => {
       <CellMeasurer cache={cache} parent={parent} key={key} index={index}>
         {({ measure, registerChild }) => (
           <div style={style} ref={registerChild}>
-            <Link to={`/bookinfo/${book.id}`}>
-              <div className="booksItemImage">
-                <img
-                  src={book.thumbnail}
-                  alt={book.title}
-                  onLoad={measure}
-                  style={{ width: "220px", height: "350px" }}
-                />
-              </div>
+            <BooksItem book={book} itemWidth={"100%"}>
               <h4 className="booksItemTitle">{book.title}</h4>
-            </Link>
+            </BooksItem>
           </div>
         )}
       </CellMeasurer>
     );
-  };
-
-  const onResize = () => {
-    cache.clearAll();
-    cellPositioner.reset({
-      columnCount: 5,
-      columnWidth: 220,
-      spacer: 20,
-    });
   };
 
   useEffect(() => {
@@ -129,31 +94,7 @@ const LibraryWishes = memo(() => {
         <hr />
 
         {/* 보고싶어요 책 리스트 */}
-        {data && (
-          <WindowScroller>
-            {({ height, scrollTop, isScrolling, onChildScroll }) => (
-              <AutoSizer disableHeight onResize={onResize}>
-                {({ width }) => (
-                  <Masonry
-                    ref={masonryRef}
-                    autoHeight
-                    isScrolling={isScrolling}
-                    overscanRowCount={5}
-                    onScroll={onChildScroll}
-                    scrollTop={scrollTop}
-                    deferredMeasurementCache={cache}
-                    cellCount={data.rows.length}
-                    cellMeasurerCache={cache}
-                    cellPositioner={cellPositioner}
-                    cellRenderer={cellRenderer}
-                    height={height}
-                    width={width}
-                  />
-                )}
-              </AutoSizer>
-            )}
-          </WindowScroller>
-        )}
+        {data && <MasonryComponent data={data.rows} cellRenderer={cellRenderer} />}
       </LibraryWishesContainer>
     </>
   );
