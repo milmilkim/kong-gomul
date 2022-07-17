@@ -2,8 +2,8 @@ import { db, sequelize } from '../../models/index.js';
 import { Op, Sequelize } from 'sequelize';
 const { book, author, genre, keyword, publisher, review, member, wish } = db;
 
-const count = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\`)`;
-const avg = `(SELECT AVG(rating) FROM review WHERE book_id = \`book\`.\`id\`)`;
+const count = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\` AND rating IS NOT NULL)`;
+const avg = `(SELECT AVG(rating) FROM review WHERE book_id = \`book\`.\`id\` AND rating IS NOT NULL)`;
 
 export const getBookList = async (req, res) => {
   const page = parseInt(req.query.page) || 1;
