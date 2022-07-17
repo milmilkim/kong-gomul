@@ -6,7 +6,6 @@ import { Outlet, useNavigate } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 import styled from "styled-components";
 import { FaSearch } from "react-icons/fa";
-import logo from "../../assets/img/title_gray.png";
 
 /* Hooks */
 import { useQueryString } from "../../hooks/useQueryString";
@@ -17,6 +16,7 @@ import { getSearchResult } from "../../slices/SearchSlice";
 /* Components */
 import Spinner from "../../components/spinner";
 import SearchResultItem from "../../components/SearchResultItem";
+import SearchResultNotFound from "../../components/SearchResultNotFound";
 
 /* Styled Components */
 const SearchContainer = styled.div`
@@ -106,26 +106,6 @@ const SearchContainer = styled.div`
       }
       .searchResultUsersRight {
         width: 80%;
-      }
-    }
-
-    .searchResultNotFound {
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      width: 200px;
-      height: 200px;
-      padding: 0.5rem;
-
-      img {
-        display: block;
-        width: 100%;
-        margin-bottom: 1rem;
-      }
-
-      p {
-        text-align: center;
       }
     }
   }
@@ -224,10 +204,7 @@ const Search = memo(() => {
               <div className="searchResultBooksRight">
                 {data.length === 0 ? (
                   /* 검색 결과가 없을 경우 */
-                  <div className="searchResultNotFound">
-                    <img src={logo} alt="logo" />
-                    <p>검색결과가 없습니다.</p>
-                  </div>
+                  <SearchResultNotFound />
                 ) : (
                   /* 검색 결과가 있을 경우 */
                   data.map((result, index) => <SearchResultItem key={index} result={result} />)
