@@ -196,6 +196,7 @@ export const analysis = async (req, res, next) => {
     const ratingCountAll = reviewList.length; //총 개수
     const ratingCount = ratingSum ? sortArr.getCounts(ratingList) : null;
     const ratingAvg = ratingSum ? Number((ratingSum / ratingCountAll).toFixed(1)) : null; //평균
+    const frequent = Object.keys(ratingCount).reduce((a, b) => (ratingCount[a] > ratingCount[b] ? a : b));
 
     //키워드
     const keywordMaxLength = 10; //최대 개수
@@ -220,6 +221,7 @@ export const analysis = async (req, res, next) => {
         avg: ratingAvg,
         count: ratingCount,
         comment: generateComment(ratingAvg),
+        frequent,
       },
       keyword: sortedKeyword,
       genre: sortedGenre,
