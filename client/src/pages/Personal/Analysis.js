@@ -63,7 +63,7 @@ const Analysis = () => {
   for (let i = 0; i < 11; i++) {
     data.push({
       name: (j * 2) % 2 === 0 ? j : "",
-      count: analysis.rating.count ? analysis.rating.count[j] : 0,
+      count: analysis?.rating?.count ? analysis?.rating?.count[j] : 0,
     });
 
     j += 0.5;
