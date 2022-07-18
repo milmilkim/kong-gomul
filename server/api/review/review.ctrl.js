@@ -84,7 +84,7 @@ export const addReview = async (req, res, next) => {
   try {
     const result = await review.upsert({
       book_id: req.params.book_id,
-      member_id: req.body.member_id,
+      member_id: req.decoded.id,
       contents: req.body.contents,
       rating: req.body.rating,
       is_spoiler: req.body.is_spoiler,

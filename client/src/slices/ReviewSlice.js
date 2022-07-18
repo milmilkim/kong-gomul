@@ -23,15 +23,17 @@ export const getReviewListByBookId = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     let result = null;
     try {
-      result = await axios.get(`api/book/review${payload.bookId}`, {
+      result = await axios.get(`api/book/review/${payload.id}`, {
         params: {
-          page: payload.page,
-          size: payload.size,
+          page: payload.page || 1,
+          size: payload.size || 5,
         },
       });
     } catch (e) {
       result = rejectWithValue(e.response);
     }
+
+    return result;
   }
 );
 
