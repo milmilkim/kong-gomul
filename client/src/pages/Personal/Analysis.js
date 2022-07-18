@@ -57,6 +57,7 @@ const Analysis = () => {
     dispatch(getAnalysis());
   }, [dispatch]);
 
+  //별점
   const data = [];
   let j = 0;
   for (let i = 0; i < 11; i++) {
@@ -68,6 +69,7 @@ const Analysis = () => {
     j += 0.5;
   }
 
+  //키워드
   const words = [];
   analysis?.keyword.forEach((v) => {
     words.push({ text: Object.keys(v), value: v[Object.keys(v)] });
@@ -102,6 +104,7 @@ const Analysis = () => {
 
           <Section>
             <h2>별점 분포</h2>
+            <span>{analysis?.rating?.comment}</span>
             <RatingChart data={data} />
             <ul>
               <li>
@@ -123,6 +126,14 @@ const Analysis = () => {
             <h2>선호 키워드</h2>
             <KeywordCloud words={words} />
             <h2>선호 장르</h2>
+            <ul>
+              {analysis?.genre.slice(0, 3).map((v, i) => (
+                <li key={i}>
+                  <div className="title">{Object.keys(v)}</div>
+                  <div className="sub">{v[Object.keys(v)]}권</div>
+                </li>
+              ))}
+            </ul>
           </Section>
         </>
       )}
