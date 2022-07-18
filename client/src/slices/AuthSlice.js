@@ -7,7 +7,11 @@ import axios from "../config/axios";
 export const tokenVerify = createAsyncThunk("AuthSlice/tokenVerify", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
-    result = await axios.get("api/auth/check");
+    result = await axios.get("api/auth/check", {
+      params: {
+        token: payload,
+      },
+    });
   } catch (err) {
     result = rejectWithValue(err.response);
   }
