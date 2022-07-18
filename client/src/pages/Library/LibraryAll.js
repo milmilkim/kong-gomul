@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { CellMeasurer } from "react-virtualized";
 
 /* Slice */
-import { getReviewList } from "../../slices/ReviewSlice";
+import { getLibrary } from "../../slices/LibrarySlice";
 import { getMyProfile } from "../../slices/MemberSlice";
 
 /* Components */
@@ -25,7 +25,7 @@ const LibraryAll = memo(() => {
 
   /* 무한 스크롤 */
   const cellRenderer = ({ index, key, parent, style }) => {
-    const book = reviewList[index].book;
+    const book = reviewList[index];
 
     return (
       <CellMeasurer cache={cache} parent={parent} key={key} index={index}>
@@ -50,7 +50,7 @@ const LibraryAll = memo(() => {
       const {
         payload: { data: reviewData },
       } = await dispatch(
-        getReviewList({
+        getLibrary({
           member_id: memberId,
         })
       ); // 가져온 멤버 아이디와 일치하는 회원이 작성한 리뷰 목록을 가져온다.
