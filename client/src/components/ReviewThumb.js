@@ -21,25 +21,20 @@ const ReviewThumb = ({ review }) => {
   return (
     <ReviewThumbContainer>
       <p>{member.nickname}</p>
-      <p>
-        {review.rating && (
-          <>
-            {" "}
-            <StarRatings
-              rating={rating}
-              numberOfStars={5}
-              name="rating"
-              starDimension="13px"
-              starSpacing="2px"
-              starRatedColor="#FA722E"
-            />
-            {rating}점
-          </>
-        )}
-      </p>
+      {review.rating && (
+        <>
+          <StarRatings
+            rating={rating}
+            numberOfStars={5}
+            name="rating"
+            starDimension="13px"
+            starSpacing="2px"
+            starRatedColor="#FA722E"
+          />
+          {rating}점
+        </>
+      )}
       <p>{contents}</p>
-      {/* <hr /> */}
-      {/* <p>❤</p> */}
     </ReviewThumbContainer>
   );
 };
