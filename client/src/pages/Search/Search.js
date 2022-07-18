@@ -16,7 +16,7 @@ import { getSearchResult } from "../../slices/SearchSlice";
 /* Components */
 import Spinner from "../../components/spinner";
 import SearchResultItem from "../../components/SearchResultItem";
-import ResultNotFound from "../../component/ResultNotFound";
+import ResultNotFound from "../../components/ResultNotFound";
 
 /* Styled Components */
 const SearchContainer = styled.div`
