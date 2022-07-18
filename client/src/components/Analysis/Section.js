@@ -5,10 +5,19 @@ const SectionContainer = styled.section`
   border: solid 1px #eee;
   padding: 20px;
   margin-bottom: 20px;
+
   h2 {
     font-size: 1.5rem;
     font-weight: bold;
     margin-bottom: 20px;
+  }
+
+  span {
+    color: ${(props) => props.theme.color.primaryColor};
+    display: inline-block;
+    width: 100%;
+    text-align: center;
+    font-size: 0.9rem;
   }
 
   ul {

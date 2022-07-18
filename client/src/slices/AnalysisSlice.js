@@ -17,7 +17,7 @@ export const getAnalysis = createAsyncThunk("AnalysisSlice/getAnalysis", async (
 const AnalysisSlice = createSlice({
   name: "analysis",
   initialState: {
-    loading: null,
+    loading: false,
     data: null,
     error: null,
   },
