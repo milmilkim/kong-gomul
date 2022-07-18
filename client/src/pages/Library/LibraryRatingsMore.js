@@ -8,7 +8,7 @@ import styled from "styled-components";
 import { FaArrowLeft } from "react-icons/fa";
 
 /* Slice */
-import { getReviewList } from "../../slices/ReviewSlice";
+import { getLibrary } from "../../slices/LibrarySlice";
 import { getMyProfile } from "../../slices/MemberSlice";
 
 /* Components */
@@ -61,7 +61,7 @@ const LibraryRatingsMore = memo(() => {
       const {
         payload: { data: reviewData },
       } = await dispatch(
-        getReviewList({
+        getLibrary({
           member_id: memberId,
           rating: parseFloat(rating),
         })
@@ -92,8 +92,7 @@ const LibraryRatingsMore = memo(() => {
           {reviewList && reviewList.length === 0 ? (
             <div>평가한 작품이 없습니다.</div> /* 평점이 없을 경우 */
           ) : (
-            reviewList &&
-            reviewList.map((book, index) => <BooksItem book={book.book} key={index} />) /* 평점이 있을 경우 */
+            reviewList && reviewList.map((book, index) => <BooksItem book={book} key={index} />) /* 평점이 있을 경우 */
           )}
         </ItemList>
       </LibraryRatingsMoreContainer>

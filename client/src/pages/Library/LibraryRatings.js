@@ -7,7 +7,7 @@ import { NavLink, Outlet } from "react-router-dom";
 import styled from "styled-components";
 
 /* Slice */
-import { getReviewList } from "../../slices/ReviewSlice";
+import { getLibrary } from "../../slices/LibrarySlice";
 import { getMyProfile } from "../../slices/MemberSlice";
 
 /* Components */
@@ -54,7 +54,7 @@ const LibraryRatings = memo(() => {
       const {
         payload: { data: reviewData },
       } = await dispatch(
-        getReviewList({
+        getLibrary({
           member_id: memberId,
         })
       ); // 가져온 멤버 아이디와 일치하는 회원이 작성한 리뷰 목록을 가져온다.
@@ -94,9 +94,7 @@ const LibraryRatings = memo(() => {
                   <div>평가한 작품이 없습니다.</div> /* 평점이 없을 경우 */
                 ) : (
                   reviewList &&
-                  filteredRatingArr.map((book, index) => (
-                    <BooksItem book={book.book} key={index} />
-                  )) /* 평점이 있을 경우 */
+                  filteredRatingArr.map((book, index) => <BooksItem book={book} key={index} />) /* 평점이 있을 경우 */
                 )}
               </ItemList>
               <hr />
