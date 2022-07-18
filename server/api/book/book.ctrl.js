@@ -140,22 +140,6 @@ export const getBook = async (req, res) => {
         separate: true,
       },
       {
-        model: review,
-        as: 'reviews',
-        separate: true,
-        offset: 0,
-        limit: 5,
-        attributes: ['id', 'rating', 'contents', 'is_spoiler'],
-        order: [['id', 'DESC']],
-        include: [
-          {
-            model: member,
-            as: 'member',
-            attributes: ['nickname', 'id', 'profile_image'],
-          },
-        ],
-      },
-      {
         model: wish,
         as: 'wishes',
         attributes: [[sequelize.fn('COUNT', Sequelize.col('wishes.id')), 'count_wish']],

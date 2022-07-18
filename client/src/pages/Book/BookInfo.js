@@ -103,6 +103,7 @@ const BookInfo = () => {
 
   const dispatch = useDispatch();
   const { data, loading, error } = useSelector((state) => state.bookInfo);
+  const { data: reviewData, loading: loading2, error: error2 } = useSelector((state) => state.review);
 
   const handleButton = (e) => {
     setIsOpen((isOpen) => !isOpen);
@@ -115,7 +116,7 @@ const BookInfo = () => {
 
   return (
     <BookInfoContainer>
-      <Spinner visible={loading} />
+      <Spinner visible={loading || loading2} />
       {data && (
         <div className="inner">
           <section className="flex-row">
@@ -144,17 +145,10 @@ const BookInfo = () => {
                   starRatedColor="#FA722E"
                 />
                 {data.avg_rating}점 ({data.count_rating})
-              </div>
-              {/* 작품 소개, 출판사 서평 외 */}
+              </div>{" "}
               <h3>작품 소개</h3>
               <hr />
               <p>{data.introduce}</p>
-              {/* <h3>출판사 서평</h3>
-              <hr />
-              <p>나중에 데이터 받아와서 넣을 내용</p>
-              <h3>저자 프로필</h3>
-              <hr />
-              <p>나중에 데이터 받아와서 넣을 내용</p> */}
               <h3>키워드</h3>
               <hr />
               <p>#{data.keywords.map((v) => v.keyword).join(" #")}</p>
@@ -167,7 +161,7 @@ const BookInfo = () => {
             </button>
             <ReviewWrite isOpen={isOpen} setIsOpen={setIsOpen} />
             <ul className="flex-row">
-              {data.reviews.map((review) => (
+              {reviewData.map((review) => (
                 <li key={review.id}>
                   <Link to="/">
                     <ReviewThumb review={review} />
