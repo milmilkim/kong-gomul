@@ -11,8 +11,10 @@ import { getSearchResult } from "../../slices/SearchSlice";
 /* Components */
 import Spinner from "../../components/spinner";
 import UserItem from "../../components/UsersItem";
+import ResultNotFound from "../../components/ResultNotFound";
+
+/* Hooks */
 import { useQueryString } from "../../hooks/useQueryString";
-import SearchResultNotFound from "../../components/SearchResultNotFound";
 
 /* Styled Components */
 const SearchUsersContainer = styled.div`
@@ -66,7 +68,7 @@ const SearchUsers = memo(() => {
           <ul>
             {data.length === 0 ? (
               /* 검색 결과가 없을 경우 */
-              <SearchResultNotFound />
+              <ResultNotFound />
             ) : (
               /* 검색 결과가 있을 경우 */
               data.map((d, i) => <UserItem key={i} user={d} />)
