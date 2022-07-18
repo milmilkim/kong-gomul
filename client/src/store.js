@@ -5,6 +5,8 @@ import SearchSlice from "./slices/SearchSlice";
 import ReviewSlice from "./slices/ReviewSlice";
 import BookInfoSlice from "./slices/BookInfoSlice";
 import MemberSlice from "./slices/MemberSlice";
+import AnalysisSlice from "./slices/AnalysisSlice";
+
 import WishSlice from "./slices/WishSlice";
 import LibrarySlice from "./slices/LibrarySlice";
 
@@ -16,6 +18,7 @@ const store = configureStore({
     review: ReviewSlice,
     bookInfo: BookInfoSlice,
     member: MemberSlice,
+    analysis: AnalysisSlice,
     wish: WishSlice,
     library: LibrarySlice,
   },

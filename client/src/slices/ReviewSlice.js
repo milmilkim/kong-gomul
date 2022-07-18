@@ -1,6 +1,6 @@
 import axios from "../config/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
-
+import { rejected, pending, fulfilled } from "../utils/ExtraReducer";
 export const getReviewList = createAsyncThunk("ReviewSlice/getReviewList", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
@@ -13,6 +13,17 @@ export const getReviewList = createAsyncThunk("ReviewSlice/getReviewList", async
     });
   } catch (e) {
     result = rejectWithValue(e.response);
+  }
+
+  return result;
+});
+
+export const addReviewItem = createAsyncThunk("ReviewSlice/addReviewItem", async (payload, { rejectWithValue }) => {
+  let result = null;
+  try {
+    result = await axios.post("/api/review", payload);
+  } catch (err) {
+    result = rejectWithValue(err.response);
   }
 
   return result;
@@ -47,6 +58,9 @@ const ReviewSlice = createSlice({
         },
       };
     },
+    [addReviewItem.pending]: pending,
+    [addReviewItem.fulfilled]: fulfilled,
+    [addReviewItem.rejected]: rejected,
   },
 });
 
