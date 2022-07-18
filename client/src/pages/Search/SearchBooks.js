@@ -67,7 +67,7 @@ const SearchBooks = memo(() => {
             ) : (
               /* 검색 결과가 있을 경우 */
               data.map((d, i) => (
-                <BooksItem book={d} key={i} className="searchBooksItem">
+                <BooksItem className="searchBooksItem" key={i} book={d} itemHref={`/bookinfo/${d.id}`}>
                   <div className="booksItemTitle">{d.title}</div>
                   <span>{d.authors?.map((author) => author.name + " ")}</span>
                   <span>{d.publishers?.map((publisher) => publisher.name + " ")}</span>
