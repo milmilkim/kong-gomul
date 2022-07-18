@@ -8,6 +8,7 @@ import ReviewWrite from "../../components/ReviewWrite";
 
 import { useDispatch, useSelector } from "react-redux";
 import { getBookInfo } from "../../slices/BookInfoSlice";
+import { getReviewListByBookId } from "../../slices/ReviewSlice";
 
 import Spinner from "../../components/spinner";
 
@@ -109,6 +110,7 @@ const BookInfo = () => {
 
   useEffect(() => {
     dispatch(getBookInfo({ id }));
+    dispatch(getReviewListByBookId({ id }));
   }, [dispatch, id]);
 
   return (

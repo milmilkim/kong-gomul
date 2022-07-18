@@ -20,6 +20,23 @@ export const getReviewList = createAsyncThunk("ReviewSlice/getReviewList", async
   return result;
 });
 
+export const getReviewListByBookId = createAsyncThunk(
+  "ReviewSlice/getReviewListByBooKId",
+  async (payload, { rejectWithValue }) => {
+    let result = null;
+    try {
+      result = await axios.get(`api/book/review${payload.bookId}`, {
+        params: {
+          page: payload.page,
+          size: payload.size,
+        },
+      });
+    } catch (e) {
+      result = rejectWithValue(e.response);
+    }
+  }
+);
+
 export const addReviewItem = createAsyncThunk("ReviewSlice/addReviewItem", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
@@ -63,6 +80,10 @@ const ReviewSlice = createSlice({
     [addReviewItem.pending]: pending,
     [addReviewItem.fulfilled]: fulfilled,
     [addReviewItem.rejected]: rejected,
+
+    [getReviewListByBookId.pending]: pending,
+    [getReviewListByBookId.fulfilled]: fulfilled,
+    [getReviewListByBookId.rejected]: rejected,
   },
 });
 
