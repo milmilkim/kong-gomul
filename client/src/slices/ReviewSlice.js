@@ -1,6 +1,9 @@
 import axios from "../config/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { rejected, pending, fulfilled } from "../utils/ExtraReducer";
+import { cloneDeep } from "lodash";
+import Swal from "sweetalert2";
+
 export const getReviewList = createAsyncThunk("ReviewSlice/getReviewList", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
@@ -38,11 +41,14 @@ export const getReviewListByBookId = createAsyncThunk(
 );
 
 export const addReviewItem = createAsyncThunk("ReviewSlice/addReviewItem", async (payload, { rejectWithValue }) => {
+  console.log("리뷰추가..");
   let result = null;
   try {
-    result = await axios.post("/api/review", payload);
+    result = await axios.post(`/api/review/${payload.book_id}`, payload.data);
   } catch (err) {
     result = rejectWithValue(err.response);
+    console.log(err);
+    Swal.fire(err.response.data.message);
   }
 
   return result;
@@ -68,6 +74,7 @@ const ReviewSlice = createSlice({
       };
     },
     [getReviewList.rejected]: (state, { payload }) => {
+      console.log("에러발생");
       return {
         data: payload?.data,
         loading: false,
@@ -78,9 +85,27 @@ const ReviewSlice = createSlice({
       };
     },
     [addReviewItem.pending]: pending,
-    [addReviewItem.fulfilled]: fulfilled,
-    [addReviewItem.rejected]: rejected,
+    [addReviewItem.fulfilled]: (state, { payload }) => {
+      // 기존의 상태값을 복사한다.(원본이 JSON이므로 깊은 복사를 수행해야 한다)
+      const data = cloneDeep(state.data);
+      console.log(data);
 
+      // 새로 저장된 결과를 기존 상태값 배열의 맨 앞에 추가한다.
+      console.log(payload);
+      data.unshift({ ...payload.data });
+
+      console.log(data);
+      if (data.length > 5) {
+        data.pop();
+      }
+
+      return {
+        data,
+        loading: false,
+        error: null,
+      };
+    },
+    [addReviewItem.rejected]: rejected,
     [getReviewListByBookId.pending]: pending,
     [getReviewListByBookId.fulfilled]: fulfilled,
     [getReviewListByBookId.rejected]: rejected,
