@@ -67,7 +67,7 @@ const LibraryWishes = memo(() => {
       <CellMeasurer cache={cache} parent={parent} key={key} index={index}>
         {({ measure, registerChild }) => (
           <div style={style} ref={registerChild}>
-            <BooksItem book={book} itemWidth={"100%"}>
+            <BooksItem book={book} itemHref={`/bookinfo/${book.id}`} itemWidth={"100%"}>
               <h4 className="booksItemTitle">{book.title}</h4>
             </BooksItem>
           </div>
