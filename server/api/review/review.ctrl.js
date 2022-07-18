@@ -82,12 +82,27 @@ export const getReview = async (req, res) => {
  */
 export const addReview = async (req, res, next) => {
   try {
-    const result = await review.upsert({
+    const newReview = await review.upsert({
       book_id: req.params.book_id,
       member_id: req.decoded.id,
       contents: req.body.contents,
       rating: req.body.rating,
       is_spoiler: req.body.is_spoiler,
+    });
+
+    if (newReview[1] === false) {
+      throw new Error('이미 리뷰를 작성한 책입니다');
+    }
+    const reviewId = newReview[0].dataValues.id;
+    const result = await review.findOne({
+      where: { id: reviewId },
+      include: [
+        {
+          model: member,
+          as: 'member',
+          attributes: ['nickname', 'id', 'profile_image'],
+        },
+      ],
     });
 
     res.send(result);
