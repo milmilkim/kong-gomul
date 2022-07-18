@@ -90,17 +90,19 @@ const ReviewSlice = createSlice({
       const data = cloneDeep(state.data);
       console.log(data);
 
+      //내가 작성한 글은 제외
+      const filterdData = data.filter((v) => v.member_id !== payload.data.member_id);
+
       // 새로 저장된 결과를 기존 상태값 배열의 맨 앞에 추가한다.
-      console.log(payload);
-      data.unshift({ ...payload.data });
+      filterdData.unshift({ ...payload.data });
 
       console.log(data);
-      if (data.length > 5) {
-        data.pop();
+      if (filterdData.length > 5) {
+        filterdData.pop();
       }
 
       return {
-        data,
+        data: filterdData,
         loading: false,
         error: null,
       };
