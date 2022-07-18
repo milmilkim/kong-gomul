@@ -1,17 +1,13 @@
 import { db } from '../../models/index.js';
 const { review, member, book } = db;
 
-
 /**
  *  모든 리뷰 가져오기
  *  GET /api/review?order=''&size=''&page=''
  */
 export const getReviewList = async (req, res) => {
   try {
-    const size = parseInt(req.query.size) || 10; // 한 페이지당 보여줄 리뷰 수
-    const page = parseInt(req.query.page) || 1; // 페이지 수
     const order = req.query.order || 'rating';
-
     const rating = req.query.rating;
     let result = null;
 
@@ -31,8 +27,6 @@ export const getReviewList = async (req, res) => {
           },
         ],
         order: [[order, 'DESC']], // 별점순, 최신순 정렬
-        limit: size,
-        offset: size * (page - 1),
         where: {
           rating: req.query.rating,
         },
@@ -53,8 +47,6 @@ export const getReviewList = async (req, res) => {
           },
         ],
         order: [[order, 'DESC']], // 별점순, 최신순 정렬
-        limit: size,
-        offset: size * (page - 1),
       });
     }
 
