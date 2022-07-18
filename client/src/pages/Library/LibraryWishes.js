@@ -1,7 +1,7 @@
 /**
  * 내 서재 보고싶어요 페이지
  */
-import React, { memo, useEffect } from "react";
+import React, { memo, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
@@ -9,6 +9,7 @@ import { FaArrowLeft } from "react-icons/fa";
 import { CellMeasurer } from "react-virtualized";
 
 /* Slice */
+import { getMyProfile } from "../../slices/MemberSlice";
 import { getWishList } from "../../slices/WishSlice";
 
 /* Components */
@@ -16,6 +17,7 @@ import StyledButton from "../../components/StyledButton";
 import Spinner from "../../components/spinner";
 import BooksItem from "../../components/BooksItem";
 import { cache, MasonryComponent } from "../../components/MasonryComponent";
+import ResultNotFound from "../../components/ResultNotFound";
 
 /* Styled Components */
 const LibraryWishesContainer = styled.div`
@@ -54,6 +56,8 @@ const LibraryWishes = memo(() => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { data, loading } = useSelector((state) => state.wish);
+  const [memberId, setMemberId] = useState(); // 멤버 아이디
+  const [wishList, setWishList] = useState(); // 유저가 보고싶어요한 목록
 
   /* 무한 스크롤 */
   const cellRenderer = ({ index, key, parent, style }) => {
@@ -63,7 +67,7 @@ const LibraryWishes = memo(() => {
       <CellMeasurer cache={cache} parent={parent} key={key} index={index}>
         {({ measure, registerChild }) => (
           <div style={style} ref={registerChild}>
-            <BooksItem book={book} itemWidth={"100%"}>
+            <BooksItem book={book} itemHref={`/bookinfo/${book.id}`} itemWidth={"100%"}>
               <h4 className="booksItemTitle">{book.title}</h4>
             </BooksItem>
           </div>
@@ -73,10 +77,28 @@ const LibraryWishes = memo(() => {
   };
 
   useEffect(() => {
-    dispatch(getWishList());
+    async function fetchData() {
+      const {
+        payload: {
+          data: { id },
+        },
+      } = await dispatch(getMyProfile()); // 멤버 아이디를 가져온다.
+      setMemberId(id);
+
+      const {
+        payload: {
+          data: { rows },
+        },
+      } = await dispatch(getWishList());
+      setWishList(rows);
+    }
+
+    fetchData();
   }, [dispatch]);
 
-  return (
+  return !memberId ? (
+    <ResultNotFound>로그인 상태가 아닙니다.</ResultNotFound>
+  ) : (
     <>
       {/* Spinner */}
       <Spinner visible={loading} />
@@ -94,7 +116,7 @@ const LibraryWishes = memo(() => {
         <hr />
 
         {/* 보고싶어요 책 리스트 */}
-        {data && <MasonryComponent data={data.rows} cellRenderer={cellRenderer} />}
+        {wishList && <MasonryComponent data={wishList} cellRenderer={cellRenderer} />}
       </LibraryWishesContainer>
     </>
   );

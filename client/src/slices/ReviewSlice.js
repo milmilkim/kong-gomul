@@ -6,8 +6,6 @@ export const getReviewList = createAsyncThunk("ReviewSlice/getReviewList", async
   try {
     result = await axios.get("api/review", {
       params: {
-        size: payload.size,
-        page: payload.page,
         order: payload.order,
         rating: payload.rating,
         member_id: payload.member_id,

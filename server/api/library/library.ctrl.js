@@ -25,8 +25,6 @@ export const getLibrary = async (req, res) => {
         SELECT r.rating, r.book_id, r.member_id, r.id, book.title, book.thumbnail
         FROM review r, book
         WHERE book.id = r.book_id AND r.rating = ${rating} AND r.member_id = ${member_id} AND r.rating IS NOT NULL
-        LIMIT ${size}
-        OFFSET ${offset}
         `;
     } else if (sort === 'rating') {
       query = `
@@ -48,8 +46,6 @@ export const getLibrary = async (req, res) => {
       SELECT r.rating, r.book_id, r.member_id, r.id, book.title, book.thumbnail
       FROM review r, book
       WHERE book.id = r.book_id AND r.member_id = ${member_id} AND r.rating IS NOT NULL
-      LIMIT ${size}
-      OFFSET ${offset}
       `;
     }
 
