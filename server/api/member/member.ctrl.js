@@ -1,13 +1,17 @@
-import { db } from '../../models/index.js';
+import { db, sequelize } from '../../models/index.js';
+import { Op, Sequelize } from 'sequelize';
 import qs from 'qs';
 import axios from 'axios';
 import dotenv from 'dotenv';
 import regexHelper from '../../lib/RegexHelper.js';
 import encrypt from '../../lib/encrypt.js';
+import sortArr from '../../lib/SortArr.js';
+
+import generateComment from '../../lib/generateComment.js';
 
 dotenv.config();
 
-const { member } = db;
+const { member, review, book, keyword, genre } = db;
 
 /**
  * 수정
@@ -161,6 +165,69 @@ export const getMyProfile = async (req, res) => {
   }
 };
 
-export const updateProfile = async (req, res) => {
-  next();
+/* 내 취향분석 결과
+    get /api/member/me/analysis
+*/
+export const analysis = async (req, res, next) => {
+  const { id } = req.decoded;
+
+  try {
+    let reviewList;
+    reviewList = await review.findAll({
+      where: {
+        member_id: id,
+        rating: {
+          [Op.ne]: null,
+        },
+      },
+      attributes: ['book_id', 'rating'],
+    });
+
+    let ratingSum = 0;
+    const ratingList = [];
+    const bookId = [];
+    reviewList.forEach((review, i) => {
+      ratingSum += review.dataValues.rating;
+      ratingList.push(review.dataValues.rating);
+      bookId.push(review.dataValues.book_id);
+    });
+
+    //별점
+    const ratingCountAll = reviewList.length; //총 개수
+    const ratingCount = ratingSum ? sortArr.getCounts(ratingList) : null;
+    const ratingAvg = ratingSum ? Number((ratingSum / ratingCountAll).toFixed(1)) : null; //평균
+    const frequent = Object.keys(ratingCount).reduce((a, b) => (ratingCount[a] > ratingCount[b] ? a : b));
+
+    //키워드
+    const keywordMaxLength = 10; //최대 개수
+    const keywordList = await keyword.findAll({ where: { book_id: bookId }, attributes: ['keyword'] });
+    const keywordArray = keywordList.map((v, i) => v.dataValues.keyword).filter((v) => v !== '완결' && v !== '일본');
+    const sortedKeyword = sortArr.getSortedArr(keywordArray).slice(0, keywordMaxLength);
+
+    //장르
+    const GenreMaxLength = 10; //최대 개수
+    const genreList = await genre.findAll({ where: { book_id: bookId }, attributes: ['genre'] });
+    const genreArray = genreList.map((v, i) => v.dataValues.genre);
+    const sortedGenre = sortArr.getSortedArr(genreArray).slice(0, GenreMaxLength);
+
+    //카테고리
+    const categoryList = await book.findAll({ where: { id: bookId } });
+    const categoryArray = categoryList.map((v, i) => v.dataValues.category);
+    const sortedCategory = sortArr.getSortedArr(categoryArray);
+
+    res.send({
+      rating: {
+        count_all: ratingCountAll,
+        avg: ratingAvg,
+        count: ratingCount,
+        comment: generateComment(ratingAvg),
+        frequent,
+      },
+      keyword: sortedKeyword,
+      genre: sortedGenre,
+      category: sortedCategory,
+    });
+  } catch (err) {
+    next();
+  }
 };

@@ -207,7 +207,7 @@ const Search = memo(() => {
                   <ResultNotFound />
                 ) : (
                   /* 검색 결과가 있을 경우 */
-                  data.map((result, index) => <SearchResultItem key={index} result={result} />)
+                  data.map((result, index) => <SearchResultItem key={index} result={result} searchType={selectedSearchType} />)
                 )}
               </div>
             </div>
