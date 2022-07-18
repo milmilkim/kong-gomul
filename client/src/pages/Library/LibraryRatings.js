@@ -16,6 +16,7 @@ import ItemList from "../../components/ItemList";
 import LibraryNav from "../../components/LibraryNav";
 import StyledButton from "../../components/StyledButton";
 import Spinner from "../../components/spinner";
+import ResultNotFound from "../../components/ResultNotFound";
 
 /* Styled Components */
 const LibraryRatingsContainer = styled.div`
@@ -64,7 +65,9 @@ const LibraryRatings = memo(() => {
     fetchData();
   }, [dispatch, memberId]);
 
-  return (
+  return !memberId ? (
+    <ResultNotFound>로그인 상태가 아닙니다.</ResultNotFound>
+  ) : (
     <>
       {/* Spinner */}
       <Spinner visible={loading} />
