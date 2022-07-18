@@ -15,6 +15,7 @@ import ItemList from "../../components/ItemList";
 import LibraryNav from "../../components/LibraryNav";
 import Spinner from "../../components/spinner";
 import { cache, MasonryComponent } from "../../components/MasonryComponent";
+import ResultNotFound from "../../components/ResultNotFound";
 
 const LibraryAll = memo(() => {
   const dispatch = useDispatch();
@@ -60,7 +61,9 @@ const LibraryAll = memo(() => {
     fetchData();
   }, [dispatch, memberId]);
 
-  return (
+  return !memberId ? (
+    <ResultNotFound>로그인 상태가 아닙니다.</ResultNotFound>
+  ) : (
     <>
       {/* Spinner */}
       <Spinner visible={loading} />
