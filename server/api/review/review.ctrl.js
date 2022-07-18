@@ -90,9 +90,6 @@ export const addReview = async (req, res, next) => {
       is_spoiler: req.body.is_spoiler,
     });
 
-    if (newReview[1] === false) {
-      throw new Error('이미 리뷰를 작성한 책입니다');
-    }
     const reviewId = newReview[0].dataValues.id;
     const result = await review.findOne({
       where: { id: reviewId },
