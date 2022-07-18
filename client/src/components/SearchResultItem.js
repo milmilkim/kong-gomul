@@ -27,10 +27,11 @@ const SearchResultItemcontainer = styled.div`
   }
 `;
 
-const SearchResultItem = ({ result }) => {
+const SearchResultItem = ({ result, searchType }) => {
   return (
     <SearchResultItemcontainer>
-      <Link to={`/bookinfo/${result?.id}`}>
+      {/* 검색타입이 books일 경우에는 책 상세페이지로 이동, users일 경우에는 mypage로 이동 */}
+      <Link to={searchType === "books" ? `/bookinfo/${result?.id}` : `/`}>
         <div className="searchResultItems">
           <div className="searchItemImage">
             <img src={result?.thumbnail || result?.profile_image} alt={result?.title || result?.nickname} />

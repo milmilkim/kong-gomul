@@ -2,7 +2,7 @@ import React, { memo } from "react";
 import styled from "styled-components";
 import logo from "../assets/img/title_gray.png";
 
-const SearchResultNotFoundContainer = styled.div`
+const ResultNotFoundContainer = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,13 +22,13 @@ const SearchResultNotFoundContainer = styled.div`
   }
 `;
 
-const SearchResultNotFound = memo(() => {
+const ResultNotFound = memo(({ children = "검색결과가 없습니다." }) => {
   return (
-    <SearchResultNotFoundContainer>
+    <ResultNotFoundContainer>
       <img src={logo} alt="logo" />
-      <p>검색결과가 없습니다.</p>
-    </SearchResultNotFoundContainer>
+      <p>{children}</p>
+    </ResultNotFoundContainer>
   );
 });
 
-export default SearchResultNotFound;
+export default ResultNotFound;

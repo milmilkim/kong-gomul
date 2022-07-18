@@ -90,7 +90,7 @@ const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
           {data &&
             data.map((book, index) => (
               <SwiperSlide key={index}>
-                <BooksItem book={book} itemWidth="100%" />
+                <BooksItem book={book} itemHref={`/bookinfo/${book.id}`} itemWidth="100%" />
               </SwiperSlide>
             ))}
         </Swiper>

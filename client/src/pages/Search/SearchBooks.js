@@ -15,7 +15,7 @@ import Spinner from "../../components/spinner";
 
 /* Custom Hooks */
 import { useQueryString } from "../../hooks/useQueryString";
-import SearchResultNotFound from "../../components/SearchResultNotFound";
+import ResultNotFound from "../../components/ResultNotFound";
 
 /* Styled Components */
 const SearchBooksContainer = styled.div`
@@ -63,11 +63,11 @@ const SearchBooks = memo(() => {
           <ItemList>
             {data.length === 0 ? (
               /* 검색 결과가 없을 경우 */
-              <SearchResultNotFound />
+              <ResultNotFound />
             ) : (
               /* 검색 결과가 있을 경우 */
               data.map((d, i) => (
-                <BooksItem book={d} key={i} className="searchBooksItem">
+                <BooksItem className="searchBooksItem" key={i} book={d} itemHref={`/bookinfo/${d.id}`}>
                   <div className="booksItemTitle">{d.title}</div>
                   <span>{d.authors?.map((author) => author.name + " ")}</span>
                   <span>{d.publishers?.map((publisher) => publisher.name + " ")}</span>

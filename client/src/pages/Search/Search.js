@@ -16,7 +16,7 @@ import { getSearchResult } from "../../slices/SearchSlice";
 /* Components */
 import Spinner from "../../components/spinner";
 import SearchResultItem from "../../components/SearchResultItem";
-import SearchResultNotFound from "../../components/SearchResultNotFound";
+import ResultNotFound from "../../components/ResultNotFound";
 
 /* Styled Components */
 const SearchContainer = styled.div`
@@ -204,10 +204,10 @@ const Search = memo(() => {
               <div className="searchResultBooksRight">
                 {data.length === 0 ? (
                   /* 검색 결과가 없을 경우 */
-                  <SearchResultNotFound />
+                  <ResultNotFound />
                 ) : (
                   /* 검색 결과가 있을 경우 */
-                  data.map((result, index) => <SearchResultItem key={index} result={result} />)
+                  data.map((result, index) => <SearchResultItem key={index} result={result} searchType={selectedSearchType} />)
                 )}
               </div>
             </div>
