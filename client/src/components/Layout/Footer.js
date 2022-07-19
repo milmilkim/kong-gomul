@@ -37,6 +37,9 @@ const Footer = memo(() => {
               버그 신고 및 기타 문의 <a href="/">misoriu@gmail.com</a>
             </p>
             <p>본 사이트는 영리목적 없이 개인 프로젝트의 일환으로 제작되었습니다.</p>
+            <a href="https://www.flaticon.com/free-icons/books" title="books icons">
+              icons created by Freepik - Flaticon
+            </a>
           </div>
           <div>
             <ul>
