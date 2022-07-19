@@ -1,7 +1,5 @@
 import Axios from "axios";
 
-const accessToken = window.localStorage.getItem("accessToken");
-
 const axios = Axios.create({
   baseURL: process.env.REACT_APP_BASE_URL,
 });
@@ -10,7 +8,7 @@ axios.defaults.withCredentials = true;
 
 axios.interceptors.request.use(
   (request) => {
-    request.headers["x-access-token"] = accessToken;
+    request.headers["x-access-token"] = window.localStorage.getItem("accessToken");
 
     return request;
   },
@@ -25,7 +23,6 @@ axios.interceptors.response.use(
   },
   async (error) => {
     const { response: errorResponse, config: originalRequest } = error;
-
     if (errorResponse.status === 401) {
       const { data } = await Axios.get("/api/auth/refresh", {
         baseURL: process.env.REACT_APP_BASE_URL,

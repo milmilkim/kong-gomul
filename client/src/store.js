@@ -6,6 +6,7 @@ import ReviewSlice from "./slices/ReviewSlice";
 import BookInfoSlice from "./slices/BookInfoSlice";
 import MemberSlice from "./slices/MemberSlice";
 import AnalysisSlice from "./slices/AnalysisSlice";
+import RecentsSlice from "./slices/RecentsSlice";
 
 import WishSlice from "./slices/WishSlice";
 import LibrarySlice from "./slices/LibrarySlice";
@@ -21,6 +22,7 @@ const store = configureStore({
     analysis: AnalysisSlice,
     wish: WishSlice,
     library: LibrarySlice,
+    recents: RecentsSlice,
   },
 
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),

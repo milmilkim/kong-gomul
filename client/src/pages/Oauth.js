@@ -2,7 +2,7 @@
  * 소셜 로그인 하는 페이지
  */
 
-import axios from "axios";
+import axios from "../config/axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -23,18 +23,20 @@ export default function Oauth() {
     const getAccessToken = async (code, platform) => {
       try {
         setIsLoading(true);
+        //인가코드로 액세스 토큰 설정
         const res = await axios.get(`api/auth/${platform}`, {
           baseURL: process.env.REACT_APP_BASE_URL,
           params: {
             code,
           },
         });
+
         const accessToken = res.data.accessToken;
         const refreshToken = res.data.refreshToken;
         window.localStorage.setItem("accessToken", accessToken); //localStorage에 토큰을 저장함
         window.localStorage.setItem("refreshToken", refreshToken);
 
-        dispatch(tokenVerify());
+        dispatch(tokenVerify(accessToken));
         navigate("/");
       } catch (err) {
         console.error(err);
