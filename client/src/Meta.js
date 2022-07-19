@@ -26,7 +26,7 @@ Meta.defaultProps = {
   title: "콩고물",
   description: "React.js로 만든 프로젝트",
   keywords: "React, Redux, Node.js",
-  author: "misoridou",
+  author: "misoriu",
   //   image: reactjs,
   url: window.location.href,
 };

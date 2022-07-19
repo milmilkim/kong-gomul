@@ -21,6 +21,7 @@ import Spinner from "../../components/spinner";
 
 /* Styled Components */
 const CategoryGenreContainer = styled.div`
+  min-height: 100vh;
   width: 1200px;
   margin: 0 auto;
 

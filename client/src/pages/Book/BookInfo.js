@@ -1,18 +1,24 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import { Link, useParams } from "react-router-dom";
+import axios from "../../config/axios";
 
 import BooksThumb from "../../components/BooksThumb";
 import ReviewThumb from "../../components/ReviewThumb";
 import ReviewWrite from "../../components/ReviewWrite";
 
 import { useDispatch, useSelector } from "react-redux";
+
 import { getBookInfo } from "../../slices/BookInfoSlice";
 import { getReviewListByBookId } from "../../slices/ReviewSlice";
+import { addWishList, deleteWishList, getWishList } from "../../slices/WishSlice";
 
 import Spinner from "../../components/spinner";
 
 import StarRatings from "react-star-ratings";
+import { useCallback, useRef } from "react";
+
+import { FaPlus, FaBookmark } from "react-icons/fa";
 
 const BookInfoContainer = styled.div`
   padding: 30px 0;
@@ -20,6 +26,32 @@ const BookInfoContainer = styled.div`
 
   section {
     margin-bottom: 50px;
+
+    .wish {
+      text-align: center;
+      margin-top: 20px;
+      cursor: pointer;
+      width: 150px;
+      height: 50px;
+      margin: auto;
+      margin-top: 20px;
+
+      @keyframes sizeUp {
+        from {
+          font-size: 1rem;
+        }
+
+        to {
+          font-size: 1.1rem;
+        }
+      }
+      &.active {
+        animation: sizeUp 300ms ease;
+        animation-fill-mode: forwards;
+
+        color: ${(props) => props.theme.color.primaryColor};
+      }
+    }
 
     &.flex-row {
       .book-thumb {
@@ -102,22 +134,67 @@ const BookInfo = () => {
   const { id } = useParams();
 
   const dispatch = useDispatch();
+
+  //책 정보
   const { data, loading } = useSelector((state) => state.bookInfo);
+  //하단에 표시될 리뷰
   const { data: reviewData, loading: loading2 } = useSelector((state) => state.review);
+  const { isLogin } = useSelector((state) => state.auth);
+
+  //보고싶어요
+  const { data: wishList } = useSelector((state) => state.wish);
+
+  //보고싶어요 추가되어있는지
+  const [isAdded, setIsAdded] = useState(false);
 
   const handleButton = (e) => {
     setIsOpen((isOpen) => !isOpen);
   };
+
+  const moveToWishList = useCallback(
+    (e) => {
+      if (isAdded) {
+        //삭제
+        dispatch(deleteWishList(id));
+      } else {
+        //추가
+        dispatch(
+          addWishList({
+            book_id: id,
+          })
+        );
+      }
+
+      setIsAdded((isAdded) => !isAdded);
+    },
+    [isAdded, dispatch]
+  );
 
   useEffect(() => {
     dispatch(getBookInfo({ id }));
     dispatch(getReviewListByBookId({ id }));
   }, [dispatch, id]);
 
+  useEffect(() => {
+    if (isLogin) {
+      dispatch(getWishList());
+    }
+  }, [isLogin, dispatch]);
+
+  useEffect(() => {
+    if (wishList) {
+      wishList.forEach((element) => {
+        if (element.book_id === Number(id)) {
+          setIsAdded(true);
+        }
+      });
+    }
+  }, [wishList]);
+
   return (
     <BookInfoContainer>
       <Spinner visible={loading || loading2} />
-      {data && (
+      {data && isLogin != null && (
         <div className="inner">
           <section className="flex-row">
             {/* 책 섬네일 */}
@@ -130,7 +207,18 @@ const BookInfo = () => {
                 author={data.authors.map((v) => v.name).join(", ")}
                 publisher={data.publishers.map((v) => v.name).join(", ")}
               />
-              <button type="button">보고싶어요</button>
+              {isLogin &&
+                (isAdded ? (
+                  <div className="wish active" onClick={moveToWishList}>
+                    <FaBookmark />
+                    보고싶어요
+                  </div>
+                ) : (
+                  <div className="wish" onClick={moveToWishList}>
+                    <FaPlus />
+                    보고싶어요
+                  </div>
+                ))}
             </div>
             {/* 우측 책 소개 */}
             <div className="book-text">
@@ -156,12 +244,15 @@ const BookInfo = () => {
           </section>
           <section className="review">
             <h3>리뷰</h3>
-            <button type="button" className="review-btn" onClick={handleButton}>
-              리뷰 작성
-            </button>
+            {isLogin && (
+              <button type="button" className="review-btn" onClick={handleButton}>
+                리뷰 작성
+              </button>
+            )}
+
             <ReviewWrite isOpen={isOpen} setIsOpen={setIsOpen} />
             <ul className="flex-row">
-              {reviewData.map((review) => (
+              {reviewData?.map((review) => (
                 <li key={review.id}>
                   <Link to="/">
                     <ReviewThumb review={review} />
