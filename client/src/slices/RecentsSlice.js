@@ -6,6 +6,7 @@ export const getRecents = createAsyncThunk("RecentsSlice/getRecents", async (pay
   let result = null;
   try {
     result = await axios.get("api/library/recents");
+    console.log(result);
   } catch (e) {
     result = rejectWithValue(e.response);
   }
@@ -22,27 +23,10 @@ const RecentsSlice = createSlice({
   },
   reducers: {},
   extraReducers: {
-    [getRecents.pending]: (state, { payload }) => {
-      return { ...state, loading: true };
-    },
-    [getRecents.fulfilled]: (state, { payload }) => {
-      return {
-        data: payload?.data,
-        loading: false,
-        error: null,
-      };
-    },
-    [getRecents.rejected]: (state, { payload }) => {
-      return {
-        data: payload?.data,
-        loading: false,
-        error: {
-          code: payload?.status ? payload.status : 500,
-          message: payload?.statusText ? payload.statusText : "ServerError",
-        },
-      };
-    },
+    [getRecents.pending]: pending,
+    [getRecents.fulfilled]: fulfilled,
+    [getRecents.rejected]: rejected,
   },
 });
 
-export default WishSlice.reducer;
+export default RecentsSlice.reducer;
