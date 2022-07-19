@@ -13,6 +13,9 @@ import MyPage from "../pages/Personal/MyPage";
 /* 취향 분석 */
 import Analysis from "../pages/Personal/Analysis";
 
+/* 보고싶어요 */
+import WishList from "../pages/Personal/WishList";
+
 /* 책 상세페이지 */
 import BookInfo from "../pages/Book/BookInfo";
 import Review from "../pages/Book/Review";
@@ -58,6 +61,8 @@ const Router = () => {
             <Route index element={<MyPage />}></Route>
             <Route path="analysis" element={<Analysis />}></Route>
           </Route>
+
+          <Route path="/wish" element={<WishList />} />
 
           {/*책 상세페이지 */}
           <Route path="/bookinfo/:id" element={<BookInfo />} />

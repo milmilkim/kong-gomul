@@ -6,7 +6,6 @@ export const getRecents = createAsyncThunk("RecentsSlice/getRecents", async (pay
   let result = null;
   try {
     result = await axios.get("api/library/recents");
-    console.log(result);
   } catch (e) {
     result = rejectWithValue(e.response);
   }

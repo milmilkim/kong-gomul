@@ -64,13 +64,12 @@ const MyPage = () => {
   //리덕스
 
   const dispatch = useDispatch();
-  const { data, error, loading } = useSelector((state) => state.member);
-  const { data: recentsData, loading: recentsLoading } = useSelector((state) => state.recents);
+  const { data } = useSelector((state) => state.member);
+  const { data: recentsData } = useSelector((state) => state.recents);
 
   useEffect(() => {
     dispatch(getMyProfile());
     dispatch(getRecents());
-    console.log(recentsData);
   }, [dispatch]);
 
   return (

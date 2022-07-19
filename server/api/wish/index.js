@@ -7,6 +7,6 @@ const wish = express.Router();
 wish.use('/', authMiddleware);
 wish.get('/', getWishList); // '보고싶어요' 등록한 책 목록
 wish.post('/', addWishList); // '보고싶어요' 추가
-wish.delete('/', deleteWishList); //'보고싶어요' 삭제
+wish.delete('/:book_id', deleteWishList); //'보고싶어요' 삭제
 
 export default wish;

@@ -53,10 +53,10 @@ const LibraryIcons = ({ member_id }) => {
 
         <div className="flex-row">
           <div>
-            <img src={love} alt="보고싶어요" />
-            <p>
-              <Link to="">보고싶어요</Link>
-            </p>
+            <Link to="/wish">
+              <img src={love} alt="보고싶어요" />
+              <p>보고싶어요</p>
+            </Link>
           </div>
           <Link to={member_id ? `/library/${member_id}` : `/library`}>
             <img src={books} alt="서재" />
