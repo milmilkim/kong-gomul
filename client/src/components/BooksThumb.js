@@ -14,6 +14,11 @@ const BooksThumbContainer = styled.div`
     font-weight: bold;
   }
 
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   ${(props) => {
     if (props.size === "big") {
       return css`
