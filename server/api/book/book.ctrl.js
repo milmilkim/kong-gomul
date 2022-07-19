@@ -92,15 +92,16 @@ export const getBook = async (req, res) => {
     //쿠키가 있음
     let book_id = req.cookies.book_id.split('+');
 
-    if (book_id.indexOf(id) === -1) {
-      //중복이 아님
-      book_id.unshift(id);
-      if (book_id.length > 20) {
-        //20개 초과
-        book_id.pop();
-      }
-      res.cookie('book_id', book_id.join('+'), { maxAge: 604800000 }); //7d
+    if (book_id.indexOf(id)) {
+      //중복이면
+      book_id = book_id.filter((v) => v !== book_id); //있던 거 삭제
     }
+    book_id.unshift(id);
+    if (book_id.length > 20) {
+      //20개 초과
+      book_id.pop();
+    }
+    res.cookie('book_id', book_id.join('+'), { maxAge: 604800000 }); //7d
   } else {
     //쿠키 없음
     res.cookie('book_id', id, { maxAge: 604800000 }); //7d
@@ -138,22 +139,6 @@ export const getBook = async (req, res) => {
         as: 'genres',
         attributes: ['genre'],
         separate: true,
-      },
-      {
-        model: review,
-        as: 'reviews',
-        separate: true,
-        offset: 0,
-        limit: 5,
-        attributes: ['id', 'rating', 'contents', 'is_spoiler'],
-        order: [['id', 'DESC']],
-        include: [
-          {
-            model: member,
-            as: 'member',
-            attributes: ['nickname', 'id', 'profile_image'],
-          },
-        ],
       },
       {
         model: wish,

@@ -8,7 +8,7 @@ import { Link } from "react-router-dom";
 /* Styled Components */
 const BooksItemContainer = styled.li`
   width: ${(props) => props.itemWidth || "20%"};
-  height: 100%;
+  height: ${(props) => props.itemHeight || "100%"};
   padding: 0 8px;
   margin-bottom: 1rem;
 
@@ -23,7 +23,7 @@ const BooksItemContainer = styled.li`
 
       .booksItemImage {
         width: 100%;
-        height: 22rem;
+        height: ${(props) => props.itemHeight || "22rem"};
         border: 1px solid #e9e9e9;
         border-radius: 5px;
         overflow: hidden;
@@ -58,9 +58,9 @@ const BooksItemContainer = styled.li`
   }
 `;
 
-const BooksItem = ({ book: { book_id, thumbnail, title }, itemWidth, itemHref, children }) => {
+const BooksItem = ({ book: { book_id, thumbnail, title }, itemWidth, itemHref, children, itemHeight }) => {
   return (
-    <BooksItemContainer itemWidth={itemWidth}>
+    <BooksItemContainer itemWidth={itemWidth} itemHeight={itemHeight}>
       <Link to={itemHref || `/bookinfo/${book_id}`}>
         <div className="booksItemInner">
           <div className="booksItemImage">
