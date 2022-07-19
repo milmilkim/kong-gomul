@@ -137,7 +137,7 @@ export const checkRefresh = async (req, res) => {
 
       res.send({ success: true, accessToken });
     } else {
-      throw new Error('유효하지 않은 토큰입니다');
+      throw new Error('유효하지 않은 토큰입니다(2)');
     }
   } catch (err) {
     res.status(401).json({ success: false, message: err.message });
