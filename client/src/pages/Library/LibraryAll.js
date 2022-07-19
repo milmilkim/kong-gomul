@@ -72,7 +72,13 @@ const LibraryAll = memo(() => {
       <LibraryNav />
 
       {/* Book List */}
-      <ItemList>{reviewList && <MasonryComponent data={reviewList} cellRenderer={cellRenderer} />}</ItemList>
+      <ItemList>
+        {reviewList && reviewList.length === 0 ? (
+          <div>평가한 작품이 없습니다.</div> /* 평점이 없을 경우 */
+        ) : (
+          reviewList && <MasonryComponent data={reviewList} cellRenderer={cellRenderer} /> /* 평점이 있을 경우 */
+        )}
+      </ItemList>
     </>
   );
 });
