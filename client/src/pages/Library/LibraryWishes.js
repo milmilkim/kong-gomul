@@ -61,7 +61,7 @@ const LibraryWishes = memo(() => {
 
   /* 무한 스크롤 */
   const cellRenderer = ({ index, key, parent, style }) => {
-    const book = data?.rows[index].book;
+    const book = data[index].book;
 
     return (
       <CellMeasurer cache={cache} parent={parent} key={key} index={index}>
@@ -86,10 +86,9 @@ const LibraryWishes = memo(() => {
       setMemberId(id);
 
       const {
-        payload: {
-          data: { rows },
-        },
+        payload: { data: rows },
       } = await dispatch(getWishList());
+
       setWishList(rows);
     }
 

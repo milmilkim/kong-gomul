@@ -1,7 +1,6 @@
 import axios from "../config/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fulfilled, rejected, pending } from "../utils/ExtraReducer";
-import { cloneDeep } from "lodash";
 
 export const getWishList = createAsyncThunk("WishSlice/getWishList", async (payload, { rejectWithValue }) => {
   let result = null;
@@ -13,7 +12,7 @@ export const getWishList = createAsyncThunk("WishSlice/getWishList", async (payl
   return result;
 });
 
-export const addWishList = createAsyncThunk("wishSlice/addWishList", async (payload, { rejectWithValue }) => {
+export const addWishList = createAsyncThunk("WishSlice/addWishList", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
     result = await axios.post("api/wish", payload);
@@ -24,7 +23,7 @@ export const addWishList = createAsyncThunk("wishSlice/addWishList", async (payl
   return result;
 });
 
-export const deleteWishList = createAsyncThunk("wishSlice/deleteWishList", async (payload, { rejectWithValue }) => {
+export const deleteWishList = createAsyncThunk("WishSlice/deleteWishList", async (payload, { rejectWithValue }) => {
   let result = null;
   try {
     result = await axios.delete(`api/wish/${payload}`);
@@ -42,6 +41,7 @@ const WishSlice = createSlice({
     loading: false,
     error: null,
   },
+
   reducers: {},
   extraReducers: {
     [getWishList.pending]: pending,
