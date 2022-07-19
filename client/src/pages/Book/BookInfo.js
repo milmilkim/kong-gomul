@@ -102,8 +102,8 @@ const BookInfo = () => {
   const { id } = useParams();
 
   const dispatch = useDispatch();
-  const { data, loading, error } = useSelector((state) => state.bookInfo);
-  const { data: reviewData, loading: loading2, error: error2 } = useSelector((state) => state.review);
+  const { data, loading } = useSelector((state) => state.bookInfo);
+  const { data: reviewData, loading: loading2 } = useSelector((state) => state.review);
 
   const handleButton = (e) => {
     setIsOpen((isOpen) => !isOpen);
