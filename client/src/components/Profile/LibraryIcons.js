@@ -49,7 +49,7 @@ const LibraryIcons = ({ member_id }) => {
     <SteyldIcons>
       <section className="con2">
         <p className="analysis">
-          <Link to={member_id ? `/member/${member_id}/analysis` : `/member/${info.id}/analysis`}>
+          <Link to={member_id ? `/member/${member_id}/analysis` : `/member/${info?.id}/analysis`}>
             <FaChartBar />
             취향분석
           </Link>
