@@ -2,7 +2,7 @@
  * 소셜 로그인 하는 페이지
  */
 
-import axios from "../config/axios";
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
