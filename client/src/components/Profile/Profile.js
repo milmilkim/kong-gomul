@@ -2,11 +2,12 @@ import styled from "styled-components";
 import ProfileImage from "../ProfileImage";
 
 const StyledProfile = styled.div`
-  section.con1 {
+  .profile_card {
     justify-content: center;
     align-items: center;
     text-align: left;
     margin-bottom: 40px;
+    padding: 20px;
 
     h2 {
       font-weight: bold;
@@ -14,8 +15,9 @@ const StyledProfile = styled.div`
     }
 
     p {
-      font-size: 12px;
-      padding: 5px 0;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: #4a4a4a;
     }
 
     .icon-container {
@@ -35,7 +37,7 @@ const StyledProfile = styled.div`
 const Profile = ({ data }) => {
   return (
     <StyledProfile>
-      <section className="con1 flex-row">
+      <section className="profile_card">
         <div className="icon-container">
           <ProfileImage src={data.profile_image} alt={data.nickname} />
         </div>
