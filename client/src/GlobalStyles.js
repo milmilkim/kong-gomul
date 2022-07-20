@@ -4,6 +4,11 @@ import { reset } from "styled-reset";
 const GlobalStyles = createGlobalStyle`
   ${reset}
 
+  body {
+    word-break: keep-all;
+
+  }
+
   *{
     box-sizing: border-box;
   }
@@ -37,6 +42,11 @@ const GlobalStyles = createGlobalStyle`
     clip: rect(0, 0, 0, 0);
     clip-path: inset(50%);
   }
+
+  svg {
+    vertical-align: middle;
+  }
+
 `;
 
 export default GlobalStyles;

@@ -50,6 +50,8 @@ export const updateMember = async (req, res) => {
     if (info.hasOwnProperty('password')) {
       //비밀번호 유효성 검사
       regexHelper.password(info.password, '비밀번호는 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다');
+      //비밀번호 암호화
+      info.password = encrypt(info.password);
     }
 
     if (info.hasOwnProperty('email')) {
@@ -57,17 +59,11 @@ export const updateMember = async (req, res) => {
       regexHelper.email(info.email, '이메일 형식이 잘못되었습니다');
     }
 
-    await member.update(
-      {
-        ...info,
-        password: encrypt(info.password),
+    await member.update(info, {
+      where: {
+        id,
       },
-      {
-        where: {
-          id,
-        },
-      }
-    );
+    });
 
     res.send({ result: 'ok' });
   } catch (err) {
