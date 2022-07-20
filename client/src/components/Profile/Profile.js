@@ -1,18 +1,12 @@
 import styled from "styled-components";
 import ProfileImage from "../ProfileImage";
 
-import ProfileEdit from "../ProfileEdit";
-
-import { GoGear } from "react-icons/go";
-
-import { useState } from "react";
-
 const StyledProfile = styled.div`
   section.con1 {
     justify-content: center;
     align-items: center;
     text-align: left;
-    padding: 40px;
+    margin-bottom: 40px;
 
     h2 {
       font-weight: bold;
@@ -39,12 +33,6 @@ const StyledProfile = styled.div`
 `;
 
 const Profile = ({ data }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleButton = (e) => {
-    setIsOpen((isOpen) => !isOpen);
-  };
-
   return (
     <StyledProfile>
       <section className="con1 flex-row">
@@ -55,11 +43,6 @@ const Profile = ({ data }) => {
           <h2>{data?.nickname}</h2>
           <p>{data?.introduce}</p>
         </div>
-        {/* 프로필 수정 버튼
-        <button type="button">
-          <GoGear className="edit-btn" onClick={handleButton} />
-        </button> */}
-        <ProfileEdit isOpen={isOpen} setIsOpen={setIsOpen} />
       </section>
     </StyledProfile>
   );

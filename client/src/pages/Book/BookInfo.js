@@ -239,7 +239,11 @@ const BookInfo = () => {
               <p>{data.introduce}</p>
               <h3>키워드</h3>
               <hr />
-              <p>#{data.keywords.map((v) => v.keyword).join(" #")}</p>
+              <p>
+                {data.keywords.map((v) => (
+                  <span className="keyword"> {v.keyword} </span>
+                ))}
+              </p>
             </div>
           </section>
           <section className="review">

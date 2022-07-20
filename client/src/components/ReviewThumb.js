@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import StarRatings from "react-star-ratings";
+import ProfileImage from "./ProfileImage";
 
 const ReviewThumbContainer = styled.div`
   display: block;
@@ -9,6 +10,11 @@ const ReviewThumbContainer = styled.div`
   padding: 25px 20px;
   background-color: #ddd;
   text-align: left;
+
+  img {
+    width: 30px;
+    height: 30px;
+  }
 
   p {
     padding-bottom: 10px;
@@ -20,7 +26,8 @@ const ReviewThumb = ({ review }) => {
 
   return (
     <ReviewThumbContainer>
-      <p>{member.nickname}</p>
+      <ProfileImage src={member.profile_image} alt={member.nickname} />
+      <p>{member.nickname.length > 10 ? member.nickname.substr(0, 10) + "..." : member.nickname}</p>
       {review.rating && (
         <>
           <StarRatings
