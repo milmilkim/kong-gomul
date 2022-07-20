@@ -161,11 +161,12 @@ export const getMyProfile = async (req, res) => {
   }
 };
 
-/* 내 취향분석 결과
+/* 취향분석 결과
     get /api/member/me/analysis
+    get /api/member/:id/analysis
 */
 export const analysis = async (req, res, next) => {
-  const { id } = req.decoded;
+  const { id } = req.decoded || req.params;
 
   try {
     let reviewList;

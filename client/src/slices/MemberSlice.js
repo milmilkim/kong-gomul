@@ -24,6 +24,19 @@ export const updateProfile = createAsyncThunk("MemberSlice/updateProfile", async
   return result;
 });
 
+export const getMemberProfile = createAsyncThunk(
+  "MemberSlice/getMemberProfile",
+  async (payload, { rejectWithValue }) => {
+    let result = null;
+    try {
+      result = await axios.get(`api/member/${payload}`);
+    } catch (e) {
+      result = rejectWithValue(e.response);
+    }
+    return result;
+  }
+);
+
 const MemberSlice = createSlice({
   name: "member",
   initialState: {
@@ -36,6 +49,10 @@ const MemberSlice = createSlice({
     [getMyProfile.pending]: pending,
     [getMyProfile.fulfilled]: fulfilled,
     [getMyProfile.rejected]: rejected,
+
+    [getMemberProfile.pending]: pending,
+    [getMemberProfile.fulfilled]: fulfilled,
+    [getMemberProfile.rejected]: rejected,
 
     [updateProfile.pending]: pending,
     [updateProfile.fulfilled]: (state, { payload }) => {
