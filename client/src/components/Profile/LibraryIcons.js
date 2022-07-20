@@ -8,6 +8,8 @@ import { FaChartBar } from "react-icons/fa";
 
 import styled from "styled-components";
 
+import { useSelector } from "react-redux";
+
 const SteyldIcons = styled.div`
   .con2 {
     padding: 20px 0;
@@ -41,11 +43,13 @@ const SteyldIcons = styled.div`
 `;
 
 const LibraryIcons = ({ member_id }) => {
+  const { info } = useSelector((state) => state.auth);
+
   return (
     <SteyldIcons>
       <section className="con2">
         <p className="analysis">
-          <Link to="/mypage/analysis">
+          <Link to={member_id ? `/member/${member_id}/analysis` : `/member/${info.id}/analysis`}>
             <FaChartBar />
             취향분석
           </Link>
@@ -53,12 +57,12 @@ const LibraryIcons = ({ member_id }) => {
 
         <div className="flex-row">
           <div>
-            <Link to="/library/wishes">
+            <Link to={member_id ? `/member/${member_id}/wishes` : `/library/wishes`}>
               <img src={love} alt="보고싶어요" />
               <p>보고싶어요</p>
             </Link>
           </div>
-          <Link to={member_id ? `/library/${member_id}` : `/library`}>
+          <Link to={member_id ? `/member/${member_id}/library` : `/library`}>
             <img src={books} alt="서재" />
             <p>서재</p>
           </Link>

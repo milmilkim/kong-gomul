@@ -54,34 +54,6 @@ const ProfileContainer = styled.div`
     background-color: transparent;
     cursor: pointer;
   }
-  con3 {
-    padding: 20px;
-    position: relative;
-
-    p {
-      font-weight: bold;
-      margin-bottom: 20px;
-    }
-
-    .more-btn {
-      display: block;
-      width: 80px;
-      height: 30px;
-      border-radius: 5px;
-      position: absolute;
-      top: 12px;
-      right: 0;
-      background-color: #333;
-      color: #eee;
-    }
-
-    .recent-list {
-      padding: 10px;
-      li {
-        margin-right: 40px;
-      }
-    }
-  }
 `;
 
 const MyPage = () => {

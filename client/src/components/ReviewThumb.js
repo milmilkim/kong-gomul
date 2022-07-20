@@ -3,6 +3,8 @@ import styled from "styled-components";
 import StarRatings from "react-star-ratings";
 import ProfileImage from "./ProfileImage";
 
+import { Link } from "react-router-dom";
+
 const ReviewThumbContainer = styled.div`
   display: block;
   width: 200px;
@@ -26,8 +28,10 @@ const ReviewThumb = ({ review }) => {
 
   return (
     <ReviewThumbContainer>
-      <ProfileImage src={member.profile_image} alt={member.nickname} />
-      <p>{member.nickname.length > 10 ? member.nickname.substr(0, 10) + "..." : member.nickname}</p>
+      <Link to={`/member/${member.id}`}>
+        <ProfileImage src={member.profile_image} alt={member.nickname} />
+        <p>{member.nickname.length > 10 ? member.nickname.substr(0, 10) + "..." : member.nickname}</p>
+      </Link>
       {review.rating && (
         <>
           <StarRatings
