@@ -10,6 +10,7 @@ import Profile from "../../components/Profile/Profile";
 import LibraryIcons from "../../components/Profile/LibraryIcons";
 import BooksItem from "../../components/BooksItem";
 import ProfileEdit from "../../components/Profile/ProfileEdit";
+import ResultNotFound from "../../components/ResultNotFound";
 
 import { FaCog } from "react-icons/fa";
 
@@ -61,6 +62,7 @@ const MyPage = () => {
 
   const dispatch = useDispatch();
   const { data } = useSelector((state) => state.member);
+  const { isLogin } = useSelector((state) => state.auth);
   const { data: recentsData } = useSelector((state) => state.recents);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -71,44 +73,48 @@ const MyPage = () => {
 
   return (
     <ProfileContainer>
-      {data && (
-        <div className="inner">
-          <div className="profile_edit">
-            <StyledFaCog
-              onClick={(e) => {
-                setIsOpen(true);
-              }}
-            />
+      {isLogin ? (
+        data && (
+          <div className="inner">
+            <div className="profile_edit">
+              <StyledFaCog
+                onClick={(e) => {
+                  setIsOpen(true);
+                }}
+              />
+            </div>
+
+            {/* 프로필 */}
+            <Profile data={data} />
+            {/*프로필 편집*/}
+            <ProfileEdit isOpen={isOpen} setIsOpen={setIsOpen} data={data} />
+            {/* 보고싶어요, 내 서재, 취향분석 아이콘 */}
+            <LibraryIcons />
+
+            <section className="con3">
+              <h3>최근 조회한 작품</h3>
+              <ul className="recent-list flex-row">
+                {recentsData ? (
+                  recentsData
+                    .slice(0, 5)
+                    .map((book) => (
+                      <BooksItem
+                        key={book.id}
+                        book={book}
+                        itemWidth={"20%"}
+                        itemHeight={"auto"}
+                        itemHref={`/bookinfo/${book.id}`}
+                      />
+                    ))
+                ) : (
+                  <>조회한 작품이 없습니다</>
+                )}
+              </ul>
+            </section>
           </div>
-
-          {/* 프로필 */}
-          <Profile data={data} />
-          {/*프로필 편집*/}
-          <ProfileEdit isOpen={isOpen} setIsOpen={setIsOpen} data={data} />
-          {/* 보고싶어요, 내 서재, 취향분석 아이콘 */}
-          <LibraryIcons />
-
-          <section className="con3">
-            <h3>최근 조회한 작품</h3>
-            <ul className="recent-list flex-row">
-              {recentsData ? (
-                recentsData
-                  .slice(0, 5)
-                  .map((book) => (
-                    <BooksItem
-                      key={book.id}
-                      book={book}
-                      itemWidth={"20%"}
-                      itemHeight={"auto"}
-                      itemHref={`/bookinfo/${book.id}`}
-                    />
-                  ))
-              ) : (
-                <>조회한 작품이 없습니다</>
-              )}
-            </ul>
-          </section>
-        </div>
+        )
+      ) : (
+        <ResultNotFound>로그인하세요</ResultNotFound>
       )}
     </ProfileContainer>
   );

@@ -19,7 +19,7 @@ const TextAreaCountainer = styled.div`
 `;
 
 const TextArea = ({ defaultValue, maxLength, width, height, placeholder, name }) => {
-  const [textLength, setTextLength] = useState(defaultValue.length || 0);
+  const [textLength, setTextLength] = useState(defaultValue?.length || 0);
 
   const countTextLength = (e) => {
     setTextLength(e.target.value.length);
