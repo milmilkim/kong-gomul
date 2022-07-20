@@ -6,10 +6,46 @@ import { useDispatch } from "react-redux";
 import { updateProfile } from "../../slices/MemberSlice";
 import { setIsLogin } from "../../slices/AuthSlice";
 import ProfileImage from "../ProfileImage";
+import Switch from "../Form/Switch";
+import TextArea from "../Form/TextArea";
 
 const EditContainer = styled.div`
-  img {
-    width: 110px;
+  .profile {
+    img {
+      width: 110px;
+    }
+
+    .email {
+      font-size: 0.8rem;
+    }
+    margin-bottom: 10px;
+  }
+
+  .btn {
+    text-align: center;
+    cursor: pointer;
+    line-height: 2;
+    border-radius: 10px;
+
+    &.logout {
+      font-size: 0.9rem;
+    }
+
+    &.leave {
+      color: #d64161;
+      font-size: 0.8rem;
+    }
+
+    &.save {
+      width: 100px;
+      margin: auto;
+      border: solid 2px #ffc0cb;
+      transition: all 300ms ease;
+      &:hover {
+        background-color: #ffc0cb;
+        color: #fff;
+      }
+    }
   }
 `;
 const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
@@ -50,27 +86,37 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={550}>
       <EditContainer>
         {/* <Spinner visible={isLoading} /> */}
-        <div className="flex-row">
+        <div className="profile">
           <ProfileImage src={data.profile_image} alt={data.nickname} />
-          <p>{data.email}</p>
+          <p className="email">{data.email}</p>
         </div>
         <form onChange={handleChange}>
           <input type="text" placeholder="닉네임" maxLength={20} defaultValue={data.nickname} name="nickname" />
-          <textarea maxLength={240} placeholder="한마디" defaultValue={data.introduce} name="introduce" />
+          <TextArea
+            maxLength={240}
+            placeholder="한마디"
+            defaultValue={data.introduce}
+            name="introduce"
+            height="100px"
+          />
         </form>
-        <label for="profile-open">프로필 공개</label>
-        <input
-          type="checkbox"
-          id="profile-open"
-          name="is_public"
+
+        <Switch
+          label="프로필 공개"
+          color="#FFC0CB"
           onChange={handleCheckChange}
+          name="is_public"
           defaultChecked={data.is_public}
         />
-        <button type="submit" onClick={saveProfile}>
+        <div className="btn save" type="submit" onClick={saveProfile}>
           저장
-        </button>
-        <button onClick={logout}>로그아웃</button>
-        <Link to="/withdrawal">탈퇴</Link>
+        </div>
+        <div className="btn logout" onClick={logout}>
+          로그아웃
+        </div>
+        <div className="btn leave">
+          <Link to="/withdrawal">탈퇴</Link>
+        </div>
       </EditContainer>
     </Modal>
   );
