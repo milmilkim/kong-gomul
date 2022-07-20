@@ -36,7 +36,7 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
       ...newProfile,
       [e.target.name]: e.target.checked,
     };
-    console.log(next);
+    setNewProfile(next);
   };
   const [newProfile, setNewProfile] = useState({});
 
