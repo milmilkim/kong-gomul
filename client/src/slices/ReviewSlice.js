@@ -97,7 +97,7 @@ const ReviewSlice = createSlice({
       filterdData.unshift({ ...payload.data });
 
       console.log(data);
-      if (filterdData.length > 5) {
+      if (filterdData.length > 4) {
         filterdData.pop();
       }
 

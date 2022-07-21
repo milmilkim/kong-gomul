@@ -67,6 +67,11 @@ export const getReview = async (req, res) => {
           as: 'member',
           attributes: ['nickname', 'id', 'profile_image'],
         },
+        {
+          model: book,
+          as: 'book',
+          attributes: ['id', 'title', 'thumbnail'],
+        },
       ],
     });
 

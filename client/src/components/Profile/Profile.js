@@ -24,6 +24,7 @@ const StyledProfile = styled.div`
       margin-right: 20px;
       img {
         width: 80px;
+        height: 80px;
       }
     }
 
@@ -39,7 +40,7 @@ const Profile = ({ data }) => {
     <StyledProfile>
       <section className="profile_card">
         <div className="icon-container">
-          <ProfileImage src={data.profile_image} alt={data.nickname} />
+          <ProfileImage src={data.profile_image} alt={data.nickname} width={80} />
         </div>
         <div>
           <h2>{data?.nickname}</h2>
