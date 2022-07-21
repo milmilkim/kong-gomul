@@ -13,6 +13,7 @@ const EditContainer = styled.div`
   .profile {
     img {
       width: 110px;
+      height: 110px;
     }
 
     .email {

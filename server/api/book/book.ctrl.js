@@ -160,9 +160,9 @@ export const getBook = async (req, res) => {
 export const getBookReview = async (req, res) => {
   const bookId = req.params.id;
   const memberId = req.query.member_id;
-  const page = req.params.page || 1;
-  const size = req.params.size || 10;
-  const sort = req.params.sort || 'id';
+  const page = Number(req.query.page) || 1;
+  const size = Number(req.query.size) || 10;
+  const sort = req.query.sort || 'id';
 
   const where = { book_id: bookId };
   memberId && (where['member_id'] = memberId);

@@ -23,7 +23,6 @@ const TextArea = ({ defaultValue, maxLength, width, height, placeholder, name })
 
   const countTextLength = (e) => {
     setTextLength(e.target.value.length);
-    console.log(e.target.value);
   };
   return (
     <TextAreaCountainer width={width} height={height}>

@@ -6,6 +6,8 @@ export default function Star({ rating, setRating }) {
     value: rating,
     isHalf: true,
     a11y: true,
+    activeColor: "rgb(255, 221, 99)",
+
     onChange: (newValue) => {
       console.log(`new value is ${newValue}`);
       setRating(newValue);
