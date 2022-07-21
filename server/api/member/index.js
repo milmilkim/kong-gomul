@@ -9,6 +9,7 @@ member.get('/me', getMyProfile);
 member.get('/me/analysis', analysis);
 
 member.get('/:id', getMember);
+member.get('/:id/analysis', analysis);
 
 member.use('/:id', authMiddleware);
 member.patch('/:id', updateMember);

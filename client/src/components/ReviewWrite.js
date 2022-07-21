@@ -7,12 +7,21 @@ import { useDispatch, useSelector } from "react-redux";
 import { addReviewItem } from "../slices/ReviewSlice";
 
 import Star from "../components/Star";
+import TextArea from "./Form/TextArea";
+import Switch from "./Form/Switch";
 
-const ReviewWriteContainer = styled(Modal)`
-  text-align: center;
-  input[type="text"] {
-    display: block;
-    height: 70px;
+const ModalContainer = styled.div`
+  button {
+    text-align: center;
+    cursor: pointer;
+    border-radius: 10px;
+    margin: 0;
+    &.save {
+      width: 100px;
+      margin: auto;
+      margin-top: 50px;
+      transition: all 300ms ease;
+    }
   }
 `;
 
@@ -49,21 +58,31 @@ const ReviewWrite = ({ isOpen, setIsOpen }) => {
       ...newReview,
       is_spoiler: e.target.checked,
     };
+    console.log(next);
     setNewReview(next);
   };
 
   return (
-    <ReviewWriteContainer isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={400}>
-      <h3>리뷰 작성하기</h3>
-      <hr />
-      <Star rating={rating} setRating={setRating} />
-      <span>스포일러 주의</span>
-      <input type="checkbox" name="is_spoiler" onChange={onCheck} />
-      <form onChange={onChange} onSubmit={onSubmit}>
-        <input type="text" name="contents" placeholder="리뷰를 작성해주세요." />
-        <button type="submit">작성하기</button>
-      </form>
-    </ReviewWriteContainer>
+    <ModalContainer>
+      <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={400}>
+        <h3>리뷰 작성하기</h3>
+        <hr />
+        <Star rating={rating} setRating={setRating} />
+        <form onChange={onChange}>
+          <TextArea
+            type="text"
+            name="contents"
+            placeholder="자유롭게 리뷰를 적어주세요"
+            maxLength={10000}
+            height={"150px"}
+          />
+        </form>
+        <Switch label="스포일러 주의!" name="is_spoiler" onChange={onCheck} />
+        <button className="save" type="submit" onClick={onSubmit}>
+          작성하기
+        </button>
+      </Modal>
+    </ModalContainer>
   );
 };
 

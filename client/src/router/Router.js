@@ -1,6 +1,6 @@
 import { Routes, Route } from "react-router-dom";
 
-import Test from "../pages/Test";
+import Test from "../pages/TestImageUpload";
 import Main from "../pages/Main";
 import Join from "../pages/Join";
 import Withdrawal from "../pages/Withdrawal";
@@ -9,6 +9,9 @@ import Oauth from "../pages/Oauth";
 
 /* 마이페이지 */
 import MyPage from "../pages/Personal/MyPage";
+
+/* 멤버 프로필 */
+import MemberProfile from "../pages/Personal/MemberProfile";
 
 /* 취향 분석 */
 import Analysis from "../pages/Personal/Analysis";
@@ -53,11 +56,14 @@ const Router = () => {
           {/*회원 탈퇴 */}
           <Route path="/withdrawal" element={<Withdrawal />} />
 
-          {/*프로필 페이지 */}
+          {/*마이 페이지 */}
           <Route path="/mypage">
             <Route index element={<MyPage />}></Route>
-            <Route path="analysis" element={<Analysis />}></Route>
           </Route>
+
+          {/*멤버 프로필*/}
+          <Route path="/member/:id" element={<MemberProfile />} />
+          <Route path="/member/:id/analysis" element={<Analysis />} />
 
           {/*책 상세페이지 */}
           <Route path="/bookinfo/:id" element={<BookInfo />} />
