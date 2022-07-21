@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 const HeaderContainer = styled.header`
   padding: 15px 0;
   border-bottom: 1px solid ${(props) => props.theme.color.borderColor};
-  margin-bottom: 10px;
 
   .flex-row {
     justify-content: space-between;

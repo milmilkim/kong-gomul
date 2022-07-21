@@ -93,15 +93,10 @@ const BooksThumbContainer = styled.div`
   }}
 `;
 
-const BooksThumb = ({ size, category, thumbnail, title, author, publisher, star }) => {
+const BooksThumb = ({ size, thumbnail }) => {
   return (
-    <BooksThumbContainer size={size} title={title} author={author} publisher={publisher} star={star}>
-      <p className="category">{category}</p>
+    <BooksThumbContainer size={size} thumbnail={thumbnail}>
       <img src={thumbnail} alt="책 섬네일" className="thumbnail" />
-      <h3 className="title">{title}</h3>
-      <p className="author">{author}</p>
-      <p className="publisher">{publisher}</p>
-      {star && <p className="star">{`평균 별점 : ${star}`}</p>}
     </BooksThumbContainer>
   );
 };
