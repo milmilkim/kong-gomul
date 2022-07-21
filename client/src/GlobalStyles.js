@@ -4,7 +4,28 @@ import { reset } from "styled-reset";
 const GlobalStyles = createGlobalStyle`
   ${reset}
 
-  *{
+  @font-face {
+  font-family: 'NanumBarunGothic';
+  font-style: normal;
+  font-weight: 400;
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot');
+  src: url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.eot?#iefix') format('embedded-opentype'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.woff') format('woff'), url('//cdn.jsdelivr.net/font-nanumlight/1.0/NanumBarunGothicWeb.ttf') format('truetype');
+  }
+
+  body {
+    word-break: keep-all;
+    font-family: 'NanumBarunGothic'
+  }
+
+  input {
+    font-family: 'NanumBarunGothic' ;
+  }
+
+  textarea {
+    font-family: 'NanumBarunGothic' ;
+  }
+
+  * {
     box-sizing: border-box;
   }
 
@@ -36,6 +57,10 @@ const GlobalStyles = createGlobalStyle`
     overflow: hidden;
     clip: rect(0, 0, 0, 0);
     clip-path: inset(50%);
+  }
+
+  svg {
+    vertical-align: middle;
   }
 `;
 

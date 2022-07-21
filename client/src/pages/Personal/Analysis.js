@@ -1,16 +1,17 @@
 import styled from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { getAnalysis } from "../../slices/AnalysisSlice";
-
+import { getAnalysis, getMemberAnalysis } from "../../slices/AnalysisSlice";
+import { getMyProfile, getMemberProfile } from "../../slices/MemberSlice";
 import { useEffect } from "react";
-
 import ProfileImage from "../../components/ProfileImage";
-
 import Section from "../../components/Analysis/Section";
+import ResultNotFound from "../../components/ResultNotFound";
 import RatingChart from "../../components/Analysis/RatingChart";
-
 import Spinner from "../../components/spinner";
 import KeywordCloud from "../../components/Analysis/KeywordCloud";
+import { useParams } from "react-router-dom";
+import { shareTwitter } from "../../lib/Share";
+import Meta from "../../Meta";
 
 const AnalysisContainer = styled.div`
   max-width: 640px;
@@ -50,11 +51,19 @@ const AnalysisContainer = styled.div`
 
 const Analysis = () => {
   const dispatch = useDispatch();
-  const { info } = useSelector((state) => state.auth);
+  const { id } = useParams();
+
+  const { data: member } = useSelector((state) => state.member);
   const { data: analysis, loading, error } = useSelector((state) => state.analysis);
 
   useEffect(() => {
-    dispatch(getAnalysis());
+    if (id) {
+      dispatch(getMemberProfile(id));
+      dispatch(getMemberAnalysis(id));
+    } else {
+      dispatch(getMyProfile());
+      dispatch(getAnalysis());
+    }
   }, [dispatch]);
 
   //별점
@@ -78,15 +87,19 @@ const Analysis = () => {
   return (
     <AnalysisContainer>
       <Spinner visible={loading} />
-      <header>
-        <h1>취향 분석🎈</h1>
-        {info && (
+      {member ? (
+        <header>
+          <Meta title={`콩고물이 분석한 ${member.nickname} 님의 취향은?`}></Meta>
+
+          <h1>취향 분석🎈</h1>
           <div className="profile">
-            <ProfileImage src={info.profile_image} alt={info.nickname} />
-            {info.nickname}
+            <ProfileImage src={member.profile_image} alt={member.nickname} />
+            {member.nickname}
           </div>
-        )}
-      </header>
+        </header>
+      ) : (
+        <ResultNotFound>잘못된 요청입니다</ResultNotFound>
+      )}
 
       {analysis && (
         <>
@@ -135,6 +148,18 @@ const Analysis = () => {
               ))}
             </ul>
           </Section>
+
+          <div
+            className="twitter"
+            onClick={(e) => {
+              shareTwitter(
+                `${member.nickname} 님의 취향 분석 결과는? ${analysis?.rating?.comment}`,
+                window.location.href
+              );
+            }}
+          >
+            공유
+          </div>
         </>
       )}
     </AnalysisContainer>

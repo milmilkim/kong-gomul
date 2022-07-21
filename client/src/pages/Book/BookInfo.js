@@ -20,6 +20,8 @@ import { useCallback, useRef } from "react";
 
 import { FaPlus, FaBookmark } from "react-icons/fa";
 
+import Meta from "../../Meta";
+
 const BookInfoContainer = styled.div`
   padding: 30px 0;
   font-size: 14px;
@@ -61,6 +63,7 @@ const BookInfoContainer = styled.div`
         padding-left: 60px;
         width: 100%;
         position: relative;
+        line-height: 1.3;
 
         h3 {
           margin-top: 50px;
@@ -74,6 +77,17 @@ const BookInfoContainer = styled.div`
         p {
           margin: 20px 0;
           white-space: pre-line;
+        }
+
+        .keyword {
+          display: inline-block;
+          padding: 5px;
+          background-color: #f2f2f2;
+          border-radius: 5px;
+          margin: 0 2px 5px 0;
+          &::before {
+            content: "#";
+          }
         }
 
         .stars {
@@ -109,7 +123,8 @@ const BookInfoContainer = styled.div`
     ul.flex-row {
       overflow: hidden;
       li {
-        margin-right: 20px;
+        width: 25%;
+        padding: 10px;
       }
     }
   }
@@ -118,7 +133,6 @@ const BookInfoContainer = styled.div`
     margin: 15px auto 0;
     display: block;
     width: 80px;
-    height: 30px;
     appearance: none;
     outline: none;
     border: none;
@@ -172,7 +186,7 @@ const BookInfo = () => {
 
   useEffect(() => {
     dispatch(getBookInfo({ id }));
-    dispatch(getReviewListByBookId({ id }));
+    dispatch(getReviewListByBookId({ id, size: 4 }));
   }, [dispatch, id]);
 
   useEffect(() => {
@@ -194,8 +208,9 @@ const BookInfo = () => {
   return (
     <BookInfoContainer>
       <Spinner visible={loading || loading2} />
-      {data && isLogin != null && (
+      {data && (
         <div className="inner">
+          <Meta title={`콩고물 - ${data.title}`} />
           <section className="flex-row">
             {/* 책 섬네일 */}
             <div className="book-thumb">
@@ -232,31 +247,36 @@ const BookInfo = () => {
                   starSpacing="2px"
                   starRatedColor="#FA722E"
                 />
-                {data.avg_rating}점 ({data.count_rating})
+                {data.avg_rating ? data.avg_rating.toFixed(1) : 0}점 ({data.count_rating})
               </div>{" "}
               <h3>작품 소개</h3>
               <hr />
               <p>{data.introduce}</p>
               <h3>키워드</h3>
               <hr />
-              <p>#{data.keywords.map((v) => v.keyword).join(" #")}</p>
+              <p>
+                {data.keywords.map((v) => (
+                  <span className="keyword"> {v.keyword} </span>
+                ))}
+              </p>
             </div>
           </section>
+          {isLogin && (
+            <button type="button" className="review-btn" onClick={handleButton}>
+              리뷰 작성
+            </button>
+          )}
           <section className="review">
             <h3>리뷰</h3>
-            {isLogin && (
-              <button type="button" className="review-btn" onClick={handleButton}>
-                리뷰 작성
-              </button>
-            )}
+            <button type="button" className="review-btn">
+              더보기
+            </button>
 
             <ReviewWrite isOpen={isOpen} setIsOpen={setIsOpen} />
             <ul className="flex-row">
               {reviewData?.map((review) => (
                 <li key={review.id}>
-                  <Link to="/">
-                    <ReviewThumb review={review} />
-                  </Link>
+                  <ReviewThumb review={review} />
                 </li>
               ))}
             </ul>
