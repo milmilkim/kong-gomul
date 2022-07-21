@@ -1,5 +1,7 @@
 import { db, sequelize } from '../../models/index.js';
 import { Op, Sequelize } from 'sequelize';
+import getPalette from '../../lib/getPalette.js';
+
 const { book, author, genre, keyword, publisher, review, member, wish } = db;
 
 const count = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\` AND rating IS NOT NULL)`;
@@ -149,7 +151,9 @@ export const getBook = async (req, res) => {
     group: ['id'],
   });
 
-  res.send({ book_info: bookInfo });
+  const colors = await getPalette(bookInfo.dataValues.thumbnail);
+
+  res.send({ book_info: bookInfo, colors });
 };
 
 /**
@@ -165,7 +169,11 @@ export const getBookReview = async (req, res) => {
   const sort = req.query.sort || 'id';
 
   const where = { book_id: bookId };
-  memberId && (where['member_id'] = memberId);
+  if (memberId) {
+    where['member_id'] = memberId;
+  } else {
+    where['contents'] = { [Op.ne]: null };
+  }
 
   try {
     const reviews = await review.findAll({

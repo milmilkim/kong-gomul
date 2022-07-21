@@ -41,7 +41,6 @@ export const getReviewListByBookId = createAsyncThunk(
 );
 
 export const addReviewItem = createAsyncThunk("ReviewSlice/addReviewItem", async (payload, { rejectWithValue }) => {
-  console.log("리뷰추가..");
   let result = null;
   try {
     result = await axios.post(`/api/review/${payload.book_id}`, payload.data);
@@ -74,7 +73,6 @@ const ReviewSlice = createSlice({
       };
     },
     [getReviewList.rejected]: (state, { payload }) => {
-      console.log("에러발생");
       return {
         data: payload?.data,
         loading: false,
@@ -86,26 +84,31 @@ const ReviewSlice = createSlice({
     },
     [addReviewItem.pending]: pending,
     [addReviewItem.fulfilled]: (state, { payload }) => {
-      // 기존의 상태값을 복사한다.(원본이 JSON이므로 깊은 복사를 수행해야 한다)
-      const data = cloneDeep(state.data);
-      console.log(data);
+      if (payload.data.result) {
+        // 기존의 상태값을 복사한다.(원본이 JSON이므로 깊은 복사를 수행해야 한다)
+        const data = cloneDeep(state.data);
 
-      //내가 작성한 글은 제외
-      const filterdData = data.filter((v) => v.member_id !== payload.data.member_id);
+        //내가 작성한 글은 제외
+        const filterdData = data.filter((v) => v.member_id !== payload.data.item.member_id);
 
-      // 새로 저장된 결과를 기존 상태값 배열의 맨 앞에 추가한다.
-      filterdData.unshift({ ...payload.data });
+        // 새로 저장된 결과를 기존 상태값 배열의 맨 앞에 추가한다.
+        filterdData.unshift({ ...payload.data.item });
 
-      console.log(data);
-      if (filterdData.length > 4) {
-        filterdData.pop();
+        if (filterdData.length > 4) {
+          filterdData.pop();
+        }
+
+        return {
+          data: filterdData,
+          loading: false,
+          error: null,
+        };
+      } else {
+        return {
+          ...state,
+          loading: false,
+        };
       }
-
-      return {
-        data: filterdData,
-        loading: false,
-        error: null,
-      };
     },
     [addReviewItem.rejected]: rejected,
     [getReviewListByBookId.pending]: pending,

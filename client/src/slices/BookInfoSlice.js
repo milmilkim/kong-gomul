@@ -28,6 +28,7 @@ const BookListSlice = createSlice({
     data: null,
     loading: false,
     error: null,
+    colors: null,
   },
   reducer: {},
   extraReducers: {
@@ -37,12 +38,14 @@ const BookListSlice = createSlice({
     [getBookInfo.fulfilled]: (state, { payload }) => {
       return {
         data: payload?.data?.book_info,
+        colors: payload?.data?.colors,
         loading: false,
         error: null,
       };
     },
     [getBookInfo.rejected]: (state, { payload }) => {
       return {
+        colors: null,
         data: payload,
         loading: false,
         error: {
