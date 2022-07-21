@@ -8,7 +8,7 @@ const { wish, book } = db;
  * /api/wish
  */
 export const getWishList = async (req, res) => {
-  const { id: member_id } = req.decoded;
+  const { id: member_id } = req.decoded || req.params.id;
 
   const member_id_attr = {};
   if (member_id) {
@@ -18,7 +18,7 @@ export const getWishList = async (req, res) => {
   }
 
   try {
-    const wishList = await wish.findAndCountAll({
+    const wishList = await wish.findAll({
       where: {
         member_id: member_id_attr,
       },
@@ -68,7 +68,7 @@ export const addWishList = async (req, res) => {
  * /api/wish
  */
 export const deleteWishList = async (req, res) => {
-  const { book_id } = req.body;
+  const { book_id } = req.params;
   const { id: member_id } = req.decoded;
 
   try {

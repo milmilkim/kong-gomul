@@ -14,6 +14,16 @@ export const getAnalysis = createAsyncThunk("AnalysisSlice/getAnalysis", async (
   return result;
 });
 
+export const getMemberAnalysis = createAsyncThunk("AnalysisSlice/getAnalysis", async (payload, { rejectWithValue }) => {
+  let result = null;
+  try {
+    result = await axios.get(`/api/member/${payload}/analysis`);
+  } catch (err) {
+    result = rejectWithValue(err.response);
+  }
+
+  return result;
+});
 const AnalysisSlice = createSlice({
   name: "analysis",
   initialState: {

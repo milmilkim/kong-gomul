@@ -1,5 +1,7 @@
 import { db, sequelize } from '../../models/index.js';
 import { Op, Sequelize } from 'sequelize';
+import getPalette from '../../lib/getPalette.js';
+
 const { book, author, genre, keyword, publisher, review, member, wish } = db;
 
 const count = `(SELECT COUNT(*) FROM review WHERE book_id = \`book\`.\`id\` AND rating IS NOT NULL)`;
@@ -149,7 +151,9 @@ export const getBook = async (req, res) => {
     group: ['id'],
   });
 
-  res.send({ book_info: bookInfo });
+  const colors = await getPalette(bookInfo.dataValues.thumbnail);
+
+  res.send({ book_info: bookInfo, colors });
 };
 
 /**
@@ -159,18 +163,24 @@ export const getBook = async (req, res) => {
 
 export const getBookReview = async (req, res) => {
   const bookId = req.params.id;
-  const page = req.params.page || 1;
-  const size = req.params.size || 10;
-  const sort = req.params.sort || 'id';
+  const memberId = req.query.member_id;
+  const page = Number(req.query.page) || 1;
+  const size = Number(req.query.size) || 10;
+  const sort = req.query.sort || 'id';
+
+  const where = { book_id: bookId };
+  if (memberId) {
+    where['member_id'] = memberId;
+  } else {
+    where['contents'] = { [Op.ne]: null };
+  }
 
   try {
     const reviews = await review.findAll({
       limit: size,
       offset: (page - 1) * size,
       order: [[sort, 'desc']],
-      where: {
-        book_id: bookId,
-      },
+      where,
       include: [
         {
           model: member,

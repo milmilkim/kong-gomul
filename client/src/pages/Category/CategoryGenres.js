@@ -21,6 +21,7 @@ import Spinner from "../../components/spinner";
 
 /* Styled Components */
 const CategoryGenreContainer = styled.div`
+  min-height: 100vh;
   width: 1200px;
   margin: 0 auto;
 
@@ -64,7 +65,10 @@ const CategoryGenreContainer = styled.div`
 `;
 
 /* Swiper 컴포넌트 */
-const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
+const CategorySwiper = ({ title, data, clsName }) => {
+  const prevRef = useRef(null);
+  const nextRef = useRef(null);
+
   return (
     <>
       <h5 className="categoryGenreTitle">#{title}</h5>
@@ -76,13 +80,11 @@ const CategorySwiper = ({ title, prevRef, nextRef, data, clsName }) => {
             nextEl: nextRef.current ? nextRef.current : undefined,
           }}
           onSwiper={(swiper) => {
-            setTimeout(() => {
-              swiper.params.navigation.prevEl = prevRef.current;
-              swiper.params.navigation.nextEl = nextRef.current;
-              swiper.navigation.destroy();
-              swiper.navigation.init();
-              swiper.navigation.update();
-            });
+            swiper.params.navigation.prevEl = prevRef.current;
+            swiper.params.navigation.nextEl = nextRef.current;
+            swiper.navigation.destroy();
+            swiper.navigation.init();
+            swiper.navigation.update();
           }}
           modules={[Navigation]}
         >
@@ -118,14 +120,6 @@ const CategoryGenres = memo(() => {
   const [comicBookData, setcomicBookData] = useState(null);
   const [romanceBookData, setRomanceBookData] = useState(null);
   const [fantasyBookData, setFantasyBookData] = useState(null);
-
-  /* prev, next button ref */
-  const comicPrevRef = useRef(null);
-  const comicNextRef = useRef(null);
-  const romancePrevRef = useRef(null);
-  const romanceNextRef = useRef(null);
-  const fantasyPrevRef = useRef(null);
-  const fantasyNextRef = useRef(null);
 
   useEffect(() => {
     async function fetchData() {
@@ -168,37 +162,11 @@ const CategoryGenres = memo(() => {
 
       <CategoryGenreContainer>
         {/* 만화 */}
-        {comicBookData && (
-          <CategorySwiper
-            title="만화"
-            clsName="comic"
-            prevRef={comicPrevRef}
-            nextRef={comicNextRef}
-            data={comicBookData}
-          />
-        )}
-
+        {comicBookData && <CategorySwiper title="만화" clsName="comic" data={comicBookData} />}
         {/* 로맨스 */}
-        {romanceBookData && (
-          <CategorySwiper
-            title="로맨스"
-            clsName="romance"
-            prevRef={romancePrevRef}
-            nextRef={romanceNextRef}
-            data={romanceBookData}
-          />
-        )}
-
+        {romanceBookData && <CategorySwiper title="로맨스" clsName="romance" data={romanceBookData} />}
         {/* 판타지 */}
-        {fantasyBookData && (
-          <CategorySwiper
-            title="판타지"
-            clsName="fantasy"
-            prevRef={fantasyPrevRef}
-            nextRef={fantasyNextRef}
-            data={fantasyBookData}
-          />
-        )}
+        {fantasyBookData && <CategorySwiper title="판타지" clsName="fantasy" data={fantasyBookData} />}
       </CategoryGenreContainer>
     </>
   );
