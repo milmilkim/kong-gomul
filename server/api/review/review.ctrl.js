@@ -96,7 +96,11 @@ export const addReview = async (req, res, next) => {
     });
 
     const reviewId = newReview[0].dataValues.id;
-    const result = await review.findOne({
+
+    if (!reviewId) {
+      res.send({ result: false });
+    }
+    const item = await review.findOne({
       where: { id: reviewId },
       include: [
         {
@@ -107,7 +111,7 @@ export const addReview = async (req, res, next) => {
       ],
     });
 
-    res.send(result);
+    res.send({ result: true, item });
   } catch (err) {
     next(err);
   }
