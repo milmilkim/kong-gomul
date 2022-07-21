@@ -45,7 +45,7 @@ export const getLibrary = async (req, res) => {
       query = `
       SELECT r.rating, r.book_id, r.member_id, r.id, book.title, book.thumbnail
       FROM review r, book
-      WHERE book.id = r.book_id AND r.member_id = ${member_id} AND r.rating IS NOT NULL
+      WHERE book.id = r.book_id AND r.member_id = ${member_id}
       `;
     }
 

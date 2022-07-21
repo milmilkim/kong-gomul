@@ -1,18 +1,13 @@
 import styled from "styled-components";
 import ProfileImage from "../ProfileImage";
 
-import ProfileEdit from "../ProfileEdit";
-
-import { GoGear } from "react-icons/go";
-
-import { useState } from "react";
-
 const StyledProfile = styled.div`
-  section.con1 {
+  .profile_card {
     justify-content: center;
     align-items: center;
     text-align: left;
-    padding: 40px;
+    margin-bottom: 40px;
+    padding: 20px;
 
     h2 {
       font-weight: bold;
@@ -20,14 +15,16 @@ const StyledProfile = styled.div`
     }
 
     p {
-      font-size: 12px;
-      padding: 5px 0;
+      font-size: 0.8rem;
+      line-height: 1.3;
+      color: #4a4a4a;
     }
 
     .icon-container {
       margin-right: 20px;
       img {
         width: 80px;
+        height: 80px;
       }
     }
 
@@ -39,27 +36,16 @@ const StyledProfile = styled.div`
 `;
 
 const Profile = ({ data }) => {
-  const [isOpen, setIsOpen] = useState(false);
-
-  const handleButton = (e) => {
-    setIsOpen((isOpen) => !isOpen);
-  };
-
   return (
     <StyledProfile>
-      <section className="con1 flex-row">
+      <section className="profile_card">
         <div className="icon-container">
-          <ProfileImage src={data.profile_image} alt={data.nickname} />
+          <ProfileImage src={data.profile_image} alt={data.nickname} width={80} />
         </div>
         <div>
           <h2>{data?.nickname}</h2>
           <p>{data?.introduce}</p>
         </div>
-        {/* 프로필 수정 버튼
-        <button type="button">
-          <GoGear className="edit-btn" onClick={handleButton} />
-        </button> */}
-        <ProfileEdit isOpen={isOpen} setIsOpen={setIsOpen} />
       </section>
     </StyledProfile>
   );

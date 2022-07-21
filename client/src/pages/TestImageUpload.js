@@ -20,11 +20,14 @@ const Test = memo(() => {
     formData.append("img", image);
     axios
       .post("http://localhost:3001/api/image/upload", formData, {
-        id: 29,
+        params: {
+          id: 58,
+        },
       })
       .then((res) => {
         const { fileName } = res.data;
         setUploadedImage({ fileName, filePath: `${BASE_URL}/img/${fileName}` });
+        console.log("업로드 성공!");
         alert("업로드 성공!");
       })
       .catch((err) => {
@@ -33,7 +36,7 @@ const Test = memo(() => {
   };
 
   return (
-    <div style={{ height: "1000vh" }}>
+    <div style={{ height: "100vh" }}>
       <h1>테스트를 위한 페이지</h1>
 
       <form onSubmit={onSubmit}>

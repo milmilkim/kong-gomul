@@ -5,7 +5,7 @@ import styled from "styled-components";
 
 import logo from "../../assets/img/title_gray.png";
 import profileImage from "../../assets/img/default.jpg";
-
+import ProfileImage from "../ProfileImage";
 import Search from "../Search";
 
 import Login from "../Login";
@@ -15,7 +15,6 @@ import { useSelector } from "react-redux";
 const HeaderContainer = styled.header`
   padding: 15px 0;
   border-bottom: 1px solid ${(props) => props.theme.color.borderColor};
-  margin-bottom: 10px;
 
   .flex-row {
     justify-content: space-between;
@@ -31,9 +30,12 @@ const HeaderContainer = styled.header`
   }
 
   .nav-menu {
+    display: flex;
     .login-info {
       .profile_image img {
         border-radius: 30px;
+        width: 35px;
+        height: 35px;
       }
 
       li.join {
@@ -63,6 +65,11 @@ const HeaderContainer = styled.header`
         margin-right: 10px;
         cursor: pointer;
       }
+    }
+
+    li.search {
+      color: gray;
+      margin-left: auto;
     }
   }
 `;
@@ -103,6 +110,11 @@ const Header = memo(() => {
                   만화
                 </NavLink>
               </li>
+              <li className="search">
+                <NavLink to="/search" noreferrer="">
+                  검색
+                </NavLink>
+              </li>
             </ul>
           </nav>
 
@@ -113,7 +125,7 @@ const Header = memo(() => {
               {isLogin ? (
                 <Link to="/mypage">
                   <li className="profile_image">
-                    <img src={info.profile_image || profileImage} alt={info.nickname} width="35" />
+                    <ProfileImage src={info.profile_image || profileImage} alt={info.nickname} />
                   </li>
                 </Link>
               ) : (

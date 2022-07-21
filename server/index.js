@@ -30,6 +30,8 @@ app.use(
   })
 );
 app.use(cookieParser());
+app.use(express.static('uploads')); //정적 파일 폴더
+
 // sequelize
 //   .sync({ force: false }) //true면 서버 실행마다 테이블 재생성
 //   .then(() => {

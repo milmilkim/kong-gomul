@@ -137,7 +137,7 @@ export const checkRefresh = async (req, res) => {
 
       res.send({ success: true, accessToken });
     } else {
-      throw new Error('유효하지 않은 토큰입니다');
+      throw new Error('유효하지 않은 토큰입니다(2 )');
     }
   } catch (err) {
     res.status(401).json({ success: false, message: err.message });
@@ -153,7 +153,7 @@ export const loginWithKakao = async (req, res) => {
   try {
     const {
       data: { access_token: kakaoAccessToken },
-    } = await axios('https://kauth.kakao.com/oauth/token', {
+    } = await axios.get('https://kauth.kakao.com/oauth/token', {
       params: {
         grant_type: 'authorization_code',
         client_id: process.env.KAKAO_REST_API_KEY,
@@ -162,7 +162,7 @@ export const loginWithKakao = async (req, res) => {
       },
     }); //액세스 토큰을 받아온다
 
-    const { data: kakaoUser } = await axios('https://kapi.kakao.com/v2/user/me', {
+    const { data: kakaoUser } = await axios.get('https://kapi.kakao.com/v2/user/me', {
       headers: {
         Authorization: `Bearer ${kakaoAccessToken}`,
       },
@@ -194,7 +194,7 @@ export const loginWithKakao = async (req, res) => {
       refreshToken = await generateRefreshToken(existingMember);
     }
 
-    await member.update({ refresh_token: refreshToken }, { where: { user_id: kakaoUser.id } });
+    await member.update({ refresh_token: refreshToken }, { where: { user_id: String(kakaoUser.id) } });
 
     res.json({
       success: true,
@@ -202,7 +202,7 @@ export const loginWithKakao = async (req, res) => {
       refreshToken,
     });
   } catch (err) {
-    res.status(401).json({ success: false, message: '유효하지 않은 토큰입니다' });
+    res.status(401).json({ success: false, message: err.message });
   }
 };
 
@@ -262,6 +262,8 @@ export const loginWithGoogle = async (req, res) => {
       accessToken = await generateToken(existingMember);
       refreshToken = await generateRefreshToken(existingMember);
     }
+
+    await member.update({ refresh_token: refreshToken }, { where: { user_id: String(googleUser.id) } });
 
     res.json({
       success: true,
