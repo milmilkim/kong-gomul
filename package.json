@@ -1,0 +1,8 @@
+{
+  "name": "kong-gomul",
+  "version": "1.0.0",
+  "main": "index.js",
+  "repository": "git@github.com:milmilkim/kong-gomul.git",
+  "author": "smilemet <smilemet@gmail.com>",
+  "license": "MIT"
+}
