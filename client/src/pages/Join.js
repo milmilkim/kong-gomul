@@ -93,7 +93,7 @@ const JoinContainer = styled.div`
 `;
 
 const Join = memo(() => {
-  const form = useRef();
+  const form = useRef(false);
   const id = useRef(false);
   const email = useRef(false);
   const pw = useRef(false);
@@ -102,6 +102,7 @@ const Join = memo(() => {
   const sex = useRef(false);
 
   // 유효성 검사 메시지 출력
+  const [formSubmit, setFormSubtmit] = useState(false);
   const [idMessage, setIdMessage] = useState(false);
   const [emailMessage, setEmailMessage] = useState(false);
   const [pwMessage, setPwMessage] = useState(false);
@@ -119,8 +120,10 @@ const Join = memo(() => {
       RegexHelper.value(email.current, "이메일을 입력해주세요.");
       RegexHelper.email(email.current, "이메일 형식에 맞게 입력해주세요.");
       RegexHelper.value(pw.current, "비밀번호를 입력해주세요.");
+      RegexHelper.value(pwCheck.current, "비밀번호를 다시 한 번 입력해주세요.");
       RegexHelper.compareTo(pw.current, pwCheck.current, "비밀번호가 일치하지 않습니다.");
-      if (birth.current !== "") {
+      setFormSubtmit(true);
+      if (birth.current.value !== "") {
         RegexHelper.value(birth.current, "출생년도를 입력해주세요.");
         RegexHelper.minLength(birth.current, 4, "출생년도 4자리를 입력해주세요.");
         RegexHelper.maxLength(birth.current, 4, "출생년도 4자리를 입력해주세요.");
@@ -140,7 +143,7 @@ const Join = memo(() => {
       } else {
         setEmailMessage("");
       }
-      if (e.field === pw.current) {
+      if (e.field === pw.current || e.field === pwCheck.current) {
         setPwMessage(e.message);
         e.field.focus();
       } else {
@@ -155,6 +158,8 @@ const Join = memo(() => {
     }
     form.submit();
   });
+
+  useEffect(() => {}, [formSubmit]);
 
   return (
     <JoinContainer>
