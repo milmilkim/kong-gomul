@@ -20,6 +20,8 @@ import BooksItem from "../components/BooksItem";
 import Spinner from "../components/spinner";
 import { getRecoBookList } from "../slices/RecommendationSlice";
 
+import { FaStar } from "react-icons/fa";
+
 /* Styled Components */
 const CategoryGenreContainer = styled.div`
   min-height: 100vh;
@@ -36,6 +38,19 @@ const CategoryGenreContainer = styled.div`
   .swiperContainer {
     position: relative;
 
+    h2 {
+      font-size: 1.2rem;
+      font-weight: bolder;
+    }
+
+    p {
+      line-height: 1.5;
+
+      svg {
+        vertical-align: top;
+        color: ${(props) => props.theme.color.primaryColor};
+      }
+    }
     .swiper-button-prev,
     .swiper-button-next {
       position: absolute;
@@ -96,9 +111,13 @@ const CategorySwiper = ({ title, data, clsName, children }) => {
                 <BooksItem book={book} title={book.title} itemHref={`/bookinfo/${book.id}`} itemWidth="100%">
                   <h2>{book.title}</h2>
                   {book.expected_rating ? (
-                    <p>예상 별점 {book.expected_rating.toFixed(2)}</p>
+                    <p>
+                      예상 별점 <FaStar /> {book.expected_rating.toFixed(1)}
+                    </p>
                   ) : (
-                    <p>평균 별점 {book.avg_rating ? book.avg_rating.toFixed(2) : 0}</p>
+                    <p>
+                      평균 별점 <FaStar /> {book.avg_rating ? book.avg_rating.toFixed(1) : 0}
+                    </p>
                   )}
                 </BooksItem>
               </SwiperSlide>
@@ -162,10 +181,12 @@ const CategoryGenres = memo(() => {
       <Spinner visible={loading} />
 
       <CategoryGenreContainer>
-        {isLogin && reco && (
-          <CategorySwiper title={` ${info.nickname} 님만을 위한 맞춤 추천!`} clsName="recommendations" data={reco}>
-            뚜샤뚜샤
-          </CategorySwiper>
+        {isLogin && reco && reco.length > 0 && (
+          <CategorySwiper
+            title={` ${info.nickname} 님만을 위한 맞춤 추천!`}
+            clsName="recommendations"
+            data={reco}
+          ></CategorySwiper>
         )}
         {category.map((v) => {
           return bookData[v] && <CategorySwiper title={v} clsName="test" data={bookData[v]} />;
