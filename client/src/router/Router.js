@@ -46,7 +46,7 @@ const Router = () => {
       <Routes>
         <Route element={<Layout />}>
           {/*메인 */}
-          <Route path="/" element={<CategoryGenres />} />
+          <Route path="/" element={<Main />} />
           {/*테스트용 페이지 */}
           <Route path="/test" element={<Test />} />
           {/* OAuth */}

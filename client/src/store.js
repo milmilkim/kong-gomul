@@ -10,6 +10,7 @@ import RecentsSlice from "./slices/RecentsSlice";
 
 import WishSlice from "./slices/WishSlice";
 import LibrarySlice from "./slices/LibrarySlice";
+import RecommendationSlice from "./slices/RecommendationSlice";
 
 const store = configureStore({
   reducer: {
@@ -23,6 +24,7 @@ const store = configureStore({
     wish: WishSlice,
     library: LibrarySlice,
     recents: RecentsSlice,
+    recommendation: RecommendationSlice,
   },
 
   middleware: (getDefaultMiddleware) => getDefaultMiddleware({ serializableCheck: false }),
