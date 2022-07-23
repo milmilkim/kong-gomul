@@ -9,6 +9,8 @@ import sortArr from '../../lib/SortArr.js';
 
 import generateComment from '../../lib/generateComment.js';
 
+import { sendId, sendPassword } from '../../lib/sendMail.js';
+
 dotenv.config();
 
 const { member, review, book, keyword, genre } = db;
@@ -158,6 +160,89 @@ export const getMyProfile = async (req, res) => {
     res.send(profile);
   } catch (err) {
     res.status(403).json({ message: err.message });
+  }
+};
+
+/* 아이디 찾기
+    get /api/member/userid
+    query: email 
+*/
+export const getMyId = async (req, res, next) => {
+  const { email } = req.query;
+  let existingMember = null;
+
+  try {
+    regexHelper.value(email, '이메일을 입력하세요');
+
+    existingMember = await member.findOne({
+      where: {
+        email,
+      },
+    });
+
+    if (!existingMember) {
+      throw new Error('가입된 아이디가 없습니다');
+    }
+    if (existingMember.platform !== 'local') {
+      throw new Error(`소셜 로그인 회원입니다(${existingMember.platform})`);
+    }
+
+    await sendId(email, existingMember.user_id);
+
+    res.send({ result: 'ok' });
+  } catch (err) {
+    next(err);
+  }
+};
+
+/* 비밀번호 재설정
+    get /api/member/userid
+    query: email, userid
+*/
+
+export const getMyPassword = async (req, res, next) => {
+  const { email, user_id } = req.query;
+  let existingMember = null;
+
+  try {
+    regexHelper.value(email, '이메일을 입력하세요');
+    regexHelper.email(email, '잘못된 이메일 주소입니다');
+    regexHelper.value(user_id, '아이디를 입력하세요');
+    regexHelper.id(user_id, '잘못된 아이디입니다');
+
+    existingMember = await member.findOne({
+      where: {
+        email,
+        user_id,
+      },
+    });
+
+    if (!existingMember) {
+      throw new Error('가입된 아이디가 없습니다');
+    }
+
+    //랜덤 문자열 비밀번호 만든다
+    const newPwd = Math.random().toString(36).slice(2);
+
+    //암호화한 비밀번호로 업데이트
+    await member.update(
+      {
+        password: encrypt(newPwd),
+      },
+      {
+        where: {
+          email,
+          user_id,
+        },
+      }
+    );
+
+    //메일 보냄
+    await sendPassword(email, newPwd);
+
+    res.send({ result: 'ok' });
+  } catch (err) {
+    next(err);
   }
 };
 
