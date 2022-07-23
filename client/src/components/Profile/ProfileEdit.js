@@ -9,46 +9,6 @@ import ProfileImage from "../ProfileImage";
 import Switch from "../Form/Switch";
 import TextArea from "../Form/TextArea";
 
-const EditContainer = styled.div`
-  .profile {
-    img {
-      width: 110px;
-      height: 110px;
-    }
-
-    .email {
-      font-size: 0.8rem;
-    }
-    margin-bottom: 10px;
-  }
-
-  .btn {
-    text-align: center;
-    cursor: pointer;
-    line-height: 2;
-    border-radius: 10px;
-
-    &.logout {
-      font-size: 0.9rem;
-    }
-
-    &.leave {
-      color: #d64161;
-      font-size: 0.8rem;
-    }
-
-    &.save {
-      width: 100px;
-      margin: auto;
-      border: solid 2px #ffc0cb;
-      transition: all 300ms ease;
-      &:hover {
-        background-color: #ffc0cb;
-        color: #fff;
-      }
-    }
-  }
-`;
 const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -84,7 +44,7 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
   };
 
   return (
-    <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={550}>
+    <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={550} height={550}>
       <EditContainer>
         {/* <Spinner visible={isLoading} /> */}
         <div className="profile">
@@ -112,6 +72,9 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
         <div className="btn save" type="submit" onClick={saveProfile}>
           저장
         </div>
+        <div className="btn" onClick={logout}>
+          비밀번호 변경
+        </div>
         <div className="btn logout" onClick={logout}>
           로그아웃
         </div>
@@ -122,5 +85,44 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
     </Modal>
   );
 };
+
+const EditContainer = styled.div`
+  .profile {
+    img {
+      width: 110px;
+      height: 110px;
+    }
+
+    .email {
+      font-size: 0.8rem;
+    }
+    margin-bottom: 10px;
+  }
+
+  .btn {
+    text-align: center;
+    cursor: pointer;
+    line-height: 2;
+    border-radius: 10px;
+
+    font-size: 0.9rem;
+
+    &.leave {
+      color: #d64161;
+      font-size: 0.8rem;
+    }
+
+    &.save {
+      width: 100px;
+      margin: auto;
+      border: solid 2px #ffc0cb;
+      transition: all 300ms ease;
+      &:hover {
+        background-color: #ffc0cb;
+        color: #fff;
+      }
+    }
+  }
+`;
 
 export default ProfileEdit;

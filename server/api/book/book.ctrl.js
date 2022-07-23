@@ -113,7 +113,7 @@ export const getBook = async (req, res) => {
   const bookInfo = await book.findOne({
     subQuery: false,
     where: { id },
-    raw: true,
+    raw: false,
     attributes: {
       include: [
         [sequelize.literal(avg), 'avg_rating'],
@@ -153,7 +153,7 @@ export const getBook = async (req, res) => {
     ],
     group: ['id'],
   });
-  const colors = await getPalette(bookInfo.thumbnail);
+  const colors = await getPalette(bookInfo.dataValues.thumbnail);
   res.send({ book_info: bookInfo, colors });
 };
 
