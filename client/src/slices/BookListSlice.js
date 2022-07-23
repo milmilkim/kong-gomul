@@ -15,6 +15,7 @@ export const getBookList = createAsyncThunk(
           page: payload.page,
           size: payload.size,
           category: payload.category,
+          sort: payload.sort,
         },
       });
     } catch (err) {
@@ -35,7 +36,7 @@ const BookListSlice = createSlice({
   reducer: {},
   extraReducers: {
     [getBookList.pending]: (state, { payload }) => {
-      return { state, loading: true };
+      return { ...state, loading: true };
     },
     [getBookList.fulfilled]: (state, { payload }) => {
       return {
