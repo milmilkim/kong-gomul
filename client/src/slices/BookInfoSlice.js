@@ -2,7 +2,7 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "../config/axios";
 
 /**
- * 책 1권의 정보와 리뷰 5개를 불러온다
+ * 책 1권의 정보를 불러온다
  */
 export const getBookInfo = createAsyncThunk(
   "BookInfoSlice/getBookInfo",
@@ -22,7 +22,7 @@ export const getBookInfo = createAsyncThunk(
   }
 );
 
-const BookListSlice = createSlice({
+const BookInfoSlice = createSlice({
   name: "bookInfo",
   initialState: {
     data: null,
@@ -33,7 +33,7 @@ const BookListSlice = createSlice({
   reducer: {},
   extraReducers: {
     [getBookInfo.pending]: (state, { payload }) => {
-      return { state, loading: true };
+      return { ...state, loading: true };
     },
     [getBookInfo.fulfilled]: (state, { payload }) => {
       return {
@@ -57,4 +57,4 @@ const BookListSlice = createSlice({
   },
 });
 
-export default BookListSlice.reducer;
+export default BookInfoSlice.reducer;
