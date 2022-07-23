@@ -6,6 +6,7 @@ const HeaderContainer = styled.footer`
   font-size: 12px;
   padding: 15px 0;
   border-top: 1px solid ${(props) => props.theme.color.borderColor};
+  min-width: 1400px;
 
   strong {
     font-weight: bold;
