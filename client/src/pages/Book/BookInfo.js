@@ -27,6 +27,7 @@ import { FaStar, FaPenFancy } from "react-icons/fa";
 const BookInfoContainer = styled.div`
   font-size: 14px;
   background-color: #f8f8f8;
+  min-width: 1400px;
 
   section {
     margin-bottom: 50px;
