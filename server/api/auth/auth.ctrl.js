@@ -1,4 +1,5 @@
 import { db } from '../../models/index.js';
+import { Op } from 'sequelize';
 import encrypt from '../../lib/encrypt.js';
 import { generateRefreshToken, generateToken } from '../../lib/jwt.js';
 
@@ -46,7 +47,7 @@ export const join = async (req, res, next) => {
     let existingMember = null;
     existingMember = await member.findOne({
       where: {
-        user_id: newMember.user_id,
+        [Op.or]: [{ user_id: newMember.user_id }, { email: newMember.email }],
       },
     });
 

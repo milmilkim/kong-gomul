@@ -19,7 +19,7 @@ class RegexHelper {
 
   /**
    * 입력값이 지정된 글자수를 초과했는지 검사
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {int}     length    최대 글자수
    * @param {string}  msg       값이 없을 경우 표시될 메시지
    */
@@ -37,7 +37,7 @@ class RegexHelper {
 
   /**
    * 입력값이 지정된 글자수 미만인지 검사
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {int}     len       최소 글자수
    * @param {string}  msg       값이 없을 경우 표시될 메시지
    */
@@ -81,7 +81,7 @@ class RegexHelper {
 
   /**
    * 입력값이 정규표현식을 충족하는지 검사
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    * @param {object}  regexExpr 검사할 정규표현식
    */
@@ -117,7 +117,7 @@ class RegexHelper {
 
   /**
    * 숫자로만 이루어졌는지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   num(field, msg) {
@@ -126,7 +126,7 @@ class RegexHelper {
 
   /**
    * 영문으로만 이루어졌는지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   eng(field, msg) {
@@ -135,7 +135,7 @@ class RegexHelper {
 
   /**
    * 한글로만 이루어졌는지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   kor(field, msg) {
@@ -144,7 +144,7 @@ class RegexHelper {
 
   /**
    * 영문과 숫자로 이루어졌는지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   engNum(field, msg) {
@@ -153,7 +153,7 @@ class RegexHelper {
 
   /**
    * 한글과 숫자로만 이루어졌는지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   korNum(field, msg) {
@@ -162,7 +162,7 @@ class RegexHelper {
 
   /**
    * 이메일주소 형식인지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   email(field, msg) {
@@ -171,7 +171,7 @@ class RegexHelper {
 
   /**
    * 핸드폰번호 형식인지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   cellphone(field, msg) {
@@ -180,7 +180,7 @@ class RegexHelper {
 
   /**
    * 집전화 형식인지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   tellphone(field, msg) {
@@ -189,7 +189,7 @@ class RegexHelper {
 
   /**
    * 핸드폰번호 형식과 집전화 형식 중 하나를 충족하는지 검사하기 위해 field()를 간접적으로 호출한다.
-   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  field  검사할 대상
    * @param {string}  msg       표시할 메시지
    */
   phone(field, msg) {
