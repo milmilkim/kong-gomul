@@ -1,6 +1,8 @@
 import { db, sequelize } from '../../models/index.js';
 import { Op, Sequelize } from 'sequelize';
 import getPalette from '../../lib/getPalette.js';
+//추천 알고리즘
+import CFService from '../../services/CF.js';
 
 const { book, author, genre, keyword, publisher, review, member, wish } = db;
 
@@ -111,6 +113,7 @@ export const getBook = async (req, res) => {
   const bookInfo = await book.findOne({
     subQuery: false,
     where: { id },
+    raw: true,
     attributes: {
       include: [
         [sequelize.literal(avg), 'avg_rating'],
@@ -150,9 +153,7 @@ export const getBook = async (req, res) => {
     ],
     group: ['id'],
   });
-
-  const colors = await getPalette(bookInfo.dataValues.thumbnail);
-
+  const colors = await getPalette(bookInfo.thumbnail);
   res.send({ book_info: bookInfo, colors });
 };
 
@@ -232,4 +233,24 @@ export const deleteBook = async (req, res) => {
   await book.destroy({ where: { id: id } });
 
   res.send({ msg: 'ok' });
+};
+
+/**
+ * GET
+ * api/book/recommendations
+ */
+
+export const getRecommendations = async (req, res, next) => {
+  const id = req.decoded.id || req.query.id;
+
+  const cfService = new CFService();
+
+  let bookList;
+  try {
+    bookList = await cfService.getRecoBook(id);
+  } catch (err) {
+    next(err);
+  }
+
+  res.json(bookList);
 };
