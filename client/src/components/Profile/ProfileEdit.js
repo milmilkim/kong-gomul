@@ -8,6 +8,9 @@ import { setIsLogin } from "../../slices/AuthSlice";
 import ProfileImage from "../ProfileImage";
 import Switch from "../Form/Switch";
 import TextArea from "../Form/TextArea";
+import Spinner from "../spinner";
+import Swal from "sweetalert2";
+import axios from "../../config/axios";
 
 const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
   const navigate = useNavigate();
@@ -43,6 +46,11 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
     setIsOpen(false);
   };
 
+  //비밀번호 변경 모달
+  const [pwdEditIsOpen, setPwdEditIsOpen] = useState(false);
+  //로딩
+  const [isLoading, setIsLoading] = useState(false);
+
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={550} height={550}>
       <EditContainer>
@@ -72,9 +80,47 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
         <div className="btn save" type="submit" onClick={saveProfile}>
           저장
         </div>
-        <div className="btn" onClick={logout}>
-          비밀번호 변경
-        </div>
+        {data.platform === "local" && (
+          <div
+            className="btn"
+            onClick={(e) => {
+              setPwdEditIsOpen(true);
+            }}
+          >
+            비밀번호 변경
+          </div>
+        )}
+        <Modal isOpen={pwdEditIsOpen} setIsOpen={setPwdEditIsOpen} width={300} height={300}>
+          <h1>비밀번호 변경</h1>
+          <form
+            onSubmit={async (e) => {
+              e.preventDefault();
+              try {
+                if (e.target.password.value !== e.target.password_check.value) {
+                  // Swal.fire("비밀번호 확인이 일치하지 않습니다...!");
+                  Swal.fire("비밀번호 확인이 일치하지 않습니다");
+                  return;
+                }
+                setIsLoading(true);
+                await axios.patch("/api/member/" + data.id, {
+                  password: e.target.password.value,
+                });
+                Swal.fire("변경 완료!");
+                setPwdEditIsOpen(false);
+              } catch (err) {
+                Swal.fire(err.response.data.message);
+              } finally {
+                setIsLoading(false);
+              }
+            }}
+          >
+            <input type="password" name="password" placeholder="비밀번호" />
+            <input type="password" name="password_check" placeholder="비밀번호 확인" />
+            <button type="submit">변경</button>
+          </form>
+        </Modal>
+        <Spinner visible={isLoading} />
+
         <div className="btn logout" onClick={logout}>
           로그아웃
         </div>
