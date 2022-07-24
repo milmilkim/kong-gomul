@@ -29,7 +29,7 @@ export const getMemberProfile = createAsyncThunk(
   async (payload, { rejectWithValue }) => {
     let result = null;
     try {
-      result = await axios.get(`api/member/${payload}`);
+      result = await axios.get(`api/member/${payload.id}`);
     } catch (e) {
       result = rejectWithValue(e.response);
     }
