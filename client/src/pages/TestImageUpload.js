@@ -1,5 +1,5 @@
 import React, { memo, useState } from "react";
-import axios from "axios";
+import axios from "../config/axios";
 
 const Test = memo(() => {
   const BASE_URL = "http://localhost:3000";
@@ -19,11 +19,7 @@ const Test = memo(() => {
     const formData = new FormData();
     formData.append("img", image);
     axios
-      .post("http://localhost:3001/api/image/upload", formData, {
-        params: {
-          id: 58,
-        },
-      })
+      .post("http://localhost:3001/api/image/upload", formData)
       .then((res) => {
         const { fileName } = res.data;
         setUploadedImage({ fileName, filePath: `${BASE_URL}/img/${fileName}` });

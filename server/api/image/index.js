@@ -1,38 +1,47 @@
 import express from 'express';
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
+
+import dotenv from 'dotenv';
 import { db } from '../../models/index.js';
+import authMiddleware from '../../middlewares/auth.js';
+
+import multer from 'multer';
+import multerS3 from 'multer-s3';
+import { S3Client } from '@aws-sdk/client-s3';
+
+dotenv.config();
+const s3 = new S3Client({
+  region: 'ap-northeast-2',
+  credentials: {
+    accessKeyId: process.env.S3_ACCESS_KEY,
+    secretAccessKey: process.env.S3_ACCESS_SECRET,
+  },
+});
 
 const router = express.Router();
 const { member } = db;
 
-try {
-  fs.readdirSync('uploads');
-} catch (error) {
-  console.error('uploads 폴더생성');
-  fs.mkdirSync('uploads');
-}
-
 const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, 'uploads/');
+  storage: multerS3({
+    s3,
+    bucket: 'kong-storage',
+    contentType: multerS3.AUTO_CONTENT_TYPE,
+    key: function (req, file, cb) {
+      cb(null, `${Date.now()}_${file.originalname}`);
     },
-    filename(req, file, done) {
-      const ext = path.extname(file.originalname);
-      done(null, path.basename(file.originalname, ext) + Date.now() + ext);
-    },
-    limits: { fileSize: 10 * 1024 * 1024 },
   }),
+  limits: { fileSize: 1 * 1024 * 1024 },
 });
 
-router.post('/upload', upload.single('img'), async (req, res) => {
-  const { id } = req.query;
+router.use('/upload', authMiddleware);
+router.post('/upload', upload.single('img'), async (req, res, next) => {
+  const { id } = req.decoded;
   try {
+    if (!id) {
+      throw new Error('아이디가 없습니다');
+    }
     const result = await member.update(
       {
-        profile_image: 'http://localhost:3001/' + req.file.filename,
+        profile_image: req.file.location,
       },
       //배포할 때는 외부 저장소 경로로 수정해야 함!
       { where: { id } }
@@ -40,6 +49,7 @@ router.post('/upload', upload.single('img'), async (req, res) => {
     res.send(result);
   } catch (err) {
     console.error(err);
+    next(err);
   }
 });
 

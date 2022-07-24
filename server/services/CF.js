@@ -162,6 +162,7 @@ class CFService {
           [Op.in]: recoList.map((v) => v.book_id),
         },
       },
+      limit: 40,
       attributes: ['id', 'title', 'thumbnail'],
       raw: true,
     });

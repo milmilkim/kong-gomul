@@ -38,4 +38,3 @@ export const sendPassword = async (receiverEmail, password) => {
   await smtp.sendMail(mailInfo);
 };
 
-console.log(Math.random().toString(36).slice(2));
