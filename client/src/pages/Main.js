@@ -188,8 +188,8 @@ const CategoryGenres = memo(() => {
             data={reco}
           ></CategorySwiper>
         )}
-        {category.map((v) => {
-          return bookData[v] && <CategorySwiper title={v} clsName="test" data={bookData[v]} />;
+        {category.map((v, i) => {
+          return bookData[v] && <CategorySwiper key={i} title={v} clsName="test" data={bookData[v]} />;
         })}
       </CategoryGenreContainer>
     </>

@@ -35,7 +35,7 @@ const AuthSlice = createSlice({
       }
     },
     setProfileImg: (state, action) => {
-      return { ...state, info: { profile_image: action.payload } };
+      return { ...state, info: { ...state.info, profile_image: action.payload } };
     },
   },
   extraReducers: {
@@ -43,6 +43,7 @@ const AuthSlice = createSlice({
       return { ...state, isLoading: true };
     },
     [tokenVerify.fulfilled]: (state, { payload }) => {
+      console.log(payload.data.info);
       return {
         ...state,
         isLoading: false,

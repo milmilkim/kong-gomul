@@ -11,6 +11,7 @@ import Spinner from "../../components/spinner";
 import Star from "../../components/Star";
 import Meta from "../../Meta";
 import MyReview from "../../components/Review/MyReview";
+import ResultNotFound from "../../components/ResultNotFound";
 
 /*리덕스 */
 import { useDispatch, useSelector } from "react-redux";
@@ -33,7 +34,7 @@ const BookInfo = () => {
   /** 리덕스 관련 */
   const dispatch = useDispatch();
   //책 정보
-  const { data, loading, colors } = useSelector((state) => state.bookInfo);
+  const { data, loading, colors, error } = useSelector((state) => state.bookInfo);
   //하단에 표시될 리뷰
   const { data: reviewData, loading: loading2 } = useSelector((state) => state.review);
   const { isLogin, id: member_id } = useSelector((state) => state.auth);
@@ -137,6 +138,11 @@ const BookInfo = () => {
   return (
     <BookInfoContainer>
       <Spinner visible={loading || loading2} />
+      {error && (
+        <ResultNotFound style={{ margin: "auto" }}>
+          {error.code}:{error.message}
+        </ResultNotFound>
+      )}
       {data && (
         <>
           <StyledTop color={colors} thumbnail={data.thumbnail}></StyledTop>
@@ -164,12 +170,12 @@ const BookInfo = () => {
               {/* 책 정보 */}
               <div className="infomation">
                 <span>{data.category}</span>
-                <span>{data?.genres.map((v) => v.genre).join(", ")}</span>
+                <span>{data?.genres?.map((v) => v.genre).join(", ")}</span>
                 <h1 className="title">{data.title}</h1>
                 <div className="meta">
                   <ul>
-                    <li>{data.authors.map((v) => v.name).join(", ")}</li>
-                    <li>{data.publishers.map((v) => v.name).join(", ")}</li>
+                    <li>{data.authors?.map((v) => v.name).join(", ")}</li>
+                    <li>{data.publishers?.map((v) => v.name).join(", ")}</li>
                     <li className="rating">
                       평균
                       <FaStar /> {data.avg_rating ? data.avg_rating.toFixed(2) : 0} ({data.count_rating || 0})
@@ -202,7 +208,7 @@ const BookInfo = () => {
 
               <h2>키워드</h2>
               <p>
-                {data.keywords.map((v, i) => (
+                {data.keywords?.map((v, i) => (
                   <span className="keyword" key={i}>
                     {v.keyword}
                   </span>

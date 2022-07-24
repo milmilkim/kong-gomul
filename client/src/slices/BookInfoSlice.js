@@ -44,13 +44,14 @@ const BookInfoSlice = createSlice({
       };
     },
     [getBookInfo.rejected]: (state, { payload }) => {
+      console.log(payload);
       return {
         colors: null,
-        data: payload,
+        data: null,
         loading: false,
         error: {
           code: payload?.status ? payload.status : 500,
-          message: payload?.statusText ? payload.statusText : "Server Error",
+          message: payload?.data?.message ? payload?.data?.message : "Server Error",
         },
       };
     },
