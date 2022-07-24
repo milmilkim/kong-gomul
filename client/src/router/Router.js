@@ -13,6 +13,14 @@ import MyPage from "../pages/Personal/MyPage";
 /* 멤버 프로필 */
 import MemberProfile from "../pages/Personal/MemberProfile";
 
+/* 멤버 보고싶어요 페이지 */
+import MemberLibraryWishes from "../pages/Personal/MemberLibraryWishes";
+
+/* 멤버 서재 페이지 */
+import MemberLibraryAll from "../pages/Personal/MemberLibraryAll";
+import MemberLibraryRatings from "../pages/Personal/MemberLibraryRatings";
+import MemberLibraryRatingsMore from "../pages/Personal/MemberLibraryRatingsMore";
+
 /* 취향 분석 */
 import Analysis from "../pages/Personal/Analysis";
 
@@ -62,7 +70,21 @@ const Router = () => {
           </Route>
 
           {/*멤버 프로필*/}
-          <Route path="/member/:id" element={<MemberProfile />} />
+          <Route path="/member/:id">
+            <Route index element={<MemberProfile />} />
+            <Route element={<Library />}>
+              {/* 멤버 보고싶어요 페이지 */}
+              <Route path="wishes" element={<MemberLibraryWishes />} />
+              {/* 멤버 서재 페이지 */}
+              <Route path="library">
+                <Route index element={<MemberLibraryAll />} />
+                <Route path="ratings">
+                  <Route index element={<MemberLibraryRatings />} />
+                  <Route path=":rating" element={<MemberLibraryRatingsMore />} />
+                </Route>
+              </Route>
+            </Route>
+          </Route>
           <Route path="/member/:id/analysis" element={<Analysis />} />
 
           {/*책 상세페이지 */}
@@ -72,7 +94,7 @@ const Router = () => {
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>
-            <Route index element={<LibraryAll />}></Route>
+            <Route index element={<LibraryAll />} />
             <Route path="ratings">
               <Route index element={<LibraryRatings />} />
               <Route path=":rating" element={<LibraryRatingsMore />} />
