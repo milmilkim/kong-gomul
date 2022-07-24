@@ -39,7 +39,7 @@ const MyPage = () => {
 
   useEffect(() => {
     dispatch(getMemberProfile(id));
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   return (
     <ProfileContainer>
