@@ -1,9 +1,16 @@
 /**
  * 내 서재 페이지
  */
-import React, { memo } from "react";
-import { NavLink, Outlet } from "react-router-dom";
+import React, { memo, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { NavLink, Outlet, useParams } from "react-router-dom";
 import styled from "styled-components";
+
+/* slices */
+import { getMemberProfile } from "../../slices/MemberSlice";
+
+/* Components */
+import Spinner from "../../components/spinner";
 
 /* Styled Components */
 const LibraryContainer = styled.div`
@@ -14,20 +21,41 @@ const LibraryContainer = styled.div`
     font-size: 1.625rem;
     font-weight: 700;
     line-height: 2rem;
-    margin-bottom: 1rem;
+    margin: 1rem 0;
   }
 `;
 
 const Library = memo(() => {
-  return (
-    <LibraryContainer>
-      {/* Title */}
-      <NavLink to="/library">
-        <h3 className="libraryTitle">내 서재</h3>
-      </NavLink>
+  const dispatch = useDispatch();
+  const { data, loading } = useSelector((state) => state.member);
+  const { id: memberId } = useParams(); // 특정 유저의 멤버 아이디
 
-      <Outlet />
-    </LibraryContainer>
+  useEffect(() => {
+    if (memberId) {
+      dispatch(
+        getMemberProfile({
+          id: memberId,
+        })
+      );
+    }
+  }, [dispatch, memberId]);
+
+  return (
+    <>
+      {/* Spinner */}
+      <Spinner visible={loading} />
+
+      <LibraryContainer>
+        {/* Title */}
+        {data && (
+          <NavLink to={memberId ? "#" : "/library"}>
+            <h3 className="libraryTitle">{memberId ? `${data.nickname}님의 서재` : "내 서재"}</h3>
+          </NavLink>
+        )}
+
+        <Outlet />
+      </LibraryContainer>
+    </>
   );
 });
 
