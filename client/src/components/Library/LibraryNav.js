@@ -3,7 +3,7 @@
  */
 
 import React from "react";
-import { NavLink } from "react-router-dom";
+import { NavLink, useParams } from "react-router-dom";
 import styled from "styled-components";
 
 const LibraryNavContainer = styled.nav`
@@ -32,16 +32,18 @@ const LibraryNavContainer = styled.nav`
 `;
 
 const LibraryNav = () => {
+  const { id } = useParams();
+
   return (
     <LibraryNavContainer>
       <ul>
         <li>
-          <NavLink to="/library" end>
+          <NavLink to={id ? `/member/${id}/library` : "/library"} end>
             전체
           </NavLink>
         </li>
         <li>
-          <NavLink to="/library/ratings">별점순</NavLink>
+          <NavLink to={id ? `/member/${id}/library/ratings` : "/library/ratings"}>별점순</NavLink>
         </li>
       </ul>
       <hr />
