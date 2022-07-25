@@ -43,7 +43,6 @@ const AuthSlice = createSlice({
       return { ...state, isLoading: true };
     },
     [tokenVerify.fulfilled]: (state, { payload }) => {
-      console.log(payload.data.info);
       return {
         ...state,
         isLoading: false,
