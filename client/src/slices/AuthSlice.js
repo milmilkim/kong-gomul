@@ -31,8 +31,11 @@ const AuthSlice = createSlice({
   reducers: {
     setIsLogin: (state, action) => {
       if (action.payload === false) {
-        return { isLogin: action.payload };
+        return { ...state, isLogin: action.payload };
       }
+    },
+    setProfileImg: (state, action) => {
+      return { ...state, info: { ...state.info, profile_image: action.payload } };
     },
   },
   extraReducers: {
@@ -63,4 +66,4 @@ const AuthSlice = createSlice({
 });
 
 export default AuthSlice.reducer; //리듀서 객체 내보내기
-export const { setIsLogin } = AuthSlice.actions;
+export const { setIsLogin, setProfileImg } = AuthSlice.actions;

@@ -7,16 +7,14 @@ const ResultNotFoundContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  width: 200px;
+  width: 100%;
   height: 200px;
   padding: 0.5rem;
-
   img {
     display: block;
-    width: 100%;
+    width: 200px;
     margin-bottom: 1rem;
   }
-
   p {
     text-align: center;
   }

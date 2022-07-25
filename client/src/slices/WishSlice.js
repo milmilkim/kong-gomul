@@ -3,10 +3,9 @@ import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import { fulfilled, rejected, pending } from "../utils/ExtraReducer";
 
 export const getWishList = createAsyncThunk("WishSlice/getWishList", async (payload, { rejectWithValue }) => {
-  let URL = payload ? `api/wish/${payload.id}` : "api/wish";
   let result = null;
   try {
-    result = await axios.get(URL);
+    result = await axios.get("api/wish");
   } catch (e) {
     result = rejectWithValue(e.response);
   }

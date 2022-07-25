@@ -15,6 +15,7 @@ export const getBookList = createAsyncThunk(
           page: payload.page,
           size: payload.size,
           category: payload.category,
+          sort: payload.sort,
         },
       });
     } catch (err) {
@@ -37,9 +38,9 @@ const BookListSlice = createSlice({
     [getBookList.pending]: (state, { payload }) => {
       return { ...state, loading: true };
     },
-    [getBookList.fulfilled]: (state, { meta, payload }) => {
+    [getBookList.fulfilled]: (state, { payload }) => {
       return {
-        data: meta.arg.page > 1 ? state.data.concat(payload?.data) : payload?.data,
+        data: payload?.data,
         loading: false,
         error: null,
       };
