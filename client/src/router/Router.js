@@ -39,6 +39,7 @@ import NotFound from "../pages/NotFound";
 
 import Layout from "../components/Layout/Layout";
 import Category from "../pages/Category/Category";
+import ReviewList from "../pages/Book/ReviewList";
 
 const Router = () => {
   return (
@@ -69,6 +70,8 @@ const Router = () => {
           <Route path="/bookinfo/:id" element={<BookInfo />} />
           {/*리뷰 상세페이지 */}
           <Route path="/review" element={<Review />} />
+          {/*리뷰 목록페이지 */}
+          <Route path="/reviewlist" element={<ReviewList />} />
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>
