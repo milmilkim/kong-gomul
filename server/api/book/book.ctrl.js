@@ -102,6 +102,7 @@ export const getBook = async (req, res, next) => {
           [sequelize.literal(count), 'count_rating'],
         ],
       },
+
       include: [
         {
           model: author,
@@ -164,6 +165,7 @@ export const getBook = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
+
 };
 
 /**

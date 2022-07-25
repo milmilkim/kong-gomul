@@ -171,6 +171,7 @@ const BookInfo = () => {
               <div className="infomation">
                 <span>{data.category}</span>
                 <span>{data?.genres?.map((v) => v.genre).join(", ")}</span>
+
                 <h1 className="title">{data.title}</h1>
                 <div className="meta">
                   <ul>
