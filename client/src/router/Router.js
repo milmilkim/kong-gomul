@@ -42,6 +42,9 @@ import SearchUsers from "../pages/Search/SearchUsers";
 
 /* 카테고리 페이지 */
 import CategoryGenres from "../pages/Category/CategoryGenres";
+import CategoryRomance from "../pages/Category/CategoryRomance";
+import CategoryComic from "../pages/Category/CategoryComic";
+import CategoryFantasy from "../pages/Category/CategoryFantasy";
 
 import NotFound from "../pages/NotFound";
 
@@ -112,7 +115,9 @@ const Router = () => {
           {/* 카테고리 페이지 */}
           <Route path="/category">
             <Route index element={<Category />} />
-            <Route path="genres" element={<CategoryGenres />} />
+            <Route path="romance" element={<CategoryRomance />} />
+            <Route path="comic" element={<CategoryComic />} />
+            <Route path="fantasy" element={<CategoryFantasy />} />
           </Route>
         </Route>
         {/*레이아웃이 적용되지 않는 페이지*/}
