@@ -58,9 +58,9 @@ const BooksItemContainer = styled.li`
   }
 `;
 
-const BooksItem = ({ book: { book_id, thumbnail, title }, itemWidth, itemHref, children, itemHeight }) => {
+const BooksItem = ({ book: { book_id, thumbnail, title }, itemWidth, itemHref, children, itemHeight, inview }) => {
   return (
-    <BooksItemContainer itemWidth={itemWidth} itemHeight={itemHeight}>
+    <BooksItemContainer itemWidth={itemWidth} itemHeight={itemHeight} ref={inview}>
       <Link to={itemHref || `/bookinfo/${book_id}`}>
         <div className="booksItemInner">
           <div className="booksItemImage">
