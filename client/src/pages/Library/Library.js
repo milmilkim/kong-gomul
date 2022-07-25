@@ -32,11 +32,7 @@ const Library = memo(() => {
 
   useEffect(() => {
     if (memberId) {
-      dispatch(
-        getMemberProfile({
-          id: memberId,
-        })
-      );
+      dispatch(getMemberProfile(memberId));
     }
   }, [dispatch, memberId]);
 
