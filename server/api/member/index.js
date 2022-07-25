@@ -1,8 +1,19 @@
 import express from 'express';
 import authMiddleware from '../../middlewares/auth.js';
-import { deleteMember, getMember, getMyProfile, updateMember, analysis } from './member.ctrl.js';
+import {
+  deleteMember,
+  getMember,
+  getMyProfile,
+  updateMember,
+  analysis,
+  getMyId,
+  getMyPassword,
+} from './member.ctrl.js';
 
 const member = express.Router();
+
+member.get('/userid', getMyId);
+member.get('/password', getMyPassword);
 
 member.use('/me', authMiddleware);
 member.get('/me', getMyProfile);

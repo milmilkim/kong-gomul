@@ -2,13 +2,13 @@ import axios from "../config/axios";
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 
 export const getLibrary = createAsyncThunk("LibrarySlice/getLibrary", async (payload, { rejectWithValue }) => {
-  let URL = payload.id ? `api/library/${payload.id}` : "api/library/me";
   let result = null;
   try {
-    result = await axios.get(URL, {
+    result = await axios.get("api/library/me", {
       params: {
         order: payload.order,
         rating: payload.rating,
+        member_id: payload.member_id,
       },
     });
   } catch (e) {

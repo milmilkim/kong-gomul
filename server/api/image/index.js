@@ -1,45 +1,55 @@
 import express from 'express';
-import multer from 'multer';
-import fs from 'fs';
-import path from 'path';
+
+import dotenv from 'dotenv';
 import { db } from '../../models/index.js';
+import authMiddleware from '../../middlewares/auth.js';
+import uploadImage from '../../middlewares/uploadImage.js';
+
+import s3 from '../../config/s3.js';
+import { DeleteObjectCommand } from '@aws-sdk/client-s3';
+
+dotenv.config();
 
 const router = express.Router();
 const { member } = db;
 
-try {
-  fs.readdirSync('uploads');
-} catch (error) {
-  console.error('uploads 폴더생성');
-  fs.mkdirSync('uploads');
-}
-
-const upload = multer({
-  storage: multer.diskStorage({
-    destination(req, file, done) {
-      done(null, 'uploads/');
-    },
-    filename(req, file, done) {
-      const ext = path.extname(file.originalname);
-      done(null, path.basename(file.originalname, ext) + Date.now() + ext);
-    },
-    limits: { fileSize: 10 * 1024 * 1024 },
-  }),
-});
-
-router.post('/upload', upload.single('img'), async (req, res) => {
-  const { id } = req.query;
+router.use('/upload', authMiddleware);
+router.post('/upload', uploadImage.single('img'), async (req, res, next) => {
+  //이미지 업로드함
+  const { id } = req.decoded;
   try {
-    const result = await member.update(
+    if (!id) {
+      throw new Error('아이디가 없습니다');
+    }
+
+    const { profile_image: prevImg } = await member.findOne({
+      where: { id },
+      raw: true,
+      attributes: ['profile_image'],
+    });
+
+    if (prevImg && prevImg.includes(process.env.S3_BUCKET_NAME)) {
+      const url = prevImg.split('/');
+      const delFileName = url[url.length - 1];
+
+      const deleteObjectsCommand = new DeleteObjectCommand({
+        Bucket: process.env.S3_BUCKET_NAME,
+        Key: delFileName,
+      });
+
+      await s3.send(deleteObjectsCommand);
+    }
+
+    await member.update(
       {
-        profile_image: 'http://localhost:3001/' + req.file.filename,
+        profile_image: req.file.location,
       },
-      //배포할 때는 외부 저장소 경로로 수정해야 함!
       { where: { id } }
     );
-    res.send(result);
+    res.send(req.file.location);
   } catch (err) {
     console.error(err);
+    next(err);
   }
 });
 

@@ -1,6 +1,8 @@
 import { db, sequelize } from '../../models/index.js';
 import { Op, Sequelize } from 'sequelize';
 import getPalette from '../../lib/getPalette.js';
+//추천 알고리즘
+import CFService from '../../services/CF.js';
 
 const { book, author, genre, keyword, publisher, review, member, wish } = db;
 
@@ -49,8 +51,8 @@ export const getBookList = async (req, res) => {
     where,
     attributes: {
       include: [
-        [sequelize.literal(avg), 'avg_count'],
-        [sequelize.literal(count), 'avg_rating'],
+        [sequelize.literal(avg), 'avg_rating'],
+        [sequelize.literal(count), 'avg_count'],
       ],
       exclude: ['introduce', 'isbn', 'published_date'],
     },
@@ -86,74 +88,84 @@ export const getBookList = async (req, res) => {
   res.send(books);
 };
 
-export const getBook = async (req, res) => {
+export const getBook = async (req, res, next) => {
   const { id } = req.params;
 
-  //쿠키에 최근 조회한 책 아이디 추가
-  if (req.cookies.book_id) {
-    //쿠키가 있음
-    let book_id = req.cookies.book_id.split('+');
+  try {
+    const bookInfo = await book.findOne({
+      subQuery: false,
+      where: { id },
+      raw: false,
+      attributes: {
+        include: [
+          [sequelize.literal(avg), 'avg_rating'],
+          [sequelize.literal(count), 'count_rating'],
+        ],
+      },
 
-    if (book_id.indexOf(id)) {
-      //중복이면
-      book_id = book_id.filter((v) => v !== book_id); //있던 거 삭제
-    }
-    book_id.unshift(id);
-    if (book_id.length > 20) {
-      //20개 초과
-      book_id.pop();
-    }
-    res.cookie('book_id', book_id.join('+'), { maxAge: 604800000 }); //7d
-  } else {
-    //쿠키 없음
-    res.cookie('book_id', id, { maxAge: 604800000 }); //7d
-  }
-  const bookInfo = await book.findOne({
-    subQuery: false,
-    where: { id },
-    attributes: {
       include: [
-        [sequelize.literal(avg), 'avg_rating'],
-        [sequelize.literal(count), 'count_rating'],
+        {
+          model: author,
+          as: 'authors',
+          attributes: ['name'],
+          separate: true,
+        },
+        {
+          model: publisher,
+          as: 'publishers',
+          attributes: ['name'],
+          separate: true,
+        },
+        {
+          model: keyword,
+          as: 'keywords',
+          attributes: ['keyword'],
+          separate: true,
+        },
+        {
+          model: genre,
+          as: 'genres',
+          attributes: ['genre'],
+          separate: true,
+        },
+        {
+          model: wish,
+          as: 'wishes',
+          attributes: [[sequelize.fn('COUNT', Sequelize.col('wishes.id')), 'count_wish']],
+        },
       ],
-    },
-    include: [
-      {
-        model: author,
-        as: 'authors',
-        attributes: ['name'],
-        separate: true,
-      },
-      {
-        model: publisher,
-        as: 'publishers',
-        attributes: ['name'],
-        separate: true,
-      },
-      {
-        model: keyword,
-        as: 'keywords',
-        attributes: ['keyword'],
-        separate: true,
-      },
-      {
-        model: genre,
-        as: 'genres',
-        attributes: ['genre'],
-        separate: true,
-      },
-      {
-        model: wish,
-        as: 'wishes',
-        attributes: [[sequelize.fn('COUNT', Sequelize.col('wishes.id')), 'count_wish']],
-      },
-    ],
-    group: ['id'],
-  });
+      group: ['id'],
+    });
 
-  const colors = await getPalette(bookInfo.dataValues.thumbnail);
+    if (!bookInfo) {
+      throw new Error('책이 존재하지 않습니다');
+    }
 
-  res.send({ book_info: bookInfo, colors });
+    //쿠키에 최근 조회한 책 아이디 추가
+    if (req.cookies.book_id) {
+      //쿠키가 있음
+      let book_id = req.cookies.book_id.split('+');
+
+      if (book_id.indexOf(id)) {
+        //중복이면
+        book_id = book_id.filter((v) => v !== book_id); //있던 거 삭제
+      }
+      book_id.unshift(id);
+      if (book_id.length > 20) {
+        //20개 초과
+        book_id.pop();
+      }
+      res.cookie('book_id', book_id.join('+'), { maxAge: 604800000 }); //7d
+    } else {
+      //쿠키 없음
+      res.cookie('book_id', id, { maxAge: 604800000 }); //7d
+    }
+    const colors = await getPalette(bookInfo.dataValues.thumbnail);
+    res.send({ book_info: bookInfo, colors });
+  } catch (err) {
+    next(err);
+  }
+
 };
 
 /**
@@ -232,4 +244,24 @@ export const deleteBook = async (req, res) => {
   await book.destroy({ where: { id: id } });
 
   res.send({ msg: 'ok' });
+};
+
+/**
+ * GET
+ * api/book/recommendations
+ */
+
+export const getRecommendations = async (req, res, next) => {
+  const id = req.decoded.id || req.query.id;
+
+  const cfService = new CFService();
+
+  let bookList;
+  try {
+    bookList = await cfService.getRecoBook(id);
+  } catch (err) {
+    next(err);
+  }
+
+  res.json(bookList);
 };

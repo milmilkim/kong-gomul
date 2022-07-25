@@ -8,7 +8,8 @@ const { wish, book } = db;
  * /api/wish
  */
 export const getWishList = async (req, res) => {
-  const { id: member_id } = req.decoded || req.params;
+  const { id: member_id } = req.decoded || req.params.id;
+
   const member_id_attr = {};
   if (member_id) {
     member_id_attr[Op.eq] = member_id;

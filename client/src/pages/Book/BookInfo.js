@@ -11,6 +11,7 @@ import Spinner from "../../components/spinner";
 import Star from "../../components/Star";
 import Meta from "../../Meta";
 import MyReview from "../../components/Review/MyReview";
+import ResultNotFound from "../../components/ResultNotFound";
 
 /*리덕스 */
 import { useDispatch, useSelector } from "react-redux";
@@ -24,181 +25,6 @@ import Swal from "sweetalert2";
 import styled from "styled-components";
 import { FaStar, FaPenFancy } from "react-icons/fa";
 
-const BookInfoContainer = styled.div`
-  font-size: 14px;
-  background-color: #f8f8f8;
-
-  section {
-    margin-bottom: 50px;
-    width: 1000px;
-    margin: auto;
-    background-color: #fff;
-
-    .wish {
-      text-align: center;
-      margin-top: 20px;
-      cursor: pointer;
-      width: 150px;
-      height: 50px;
-      margin: auto;
-      margin-top: 20px;
-
-      @keyframes sizeUp {
-        from {
-          font-size: 1rem;
-        }
-
-        to {
-          font-size: 1.1rem;
-        }
-      }
-      &.active {
-        animation: sizeUp 300ms ease;
-        animation-fill-mode: forwards;
-
-        color: ${(props) => props.theme.color.primaryColor};
-      }
-    }
-
-    &.flex-row {
-      border-bottom: 1px solid #eee;
-      margin-bottom: 30px;
-
-      .book-thumb {
-        /* width: 30%; */
-        margin-top: -80px;
-        z-index: 1;
-        border: 1px solid #fff;
-      }
-      .infomation {
-        padding-left: 60px;
-        width: 100%;
-        position: relative;
-        line-height: 1.3;
-        margin-top: 10px;
-        flex-direction: column;
-        display: flex;
-        padding-bottom: 20px;
-        padding-right: 40px;
-
-        span {
-          line-height: 1.4;
-          color: #787878;
-        }
-        h1 {
-          font-size: 2rem;
-          font-weight: bolder;
-          margin-top: 5px;
-        }
-
-        .add_review {
-          margin-left: auto;
-          cursor: pointer;
-          transition: all 300ms ease;
-          svg {
-            margin-right: 10px;
-          }
-
-          &:hover {
-            font-size: 1rem;
-            color: ${(props) => props.theme.color.primaryColor};
-          }
-        }
-
-        .meta {
-          font-size: 1.2rem;
-          color: #787878;
-          margin-bottom: 20px;
-
-          ul > li {
-            &::after {
-              content: " ・ ";
-            }
-          }
-          ul li {
-            float: left;
-            margin-right: 5px;
-          }
-
-          li.rating {
-            color: #66bfbf;
-            svg {
-              vertical-align: top;
-            }
-
-            &::after {
-              content: "";
-            }
-          }
-        }
-      }
-    }
-
-    h2 {
-      font-size: 1.3rem;
-      font-weight: bolder;
-    }
-
-    &.review {
-      position: relative;
-      border: 1px solid #eee;
-      padding: 10px;
-      display: flex;
-      flex-direction: column;
-
-      ul.flex-row {
-        overflow: hidden;
-        li {
-          width: 25%;
-          padding: 10px;
-        }
-      }
-
-      button.review-btn {
-        appearance: none;
-        outline: none;
-        border: none;
-        background-color: #333;
-        color: #eee;
-        cursor: pointer;
-        padding: 5px 10px;
-        margin-left: auto;
-      }
-    }
-
-    &.description {
-      margin-top: 30px;
-      margin-bottom: 30px;
-      padding: 20px;
-
-      p {
-        margin: 20px 0;
-        white-space: pre-line;
-        font-size: 1.1rem;
-        line-height: 1.5;
-
-        .keyword {
-          display: inline-block;
-          padding: 5px;
-          background-color: #f2f2f2;
-          border-radius: 5px;
-          margin: 0 5px 10px 0;
-
-          &::before {
-            content: "#";
-          }
-        }
-      }
-    }
-  }
-`;
-
-const StyledTop = styled.div`
-  width: 100%;
-  height: 200px;
-  background-color: ${(props) => props.color[0]};
-`;
-
 const BookInfo = () => {
   //모달
   const [isOpen, setIsOpen] = useState(false);
@@ -208,7 +34,7 @@ const BookInfo = () => {
   /** 리덕스 관련 */
   const dispatch = useDispatch();
   //책 정보
-  const { data, loading, colors } = useSelector((state) => state.bookInfo);
+  const { data, loading, colors, error } = useSelector((state) => state.bookInfo);
   //하단에 표시될 리뷰
   const { data: reviewData, loading: loading2 } = useSelector((state) => state.review);
   const { isLogin, id: member_id } = useSelector((state) => state.auth);
@@ -312,6 +138,11 @@ const BookInfo = () => {
   return (
     <BookInfoContainer>
       <Spinner visible={loading || loading2} />
+      {error && (
+        <ResultNotFound style={{ margin: "auto" }}>
+          {error.code}:{error.message}
+        </ResultNotFound>
+      )}
       {data && (
         <>
           <StyledTop color={colors} thumbnail={data.thumbnail}></StyledTop>
@@ -339,12 +170,13 @@ const BookInfo = () => {
               {/* 책 정보 */}
               <div className="infomation">
                 <span>{data.category}</span>
-                <span>{data.genres.map((v) => v.genre).join(", ")}</span>
+                <span>{data?.genres?.map((v) => v.genre).join(", ")}</span>
+
                 <h1 className="title">{data.title}</h1>
                 <div className="meta">
                   <ul>
-                    <li>{data.authors.map((v) => v.name).join(", ")}</li>
-                    <li>{data.publishers.map((v) => v.name).join(", ")}</li>
+                    <li>{data.authors?.map((v) => v.name).join(", ")}</li>
+                    <li>{data.publishers?.map((v) => v.name).join(", ")}</li>
                     <li className="rating">
                       평균
                       <FaStar /> {data.avg_rating ? data.avg_rating.toFixed(2) : 0} ({data.count_rating || 0})
@@ -377,7 +209,7 @@ const BookInfo = () => {
 
               <h2>키워드</h2>
               <p>
-                {data.keywords.map((v, i) => (
+                {data.keywords?.map((v, i) => (
                   <span className="keyword" key={i}>
                     {v.keyword}
                   </span>
@@ -411,5 +243,159 @@ const BookInfo = () => {
     </BookInfoContainer>
   );
 };
+
+const BookInfoContainer = styled.div`
+  font-size: 14px;
+  background-color: #f8f8f8;
+  min-width: 1400px;
+  section {
+    margin-bottom: 50px;
+    width: 1000px;
+    margin: auto;
+    background-color: #fff;
+    .wish {
+      text-align: center;
+      margin-top: 20px;
+      cursor: pointer;
+      width: 150px;
+      height: 50px;
+      margin: auto;
+      margin-top: 20px;
+      @keyframes sizeUp {
+        from {
+          font-size: 1rem;
+        }
+        to {
+          font-size: 1.1rem;
+        }
+      }
+      &.active {
+        animation: sizeUp 300ms ease;
+        animation-fill-mode: forwards;
+        color: ${(props) => props.theme.color.primaryColor};
+      }
+    }
+    &.flex-row {
+      border-bottom: 1px solid #eee;
+      margin-bottom: 30px;
+      .book-thumb {
+        /* width: 30%; */
+        margin-top: -80px;
+        z-index: 1;
+        border: 1px solid #fff;
+      }
+      .infomation {
+        padding-left: 60px;
+        width: 100%;
+        position: relative;
+        line-height: 1.3;
+        margin-top: 10px;
+        flex-direction: column;
+        display: flex;
+        padding-bottom: 20px;
+        padding-right: 40px;
+        span {
+          line-height: 1.4;
+          color: #787878;
+        }
+        h1 {
+          font-size: 2rem;
+          font-weight: bolder;
+          margin-top: 5px;
+        }
+        .add_review {
+          margin-left: auto;
+          cursor: pointer;
+          transition: all 300ms ease;
+          svg {
+            margin-right: 10px;
+          }
+          &:hover {
+            font-size: 1rem;
+            color: ${(props) => props.theme.color.primaryColor};
+          }
+        }
+        .meta {
+          font-size: 1.2rem;
+          color: #787878;
+          margin-bottom: 20px;
+          ul > li {
+            &::after {
+              content: " ・ ";
+            }
+          }
+          ul li {
+            float: left;
+            margin-right: 5px;
+          }
+          li.rating {
+            color: #66bfbf;
+            svg {
+              vertical-align: top;
+            }
+            &::after {
+              content: "";
+            }
+          }
+        }
+      }
+    }
+    h2 {
+      font-size: 1.3rem;
+      font-weight: bolder;
+    }
+    &.review {
+      position: relative;
+      border: 1px solid #eee;
+      padding: 10px;
+      display: flex;
+      flex-direction: column;
+      ul.flex-row {
+        overflow: hidden;
+        li {
+          width: 25%;
+          padding: 10px;
+        }
+      }
+      button.review-btn {
+        appearance: none;
+        outline: none;
+        border: none;
+        background-color: #333;
+        color: #eee;
+        cursor: pointer;
+        padding: 5px 10px;
+        margin-left: auto;
+      }
+    }
+    &.description {
+      margin-top: 30px;
+      margin-bottom: 30px;
+      padding: 20px;
+      p {
+        margin: 20px 0;
+        white-space: pre-line;
+        font-size: 1.1rem;
+        line-height: 1.5;
+        .keyword {
+          display: inline-block;
+          padding: 5px;
+          background-color: #f2f2f2;
+          border-radius: 5px;
+          margin: 0 5px 10px 0;
+          &::before {
+            content: "#";
+          }
+        }
+      }
+    }
+  }
+`;
+
+const StyledTop = styled.div`
+  width: 100%;
+  height: 200px;
+  background-color: ${(props) => props.color[0]};
+`;
 
 export default BookInfo;

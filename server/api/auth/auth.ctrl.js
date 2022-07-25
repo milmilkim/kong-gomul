@@ -1,4 +1,5 @@
 import { db } from '../../models/index.js';
+import { Op } from 'sequelize';
 import encrypt from '../../lib/encrypt.js';
 import { generateRefreshToken, generateToken } from '../../lib/jwt.js';
 
@@ -46,7 +47,7 @@ export const join = async (req, res, next) => {
     let existingMember = null;
     existingMember = await member.findOne({
       where: {
-        user_id: newMember.user_id,
+        [Op.or]: [{ user_id: newMember.user_id }, { email: newMember.email }],
       },
     });
 
@@ -114,9 +115,17 @@ export const login = async (req, res) => {
     토큰의 유효성을 검사한다
 */
 export const check = async (req, res) => {
+  const { id } = req.decoded;
+
+  let info = null;
+  try {
+    info = await member.findOne({ where: { id } });
+  } catch (err) {
+    next(err);
+  }
   res.json({
     success: true,
-    info: req.decoded,
+    info,
   });
 };
 
