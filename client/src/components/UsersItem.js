@@ -53,7 +53,7 @@ const UsersItem = ({ user }) => {
   return (
     user && (
       <UsersItemContainer>
-        <Link to="/">
+        <Link to={`/member/${user.id}`}>
           <div className="usersItemInner">
             <div className="userImage">
               <img src={user.profile_image} alt={user.nickname} />

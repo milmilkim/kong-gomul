@@ -13,6 +13,14 @@ import MyPage from "../pages/Personal/MyPage";
 /* 멤버 프로필 */
 import MemberProfile from "../pages/Personal/MemberProfile";
 
+/* 멤버 보고싶어요 페이지 */
+import MemberLibraryWishes from "../pages/Personal/MemberLibraryWishes";
+
+/* 멤버 서재 페이지 */
+import MemberLibraryAll from "../pages/Personal/MemberLibraryAll";
+import MemberLibraryRatings from "../pages/Personal/MemberLibraryRatings";
+import MemberLibraryRatingsMore from "../pages/Personal/MemberLibraryRatingsMore";
+
 /* 취향 분석 */
 import Analysis from "../pages/Personal/Analysis";
 
@@ -34,6 +42,9 @@ import SearchUsers from "../pages/Search/SearchUsers";
 
 /* 카테고리 페이지 */
 import CategoryGenres from "../pages/Category/CategoryGenres";
+import CategoryRomance from "../pages/Category/CategoryRomance";
+import CategoryComic from "../pages/Category/CategoryComic";
+import CategoryFantasy from "../pages/Category/CategoryFantasy";
 
 import NotFound from "../pages/NotFound";
 
@@ -47,7 +58,7 @@ const Router = () => {
       <Routes>
         <Route element={<Layout />}>
           {/*메인 */}
-          <Route path="/" element={<Main />} />
+          <Route path="/" element={<CategoryGenres />} />
           {/*테스트용 페이지 */}
           <Route path="/test" element={<Test />} />
           {/* OAuth */}
@@ -63,7 +74,22 @@ const Router = () => {
           </Route>
 
           {/*멤버 프로필*/}
-          <Route path="/member/:id" element={<MemberProfile />} />
+          <Route path="/member/:id">
+            <Route index element={<MemberProfile />} />
+            <Route element={<Library />}>
+              {/* 멤버 보고싶어요 페이지 */}
+              <Route path="wishes" element={<MemberLibraryWishes />} />
+              {/* 멤버 서재 페이지 */}
+              <Route path="library">
+                <Route index element={<MemberLibraryAll />} />
+                <Route path="ratings">
+                  <Route index element={<MemberLibraryRatings />} />
+                  <Route path=":rating" element={<MemberLibraryRatingsMore />} />
+                </Route>
+              </Route>
+            </Route>
+          </Route>
+
           <Route path="/member/:id/analysis" element={<Analysis />} />
 
           {/*책 상세페이지 */}
@@ -75,7 +101,7 @@ const Router = () => {
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>
-            <Route index element={<LibraryAll />}></Route>
+            <Route index element={<LibraryAll />} />
             <Route path="ratings">
               <Route index element={<LibraryRatings />} />
               <Route path=":rating" element={<LibraryRatingsMore />} />
@@ -93,7 +119,9 @@ const Router = () => {
           {/* 카테고리 페이지 */}
           <Route path="/category">
             <Route index element={<Category />} />
-            <Route path="genres" element={<CategoryGenres />} />
+            <Route path="romance" element={<CategoryRomance />} />
+            <Route path="comic" element={<CategoryComic />} />
+            <Route path="fantasy" element={<CategoryFantasy />} />
           </Route>
         </Route>
         {/*레이아웃이 적용되지 않는 페이지*/}

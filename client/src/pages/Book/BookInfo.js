@@ -248,13 +248,11 @@ const BookInfoContainer = styled.div`
   font-size: 14px;
   background-color: #f8f8f8;
   min-width: 1400px;
-
   section {
     margin-bottom: 50px;
     width: 1000px;
     margin: auto;
     background-color: #fff;
-
     .wish {
       text-align: center;
       margin-top: 20px;
@@ -263,12 +261,10 @@ const BookInfoContainer = styled.div`
       height: 50px;
       margin: auto;
       margin-top: 20px;
-
       @keyframes sizeUp {
         from {
           font-size: 1rem;
         }
-
         to {
           font-size: 1.1rem;
         }
@@ -276,15 +272,12 @@ const BookInfoContainer = styled.div`
       &.active {
         animation: sizeUp 300ms ease;
         animation-fill-mode: forwards;
-
         color: ${(props) => props.theme.color.primaryColor};
       }
     }
-
     &.flex-row {
       border-bottom: 1px solid #eee;
       margin-bottom: 30px;
-
       .book-thumb {
         /* width: 30%; */
         margin-top: -80px;
@@ -301,7 +294,6 @@ const BookInfoContainer = styled.div`
         display: flex;
         padding-bottom: 20px;
         padding-right: 40px;
-
         span {
           line-height: 1.4;
           color: #787878;
@@ -311,7 +303,6 @@ const BookInfoContainer = styled.div`
           font-weight: bolder;
           margin-top: 5px;
         }
-
         .add_review {
           margin-left: auto;
           cursor: pointer;
@@ -319,18 +310,15 @@ const BookInfoContainer = styled.div`
           svg {
             margin-right: 10px;
           }
-
           &:hover {
             font-size: 1rem;
             color: ${(props) => props.theme.color.primaryColor};
           }
         }
-
         .meta {
           font-size: 1.2rem;
           color: #787878;
           margin-bottom: 20px;
-
           ul > li {
             &::after {
               content: " ・ ";
@@ -340,13 +328,11 @@ const BookInfoContainer = styled.div`
             float: left;
             margin-right: 5px;
           }
-
           li.rating {
             color: #66bfbf;
             svg {
               vertical-align: top;
             }
-
             &::after {
               content: "";
             }
@@ -354,19 +340,16 @@ const BookInfoContainer = styled.div`
         }
       }
     }
-
     h2 {
       font-size: 1.3rem;
       font-weight: bolder;
     }
-
     &.review {
       position: relative;
       border: 1px solid #eee;
       padding: 10px;
       display: flex;
       flex-direction: column;
-
       ul.flex-row {
         overflow: hidden;
         li {
@@ -374,7 +357,6 @@ const BookInfoContainer = styled.div`
           padding: 10px;
         }
       }
-
       button.review-btn {
         appearance: none;
         outline: none;
@@ -386,25 +368,21 @@ const BookInfoContainer = styled.div`
         margin-left: auto;
       }
     }
-
     &.description {
       margin-top: 30px;
       margin-bottom: 30px;
       padding: 20px;
-
       p {
         margin: 20px 0;
         white-space: pre-line;
         font-size: 1.1rem;
         line-height: 1.5;
-
         .keyword {
           display: inline-block;
           padding: 5px;
           background-color: #f2f2f2;
           border-radius: 5px;
           margin: 0 5px 10px 0;
-
           &::before {
             content: "#";
           }

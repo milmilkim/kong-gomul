@@ -138,26 +138,21 @@ const EditContainer = styled.div`
       width: 110px;
       height: 110px;
     }
-
     .email {
       font-size: 0.8rem;
     }
     margin-bottom: 10px;
   }
-
   .btn {
     text-align: center;
     cursor: pointer;
     line-height: 2;
     border-radius: 10px;
-
     font-size: 0.9rem;
-
     &.leave {
       color: #d64161;
       font-size: 0.8rem;
     }
-
     &.save {
       width: 100px;
       margin: auto;

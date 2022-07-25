@@ -10,13 +10,11 @@ const ResultNotFoundContainer = styled.div`
   width: 100%;
   height: 200px;
   padding: 0.5rem;
-
   img {
     display: block;
     width: 200px;
     margin-bottom: 1rem;
   }
-
   p {
     text-align: center;
   }
