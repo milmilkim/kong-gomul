@@ -35,11 +35,11 @@ const BookListSlice = createSlice({
   reducer: {},
   extraReducers: {
     [getBookList.pending]: (state, { payload }) => {
-      return { state, loading: true };
+      return { ...state, loading: true };
     },
-    [getBookList.fulfilled]: (state, { payload }) => {
+    [getBookList.fulfilled]: (state, { meta, payload }) => {
       return {
-        data: payload?.data,
+        data: meta.arg.page > 1 ? state.data.concat(payload?.data) : payload?.data,
         loading: false,
         error: null,
       };
