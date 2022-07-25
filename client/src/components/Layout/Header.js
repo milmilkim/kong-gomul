@@ -96,17 +96,17 @@ const Header = memo(() => {
           <nav className="nav-menu">
             <ul>
               <li>
-                <NavLink to="/category" noreferrer="">
+                <NavLink to="/category/romance" noreferrer="">
                   로맨스
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/category" noreferrer="">
+                <NavLink to="/category/fantasy" noreferrer="">
                   판타지
                 </NavLink>
               </li>
               <li>
-                <NavLink to="/category" noreferrer="">
+                <NavLink to="/category/comic" noreferrer="">
                   만화
                 </NavLink>
               </li>
