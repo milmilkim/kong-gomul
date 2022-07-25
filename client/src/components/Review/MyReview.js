@@ -52,7 +52,7 @@ const MyReview = ({ myReview }) => {
         await axios.post("api/review/" + book_id, { contents: null });
         Swal.fire("삭제했어요", "", "success");
       } catch (err) {
-        Swal.fire(err.message);
+        Swal.fire(err.response.data.message);
       } finally {
         setVisible(false);
       }

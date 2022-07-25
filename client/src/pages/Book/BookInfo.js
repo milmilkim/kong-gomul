@@ -75,15 +75,6 @@ const BookInfo = () => {
   const [rating, setRating] = useState(null);
   //기존 리뷰 state
   const [myReview, setMyReview] = useState({ contents: "", is_spoiler: false, loaded: false, member: null });
-  //평점 onChange
-  const onStarChange = async (value) => {
-    try {
-      const res = await axios.post(`api/review/${id}`, { rating: value });
-    } catch (err) {
-      Swal.fire("err.message");
-    }
-    setRating(value);
-  };
 
   /** useEffect */
 
@@ -185,7 +176,7 @@ const BookInfo = () => {
                 </div>
                 {/* 별점 */}
                 {isLogin ? (
-                  myReview.loaded && <Star rating={rating} onChange={onStarChange} />
+                  myReview.loaded && <Star prevRating={rating} book_id={id} />
                 ) : (
                   <>로그인 후 별점을 기록해보세요!</>
                 )}

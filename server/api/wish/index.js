@@ -13,9 +13,11 @@ wish.use('/', authMiddleware);
 wish.get('/', getWishList);
 
 //보고싶어요 추가
+wish.use('/', authMiddleware);
 wish.post('/', addWishList);
 
 //'보고싶어요' 삭제
+wish.use('/', authMiddleware);
 wish.delete('/:book_id', deleteWishList);
 
 export default wish;

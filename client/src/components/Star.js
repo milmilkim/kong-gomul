@@ -1,13 +1,26 @@
 import ReactStars from "react-rating-stars-component";
+import axios from "../config/axios";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
-export default function Star({ rating, onChange }) {
+export default function Star({ prevRating, book_id }) {
+  const [rating, setRating] = useState(prevRating);
+  const onStarChange = async (value) => {
+    try {
+      const res = await axios.post(`api/review/${book_id}`, { rating: value });
+    } catch (err) {
+      Swal.fire("err.message");
+    }
+    setRating(value);
+  };
+
   const config = {
     size: 48,
     value: rating,
     isHalf: true,
     a11y: true,
     activeColor: "rgb(255, 221, 99)",
-    onChange: onChange,
+    onChange: onStarChange,
   };
 
   const getComment = (rating) => {

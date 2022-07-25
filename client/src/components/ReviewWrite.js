@@ -49,7 +49,7 @@ const ReviewWrite = ({ isOpen, setIsOpen, myReview, setMyReview }) => {
   const onSubmit = (e) => {
     e.preventDefault();
     dispatch(addReviewItem({ data: { ...newReview }, book_id }));
-    setMyReview(newReview);
+    setMyReview({ ...newReview, book_id });
     setIsOpen(false);
   };
 
@@ -58,7 +58,6 @@ const ReviewWrite = ({ isOpen, setIsOpen, myReview, setMyReview }) => {
       ...newReview,
       is_spoiler: e.target.checked,
     };
-    console.log(next);
     setNewReview(next);
   };
 
