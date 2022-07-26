@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { FaStar } from "react-icons/fa";
-import ProfileImage from "./ProfileImage";
+import ProfileImage from "../ProfileImage";
 
 import { Link } from "react-router-dom";
 
@@ -12,6 +12,7 @@ const ReviewThumbContainer = styled.div`
   padding: 25px 20px;
   background-color: #f2f2f2;
   text-align: left;
+  margin-bottom: 100px;
 
   .profile {
     display: flex;

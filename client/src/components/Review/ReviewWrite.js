@@ -1,13 +1,15 @@
-import Modal from "./Modal";
+import Modal from "../Modal";
 import { useState } from "react";
 
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
-import { addReviewItem } from "../slices/ReviewSlice";
+import { addReviewItem } from "../../slices/ReviewSlice";
 
-import TextArea from "./Form/TextArea";
-import Switch from "./Form/Switch";
+import TextArea from "../Form/TextArea";
+import Switch from "../Form/Switch";
+
+import Swal from "sweetalert2";
 
 const ModalContainer = styled.div`
   .button_container {
@@ -48,9 +50,17 @@ const ReviewWrite = ({ isOpen, setIsOpen, myReview, setMyReview }) => {
   //리뷰 작성
   const onSubmit = (e) => {
     e.preventDefault();
-    dispatch(addReviewItem({ data: { ...newReview }, book_id }));
-    setMyReview({ ...newReview, book_id });
-    setIsOpen(false);
+    if (newReview.contents.trim() === "") {
+      Swal.fire("내용을 입력해주세요");
+      return;
+    }
+    try {
+      dispatch(addReviewItem({ data: { ...newReview }, book_id }));
+      setMyReview({ ...newReview, book_id });
+      setIsOpen(false);
+    } catch (err) {
+      console.error(err.response.data.message);
+    }
   };
 
   const onCheck = (e) => {
@@ -71,7 +81,7 @@ const ReviewWrite = ({ isOpen, setIsOpen, myReview, setMyReview }) => {
             placeholder="자유롭게 리뷰를 적어주세요"
             maxLength={10000}
             height={"200px"}
-            defaultValue={myReview.contents || null}
+            defaultValue={myReview?.contents || null}
           />
         </form>
         <Switch label="스포일러 주의!" name="is_spoiler" onChange={onCheck} defaultChecked={myReview.is_spoiler} />

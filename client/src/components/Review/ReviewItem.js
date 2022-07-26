@@ -6,66 +6,83 @@ import styled from "styled-components";
 import like from "../../assets/img/like.png";
 import comment from "../../assets/img/comment.png";
 
+import ProfileImage from "../ProfileImage";
+import { FaStar } from "react-icons/fa";
+
 const ReviewItemContainter = styled.div`
+  display: block;
   width: 100%;
-  padding: 15px;
-  background-color: #eee;
-  border-radius: 5px;
-
+  min-height: 300px;
+  padding: 25px 20px;
+  background-color: #f2f2f2;
+  text-align: left;
+  margin-bottom: 20px;
+  white-space: pre-line;
   .profile {
+    display: flex;
+    align-items: center;
+    font-weight: bolder;
     padding-bottom: 10px;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .review {
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-  }
-
-  .comment {
-    padding: 10px 0;
-    border-bottom: 1px solid #ddd;
-
+    border-bottom: solid 1px ${(props) => props.theme.color.borderColor};
+    margin-bottom: 20px;
     img {
-      vertical-align: middle;
+      width: 30px;
+      height: 30px;
+      border-radius: 15px;
       margin-right: 5px;
     }
 
-    span {
-      font-size: 14px;
-      margin-right: 20px;
+    .rating {
+      margin-left: auto;
+      background-color: #fff;
+      padding: 5px 10px;
+      display: flex;
+      border-radius: 15px;
     }
   }
 
-  .like-btn {
-    padding-top: 10px;
+  summary {
+    cursor: pointer;
+    outline: none;
+  }
+
+  .contents {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    line-height: 1.3;
+
+    word-wrap: break-word;
   }
 `;
 
-const ReviewItem = () => {
+const ReviewItem = ({ data, inview }) => {
   return (
-    <ReviewItemContainter>
-      <div className="profile">
-        아이콘
-        {/* <Link to={`/member/${member.id}`}>
-              <ProfileImage src={member.profile_image} alt={member.nickname} />
-              <div>{member.nickname.length > 10 ? member.nickname.substr(0, 10) + "..." : member.nickname}</div>
-              {review.rating && (
-                <div className="rating">
-                  <FaStar />
-                  {review.rating}점
-                </div>
-              )}
-            </Link> */}
+    <ReviewItemContainter ref={inview}>
+      <Link to={`/member/${data.member.id}`}>
+        <div className="profile">
+          <ProfileImage src={data.member.profile_image} alt={data.member.nickname} />
+          <div>
+            {data.member.nickname.length > 10 ? data.member.nickname.substr(0, 10) + "..." : data.member.nickname}
+          </div>
+          {data.rating && (
+            <div className="rating">
+              <FaStar />
+              {data.rating}점
+            </div>
+          )}
+        </div>
+      </Link>
+
+      <div className="contents">
+        {data.is_spoiler ? (
+          <details>
+            <summary>스포일러 보기</summary>
+            <Link to="/">{data.contents}</Link>
+          </details>
+        ) : (
+          <Link to="/">{data.contents}</Link>
+        )}
       </div>
-      <div className="review">내용</div>
-      <div className="comment">
-        <img src={like} alt="좋아요" width={15} />
-        <span>좋아요 555</span>
-        <img src={comment} alt="댓글" width={15} />
-        <span>코멘트 52</span>
-      </div>
-      <div className="like-btn">좋아요</div>
     </ReviewItemContainter>
   );
 };
