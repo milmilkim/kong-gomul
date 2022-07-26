@@ -73,7 +73,7 @@ const BookInfo = () => {
 
       setIsAdded((isAdded) => !isAdded);
     },
-    [isAdded, dispatch]
+    [isAdded, dispatch, id]
   );
 
   //평점 state
@@ -105,7 +105,7 @@ const BookInfo = () => {
         }
       });
     }
-  }, [wishList]);
+  }, [wishList, id]);
 
   //하단 비슷한 도서
   const [similarBook, setSimilarBook] = useState([]);
@@ -155,7 +155,7 @@ const BookInfo = () => {
       }
     })();
     return () => setMyReview({ contents: "", is_spoiler: false, loaded: false, member: null });
-  }, [isLogin, id]);
+  }, [isLogin, id, member_id]);
 
   return (
     <BookInfoContainer>

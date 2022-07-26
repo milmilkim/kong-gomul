@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import styled from "styled-components";
 
 import { useParams } from "react-router-dom";
@@ -38,29 +38,53 @@ const ReviewList = () => {
     threshold: 1,
   });
 
-  const getData = async (p) => {
-    setIsLoading(true);
-    const res = await axios.get("api/book/review/" + id, {
-      params: {
-        page: p || 1,
-        size: 4,
-      },
-    });
-    setPage(p + 1);
-    setReviewList(reviewList.concat(res.data));
-    setTotal(res.headers["total-count"]);
-    setIsLoading(false);
-  };
+  const size = 4;
+
+  const getData = useCallback(
+    async (p) => {
+      setIsLoading(true);
+      const res = await axios.get("api/book/review/" + id, {
+        params: {
+          page: p || 1,
+          size,
+        },
+      });
+      setReviewList(res.data);
+      setTotal(res.headers["total-count"]);
+      setIsLoading(false);
+    },
+    [id]
+  );
+
+  const moreData = useCallback(
+    async (p) => {
+      if (p > Math.ceil(total / size)) {
+        return;
+      }
+      setIsLoading(true);
+      const res = await axios.get("api/book/review/" + id, {
+        params: {
+          page: p || 1,
+          size,
+        },
+      });
+      setIsLoading(false);
+
+      setReviewList((reviewList) => reviewList.concat(res.data));
+      setPage((page) => page + 1);
+    },
+    [id, total]
+  );
 
   useEffect(() => {
-    getData(1);
-  }, []);
+    getData();
+  }, [getData]);
 
   useEffect(() => {
-    if (inView && !isLoading && reviewList.length < total) {
-      getData(page);
+    if (inView && !isLoading) {
+      moreData(page + 1);
     }
-  }, [inView, page, isLoading, getData]);
+  }, [inView, page, isLoading, moreData, reviewList.length]);
 
   return (
     <ReviewListContainer>

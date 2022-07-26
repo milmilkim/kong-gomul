@@ -30,10 +30,10 @@ const CategoryGenresComponent = memo(({ genre }) => {
 
   const getContent = useCallback(
     (p = 1) => {
-      setPage(p);
       if (p > 30) {
         return;
       }
+      setPage(p);
       dispatch(
         getBookList({
           category: genre,

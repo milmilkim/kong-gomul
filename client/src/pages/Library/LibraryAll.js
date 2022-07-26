@@ -35,6 +35,7 @@ const LibraryAll = memo(() => {
         })
       ); // 가져온 멤버 아이디와 일치하는 회원이 작성한 리뷰 목록을 가져온다.
       setReviewList(reviewData);
+      console.log(reviewData);
     }
 
     fetchData();

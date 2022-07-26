@@ -54,7 +54,7 @@ const ReviewThumbContainer = styled.div`
 `;
 
 const ReviewThumb = ({ review }) => {
-  const { rating, contents, member } = review;
+  const { contents, member } = review;
 
   return (
     <ReviewThumbContainer>

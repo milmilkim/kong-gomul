@@ -3,9 +3,6 @@ import { Link } from "react-router-dom";
 
 import styled from "styled-components";
 
-import like from "../../assets/img/like.png";
-import comment from "../../assets/img/comment.png";
-
 import ProfileImage from "../ProfileImage";
 import { FaStar } from "react-icons/fa";
 

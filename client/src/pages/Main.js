@@ -1,7 +1,7 @@
 /**
  * 카테고리 장르별 서적 페이지
  */
-import React, { memo, useEffect, useState } from "react";
+import React, { memo, useCallback, useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
 /* Slice */
@@ -22,22 +22,23 @@ const CategoryGenres = memo(() => {
 
   const [bookData, setBookData] = useState({});
 
-  const category = ["만화 e북", "로판 e북", "판타지 웹소설"];
+  const fetchData = useCallback(
+    async (category) => {
+      const {
+        payload: { data },
+      } = await dispatch(
+        getBookList({
+          category,
+          sort: "random",
+        })
+      );
+      setBookData((bookData) => {
+        return { ...bookData, [category]: data };
+      });
+    },
+    [dispatch]
+  );
 
-  const fetchData = async (category) => {
-    const {
-      payload: { data },
-    } = await dispatch(
-      getBookList({
-        category,
-        sort: "random",
-      })
-    );
-
-    setBookData((bookData) => {
-      return { ...bookData, [category]: data };
-    });
-  };
   useEffect(() => {
     if (isLogin) {
       dispatch(getRecoBookList());
@@ -45,10 +46,12 @@ const CategoryGenres = memo(() => {
   }, [dispatch, isLogin]);
 
   useEffect(() => {
-    category.forEach((v) => {
-      fetchData(v);
+    const category = ["만화 e북", "로판 e북", "판타지 웹소설"];
+
+    category.forEach((category) => {
+      fetchData(category);
     });
-  }, [dispatch]);
+  }, [fetchData]);
 
   return (
     <>
@@ -63,9 +66,11 @@ const CategoryGenres = memo(() => {
             data={reco}
           ></CategorySwiper>
         )}
-        {category.map((v, i) => {
-          return bookData[v] && <CategorySwiper key={i} title={v} clsName="test" data={bookData[v]} />;
-        })}
+        {bookData["만화 e북"] && <CategorySwiper title={"만화 e북"} clsName="test" data={bookData["만화 e북"]} />}
+        {bookData["로판 e북"] && <CategorySwiper title={"로판 e북"} clsName="test" data={bookData["로판 e북"]} />}
+        {bookData["판타지 웹소설"] && (
+          <CategorySwiper title={"판타지 웹소설"} clsName="test" data={bookData["판타지 웹소설"]} />
+        )}
       </CategoryGenreContainer>
     </>
   );

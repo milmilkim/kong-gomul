@@ -41,7 +41,7 @@ import SearchBooks from "../pages/Search/SearchBooks";
 import SearchUsers from "../pages/Search/SearchUsers";
 
 /* 카테고리 페이지 */
-import CategoryGenres from "../pages/Category/CategoryGenres";
+// import CategoryGenres from "../pages/Category/CategoryGenres";
 import CategoryRomance from "../pages/Category/CategoryRomance";
 import CategoryComic from "../pages/Category/CategoryComic";
 import CategoryFantasy from "../pages/Category/CategoryFantasy";

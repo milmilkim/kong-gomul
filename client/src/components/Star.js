@@ -86,6 +86,9 @@ export default function Star({ prevRating, book_id }) {
       case 0.5:
         comment = "최악이에요";
         break;
+
+      default:
+        comment = "";
     }
 
     return comment;
