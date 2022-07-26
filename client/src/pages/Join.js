@@ -1,12 +1,13 @@
 import React, { memo, useCallback, useRef, useState } from "react";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
 
 /* lib */
 import RegexHelper from "../lib/RegexHelper.js";
 
 /* slices */
-import { join } from "../slices/AuthSlice";
+import { getEmailCode, join } from "../slices/AuthSlice";
 
 /* Components */
 import Spinner from "../components/spinner";
@@ -103,6 +104,8 @@ const JoinContainer = styled.div`
 `;
 
 const Join = memo(() => {
+  const navigate = useNavigate();
+
   const dispatch = useDispatch();
   const { loading } = useSelector((state) => state.auth);
 
@@ -114,12 +117,13 @@ const Join = memo(() => {
     pwCheck: "",
     birth: "",
     gender: "",
-    personal: "",
-    personal2: "",
+    personal: false,
+    personal2: false,
+    codeCheck: "",
   });
 
   // 구조분해
-  const { id, email, pw, pwCheck, birth, gender, personal, personal2 } = inputs;
+  const { id, email, pw, pwCheck, birth, gender, personal, personal2, codeCheck } = inputs;
 
   // 유효성 검사 메시지 출력
   const [idMessage, setIdMessage] = useState("");
@@ -127,6 +131,10 @@ const Join = memo(() => {
   const [pwMessage, setPwMessage] = useState("");
   const [birthSexMessage, setBirthSexMessage] = useState("");
   const [termMessage, setTermMessage] = useState("");
+  const [codeMessage, setCodeMessage] = useState("");
+
+  // 이메일 인증코드
+  const [code, setCode] = useState("");
 
   const changeInput = useCallback(
     (e) => {
@@ -139,9 +147,17 @@ const Join = memo(() => {
       setPwMessage("");
       setBirthSexMessage("");
       setTermMessage("");
+      setCodeMessage("");
     },
     [inputs]
   );
+
+  const changeCheckBox = (e) => {
+    setInputs({
+      ...inputs,
+      personal: e.target.checked,
+    });
+  };
 
   const submitForm = useCallback(
     async (e) => {
@@ -153,6 +169,8 @@ const Join = memo(() => {
         RegexHelper.id(id, "아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)로만 입력할 수 있습니다.");
         RegexHelper.value(email, "이메일을 입력해주세요.");
         RegexHelper.email(email, "이메일 형식에 맞게 입력해주세요.");
+        RegexHelper.value(codeCheck, "이메일 인증코드를 입력해주세요.");
+        RegexHelper.compareTo(code, codeCheck, "이메일 인증코드가 일치하지 않습니다.");
         RegexHelper.password(pw, "비밀번호는 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다");
         RegexHelper.password(pwCheck, "비밀번호 확인은 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다");
         RegexHelper.compareTo(pw, pwCheck, "비밀번호가 일치하지 않습니다.");
@@ -160,7 +178,7 @@ const Join = memo(() => {
         RegexHelper.minLength(birth, 4, "출생년도 4자리를 입력해주세요.");
         RegexHelper.maxLength(birth, 4, "출생년도 4자리를 입력해주세요.");
         RegexHelper.gender(gender, "성별을 입력해주세요.");
-        RegexHelper.check(personal, "필수항목을 체크해주세요.");
+        RegexHelper.value(personal, "필수항목을 체크해주세요.");
       } catch (e) {
         if (e.field === id) {
           setIdMessage(e.message);
@@ -168,6 +186,9 @@ const Join = memo(() => {
         } else if (e.field === email) {
           setEmailMessage(e.message);
           inputRef.current[1].focus();
+        } else if (e.field === code) {
+          setCodeMessage(e.message);
+          inputRef.current[8].focus();
         } else if (e.field === pw) {
           setPwMessage(e.message);
           inputRef.current[2].focus();
@@ -187,7 +208,11 @@ const Join = memo(() => {
       }
 
       // 회원가입 요청
-      dispatch(
+      const {
+        payload: {
+          data: { message },
+        },
+      } = await dispatch(
         join({
           user_id: id,
           password: pw,
@@ -195,11 +220,29 @@ const Join = memo(() => {
           email: email,
           birth_year: birth,
           gender: gender,
+          code: code,
+          code_check: codeCheck,
+          personal: personal,
         })
       );
+
+      if (message === "ok") {
+        window.alert("저장되었습니다.");
+        navigate("/");
+      }
     },
-    [dispatch, id, pw, pwCheck, email, birth, gender, personal]
+
+    [navigate, dispatch, id, pw, pwCheck, email, birth, gender, personal, code, codeCheck]
   );
+
+  const clickEmailCode = async () => {
+    const {
+      payload: {
+        data: { email_code },
+      },
+    } = await dispatch(getEmailCode({ email }));
+    setCode(email_code);
+  };
 
   return (
     <>
@@ -231,17 +274,19 @@ const Join = memo(() => {
                 ref={(el) => (inputRef.current[1] = el)}
               />
               <span className="alertMsg">{emailMessage}</span>
-              <button
-                type="button"
-                className="email-btn"
-                onClick={(e) => {
-                  console.log("test"); // 미구현
-                }}
-              >
+              <button type="button" className="email-btn" onClick={clickEmailCode}>
                 이메일 인증
               </button>
               {/* 이메일 인증 코드 */}
-              <input type="text" placeholder="이메일 인증 코드" />
+              <input
+                type="text"
+                placeholder="이메일 인증 코드"
+                name="codeCheck"
+                value={codeCheck}
+                onChange={changeInput}
+                ref={(el) => (inputRef.current[8] = el)}
+              />
+              <span className="alertMsg">{codeMessage}</span>
             </div>
 
             <div className="form-container">
@@ -294,8 +339,8 @@ const Join = memo(() => {
               <input
                 type="checkbox"
                 id="personal"
-                value={personal}
-                onChange={changeInput}
+                checked={personal}
+                onChange={changeCheckBox}
                 ref={(el) => (inputRef.current[6] = el)}
               />
               <label htmlFor="personal">개인정보 수집 및 이용 동의(필수)</label>
@@ -305,7 +350,7 @@ const Join = memo(() => {
               <input
                 type="checkbox"
                 id="birthdate"
-                value={personal2}
+                checked={personal2}
                 onChange={changeInput}
                 ref={(el) => (inputRef.current[7] = el)}
               />
