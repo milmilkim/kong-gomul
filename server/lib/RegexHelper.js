@@ -10,7 +10,12 @@ class RegexHelper {
   value(field, msg) {
     const content = field;
 
-    if (content === undefined || content === null || (typeof content === 'string' && content.trim().length === 0)) {
+    if (
+      content === false ||
+      content === undefined ||
+      content === null ||
+      (typeof content === 'string' && content.trim().length === 0)
+    ) {
       throw new BadRequestException(msg);
     }
 
