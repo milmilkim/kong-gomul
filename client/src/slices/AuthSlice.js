@@ -19,6 +19,28 @@ export const tokenVerify = createAsyncThunk("AuthSlice/tokenVerify", async (payl
   return result;
 });
 
+/**
+ * join() : 회원가입
+ */
+export const join = createAsyncThunk("AuthSlice/join", async (payload, { rejectWithValue }) => {
+  let result = null;
+
+  try {
+    result = await axios.post("api/auth/join", {
+      user_id: payload.user_id,
+      password: payload.password,
+      password_check: payload.password_check,
+      email: payload.email,
+      birth_year: payload.birth_year,
+      gender: payload.gender,
+    });
+  } catch (err) {
+    result = rejectWithValue(err.response);
+  }
+
+  return result;
+});
+
 const AuthSlice = createSlice({
   name: "auth",
   initialState: {
@@ -27,6 +49,7 @@ const AuthSlice = createSlice({
     id: null,
     nickname: null,
     error: null,
+    data: null,
   },
   reducers: {
     setIsLogin: (state, action) => {
@@ -59,6 +82,26 @@ const AuthSlice = createSlice({
         isLogin: false,
         error: {
           code: payload?.status ? payload.status : 500,
+        },
+      };
+    },
+    [join.pending]: (state, { payload }) => {
+      return { ...state, isLoading: true };
+    },
+    [join.fulfilled]: (state, { payload }) => {
+      return {
+        data: payload?.data,
+        isLoading: false,
+        error: null,
+      };
+    },
+    [join.rejected]: (state, { payload }) => {
+      return {
+        data: payload?.data,
+        isLoading: false,
+        error: {
+          code: payload?.status ? payload.status : 500,
+          message: payload?.statusText ? payload.statusText : "ServerError",
         },
       };
     },
