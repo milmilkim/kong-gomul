@@ -1,5 +1,4 @@
-import React from 'react';
-import { useLocation } from 'react-router-dom';
+import { useLocation } from "react-router-dom";
 
 const useQueryString = () => {
   // Query string 문자열 추출함

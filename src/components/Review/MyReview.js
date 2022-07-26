@@ -1,10 +1,50 @@
 import ProfileImage from "../ProfileImage";
 import styled from "styled-components";
-import axios from "../../config/axios";
-import { useState } from "react";
-import { useSelector } from "react-redux";
+import { useState, useEffect } from "react";
+import { useSelector, useDispatch } from "react-redux";
 import Swal from "sweetalert2";
 import { FaTrashAlt } from "react-icons/fa";
+import { deleteReviewContents } from "../../slices/ReviewSlice";
+
+const MyReview = ({ myReview }) => {
+  const { book_id } = myReview;
+
+  const [visible, setVisible] = useState(true);
+
+  useEffect(() => {
+    setVisible(!!myReview.contents);
+  }, [myReview]);
+
+  const dispatch = useDispatch();
+  const { info } = useSelector((state) => state.auth);
+
+  const deleteReview = async (e) => {
+    const result = await Swal.fire({ title: "정말 리뷰를 삭제할까요?", showCancelButton: true });
+    if (result.isConfirmed) {
+      try {
+        dispatch(deleteReviewContents({ book_id }));
+        setVisible(false);
+      } catch (err) {
+        Swal.fire(err.response.data.message);
+      }
+    }
+  };
+
+  return (
+    <>
+      {myReview.contents && visible && (
+        <ReviewContainer>
+          <ProfileImage src={info.profile_image} alt={info.nickname} />
+          <span className="text">{myReview.contents}</span>
+          <button onClick={deleteReview}>
+            <FaTrashAlt />
+            삭제
+          </button>
+        </ReviewContainer>
+      )}
+    </>
+  );
+};
 
 const ReviewContainer = styled.div`
   max-width: 1000px;
@@ -37,42 +77,5 @@ const ReviewContainer = styled.div`
     padding: 3px 10px;
   }
 `;
-
-const MyReview = ({ myReview }) => {
-  const { contents, book_id } = myReview;
-
-  const [visible, setVisible] = useState(true);
-
-  const { info } = useSelector((state) => state.auth);
-
-  const deleteReview = async (e) => {
-    const result = await Swal.fire({ title: "정말 리뷰를 삭제할까요?", showCancelButton: true });
-    if (result.isConfirmed) {
-      try {
-        await axios.post("api/review/" + book_id, { contents: null });
-        Swal.fire("삭제했어요", "", "success");
-      } catch (err) {
-        Swal.fire(err.message);
-      } finally {
-        setVisible(false);
-      }
-    }
-  };
-
-  return (
-    <>
-      {visible && (
-        <ReviewContainer>
-          <ProfileImage src={info.profile_image} alt={info.nickname} />
-          <span className="text">{contents || "아직 작성된 글이 없어요"}</span>
-          <button onClick={deleteReview}>
-            <FaTrashAlt />
-            삭제
-          </button>
-        </ReviewContainer>
-      )}
-    </>
-  );
-};
 
 export default MyReview;

@@ -66,7 +66,7 @@ class RegexHelper {
     let src = origin.value.trim(); // 원본값을 가져온다.
     let dsc = compare.value.trim(); // 비교할 값을 가져온다.
 
-    if (src != dsc) {
+    if (src !== dsc) {
       throw new BadRequestException(msg, origin);
     }
 

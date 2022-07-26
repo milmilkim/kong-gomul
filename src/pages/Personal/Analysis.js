@@ -54,7 +54,7 @@ const Analysis = () => {
   const { id } = useParams();
 
   const { data: member } = useSelector((state) => state.member);
-  const { data: analysis, loading, error } = useSelector((state) => state.analysis);
+  const { data: analysis, loading } = useSelector((state) => state.analysis);
 
   useEffect(() => {
     if (id) {
@@ -64,7 +64,7 @@ const Analysis = () => {
       dispatch(getMyProfile());
       dispatch(getAnalysis());
     }
-  }, [dispatch]);
+  }, [dispatch, id]);
 
   //별점
   const data = [];

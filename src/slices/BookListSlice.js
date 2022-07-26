@@ -15,6 +15,7 @@ export const getBookList = createAsyncThunk(
           page: payload.page,
           size: payload.size,
           category: payload.category,
+          sort: payload.sort,
         },
       });
     } catch (err) {

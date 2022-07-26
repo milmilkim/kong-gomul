@@ -6,6 +6,7 @@ import store from "./store";
 import { Provider } from "react-redux";
 import { BrowserRouter } from "react-router-dom";
 import GlobalStyles from "./GlobalStyles";
+import Scroll from "./components/Scroll";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
@@ -14,6 +15,7 @@ root.render(
       <Meta />
       <GlobalStyles />
       <BrowserRouter>
+        <Scroll />
         <App />
       </BrowserRouter>
     </Provider>
