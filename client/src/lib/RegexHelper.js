@@ -1,4 +1,4 @@
-import BadRequestException from './BadRequestException.js';
+import BadRequestException from "./BadRequestException";
 
 class RegexHelper {
   /**
@@ -14,9 +14,9 @@ class RegexHelper {
       content === false ||
       content === undefined ||
       content === null ||
-      (typeof content === 'string' && content.trim().length === 0)
+      (typeof content === "string" && content.trim().length === 0)
     ) {
-      throw new BadRequestException(msg);
+      throw new BadRequestException(msg, field);
     }
 
     return true;
@@ -67,7 +67,7 @@ class RegexHelper {
 
     const nowYear = new Date().getFullYear();
 
-    if (content > nowYear || content < nowYear - 100 || typeof content !== 'number') {
+    if (content > nowYear || content < nowYear - 100 || typeof content !== "number") {
       throw new BadRequestException(msg, field);
     }
   }
@@ -79,7 +79,7 @@ class RegexHelper {
   gender(field, msg) {
     const content = field;
 
-    if (content !== 'F' && field !== 'M') {
+    if (content !== "F" && field !== "M") {
       throw new BadRequestException(msg, field);
     }
   }
@@ -229,6 +229,20 @@ class RegexHelper {
     }
 
     return true; // 성공했음을 리턴
+  }
+
+  /**
+   * 라디오나 체크박스가 선택된 항목인지 확인
+   * @param {string}  field  검사할 대상의 CSS 선택자
+   * @param {string}  msg       검사에 실패할 경우 표시할 메시지
+   */
+  check(field, msg) {
+    const content = field;
+    const checkedItem = Array.from(content).filter((v) => v.checked);
+
+    if (checkedItem.length === 0) {
+      throw new BadRequestException(msg, field);
+    }
   }
 }
 
