@@ -1,17 +1,19 @@
 /* 기본 설정 */
 import React, { useEffect, useState, useCallback } from "react";
 import axios from "../../config/axios";
-import { Link, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 /*컴포넌트 */
 import BooksThumb from "../../components/BooksThumb";
-import ReviewThumb from "../../components/ReviewThumb";
-import ReviewWrite from "../../components/ReviewWrite";
+import ReviewThumb from "../../components/Review/ReviewThumb";
+import ReviewWrite from "../../components/Review/ReviewWrite";
 import Spinner from "../../components/spinner";
 import Star from "../../components/Star";
 import Meta from "../../Meta";
 import MyReview from "../../components/Review/MyReview";
 import ResultNotFound from "../../components/ResultNotFound";
+import CategorySwiper from "../../components/Category/CategorySwiper";
+import CategoryGenreContainer from "../../components/Category/CategoryGenresContainer";
 
 /*리덕스 */
 import { useDispatch, useSelector } from "react-redux";
@@ -21,15 +23,18 @@ import { addWishList, deleteWishList, getWishList } from "../../slices/WishSlice
 
 /* 기타등등 */
 import { FaPlus, FaBookmark } from "react-icons/fa";
-import Swal from "sweetalert2";
+// import Swal from "sweetalert2";
 import styled from "styled-components";
 import { FaStar, FaPenFancy } from "react-icons/fa";
+import getRandInt from "../../lib/getRandInt";
 
 const BookInfo = () => {
   //모달
   const [isOpen, setIsOpen] = useState(false);
   //책 아이디
   const { id } = useParams();
+  //navigate
+  const navigate = useNavigate();
 
   /** 리덕스 관련 */
   const dispatch = useDispatch();
@@ -78,10 +83,10 @@ const BookInfo = () => {
 
   /** useEffect */
 
-  //책 밑에 출력할 리뷰 4개 불러오기
+  //책 정보와 밑에 출력할 리뷰 4개 불러오기
   useEffect(() => {
     dispatch(getBookInfo({ id }));
-    dispatch(getReviewListByBookId({ id, size: 4 }));
+    dispatch(getReviewListByBookId({ id, size: 5 })); //n+1개 불러옴
   }, [dispatch, id]);
 
   //보고싶어요 체크 여부 확인을 위한 위시리스트 조회
@@ -102,11 +107,36 @@ const BookInfo = () => {
     }
   }, [wishList]);
 
+  //하단 비슷한 도서
+  const [similarBook, setSimilarBook] = useState([]);
+  const [titleKeyword, setTitleKeyword] = useState("");
+  useEffect(() => {
+    (async () => {
+      const keyword = data?.keywords[getRandInt(0, data.keywords.length)]?.keyword || null;
+      const category = data?.category || null;
+      setTitleKeyword(keyword);
+      if (category) {
+        if (keyword) {
+          const res = await axios.get("api/book/keyword", {
+            params: {
+              keyword,
+              category,
+            },
+          });
+          setSimilarBook(res.data);
+        } else {
+          const res = await axios.get("api/book", { params: { category, sort: "random", limit: 20 } });
+          setSimilarBook(res.data);
+          setTitleKeyword(category);
+        }
+      }
+    })();
+  }, [data, id, dispatch]);
+
   //내 기존 리뷰 불러오기
   useEffect(() => {
     (async () => {
       let res = null;
-
       //로그인 했을 때만 불러옴
       if (isLogin) {
         try {
@@ -118,13 +148,14 @@ const BookInfo = () => {
 
           // 별점을 설정하고 없으면 null
           setRating(res.data[0] ? res.data[0].rating : null);
-          setMyReview({ ...myReview, ...res.data[0], loaded: true });
+          setMyReview({ ...res.data[0], loaded: true });
         } catch (err) {
           console.error(err.message);
         }
       }
     })();
-  }, [isLogin]);
+    return () => setMyReview({ contents: "", is_spoiler: false, loaded: false, member: null });
+  }, [isLogin, id]);
 
   return (
     <BookInfoContainer>
@@ -176,7 +207,7 @@ const BookInfo = () => {
                 </div>
                 {/* 별점 */}
                 {isLogin ? (
-                  myReview.loaded && <Star prevRating={rating} book_id={id} />
+                  myReview?.loaded && <Star prevRating={rating} book_id={id} />
                 ) : (
                   <>로그인 후 별점을 기록해보세요!</>
                 )}
@@ -191,7 +222,7 @@ const BookInfo = () => {
             </section>
 
             {/**내 리뷰 상단 표시 */}
-            {isLogin && myReview.contents && <MyReview myReview={myReview} />}
+            {isLogin && myReview?.loaded && <MyReview myReview={myReview} />}
 
             {/**책 소개 */}
             <section className="description">
@@ -209,10 +240,6 @@ const BookInfo = () => {
             </section>
 
             <section className="review">
-              <button type="button" className="review-btn">
-                더보기
-              </button>
-
               <ReviewWrite
                 isOpen={isOpen}
                 setIsOpen={setIsOpen}
@@ -220,13 +247,40 @@ const BookInfo = () => {
                 setMyReview={setMyReview}
                 book_id={id}
               />
+
+              {/*리뷰 4개 미리보기*/}
+              <h2>
+                리뷰
+                {reviewData?.length > 4 && (
+                  <button
+                    type="button"
+                    className="review-btn"
+                    onClick={(e) => {
+                      navigate("./review");
+                    }}
+                  >
+                    더보기
+                  </button>
+                )}
+              </h2>
+
               <ul className="flex-row">
-                {reviewData?.map((review) => (
-                  <li key={review.id}>
-                    <ReviewThumb review={review} />
-                  </li>
-                ))}
+                {reviewData?.length > 0 ? (
+                  reviewData.slice(0, 4).map((review) => (
+                    <li key={review.id}>
+                      <ReviewThumb review={review} />
+                    </li>
+                  ))
+                ) : (
+                  <li style={{ textAlign: "center", width: "100%" }}>아직 리뷰가 없습니다!</li>
+                )}
               </ul>
+            </section>
+
+            <section className="similar">
+              <CategoryGenreContainer width={"100%"}>
+                <CategorySwiper title={titleKeyword} clsName="comic" data={similarBook} />
+              </CategoryGenreContainer>
             </section>
           </div>
         </>
@@ -239,6 +293,7 @@ const BookInfoContainer = styled.div`
   font-size: 14px;
   background-color: #f8f8f8;
   min-width: 1400px;
+  padding-bottom: 30px;
   section {
     margin-bottom: 50px;
     width: 1000px;
@@ -338,14 +393,18 @@ const BookInfoContainer = styled.div`
     &.review {
       position: relative;
       border: 1px solid #eee;
-      padding: 10px;
       display: flex;
       flex-direction: column;
+      padding-bottom: 20px;
+      h2 {
+        padding: 20px;
+        display: flex;
+      }
       ul.flex-row {
         overflow: hidden;
         li {
           width: 25%;
-          padding: 10px;
+          padding: 0 10px 10px 10px;
         }
       }
       button.review-btn {
@@ -379,6 +438,10 @@ const BookInfoContainer = styled.div`
           }
         }
       }
+    }
+
+    &.similar {
+      margin-top: 20px;
     }
   }
 `;

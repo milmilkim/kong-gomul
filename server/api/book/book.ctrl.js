@@ -1,6 +1,8 @@
 import { db, sequelize } from '../../models/index.js';
 import { Op, Sequelize } from 'sequelize';
 import getPalette from '../../lib/getPalette.js';
+import BookService from '../../services/BookService.js';
+
 //추천 알고리즘
 import CFService from '../../services/CF.js';
 
@@ -37,6 +39,8 @@ export const getBookList = async (req, res) => {
     order = sequelize.literal(`avg_rating desc`);
   } else if (sort === 'count') {
     order = sequelize.literal(`avg_count desc`);
+  } else if (sort === 'random') {
+    order = Sequelize.literal('rand()');
   } else {
     order = [['id', 'ASC']];
   }
@@ -165,7 +169,6 @@ export const getBook = async (req, res, next) => {
   } catch (err) {
     next(err);
   }
-
 };
 
 /**
@@ -188,7 +191,7 @@ export const getBookReview = async (req, res) => {
   }
 
   try {
-    const reviews = await review.findAll({
+    const reviews = await review.findAndCountAll({
       limit: size,
       offset: (page - 1) * size,
       order: [[sort, 'desc']],
@@ -202,7 +205,8 @@ export const getBookReview = async (req, res) => {
       ],
     });
 
-    res.send(reviews);
+    res.set('total-count', reviews.count); //총 갯수
+    res.send(reviews.rows);
   } catch (err) {
     res.status(403).json({ message: err.message });
   }
@@ -244,6 +248,23 @@ export const deleteBook = async (req, res) => {
   await book.destroy({ where: { id: id } });
 
   res.send({ msg: 'ok' });
+};
+
+/**
+ * GET
+ * api/book/keyword
+ */
+
+export const getSimilarBook = async (req, res, next) => {
+  const bookService = new BookService();
+  const { keyword, category } = req.query;
+
+  try {
+    const bookList = await bookService.getListByKeyword({ keyword, category });
+    res.send(bookList);
+  } catch (err) {
+    next(err);
+  }
 };
 
 /**

@@ -31,10 +31,14 @@ const CategoryGenresComponent = memo(({ genre }) => {
   const getContent = useCallback(
     (p = 1) => {
       setPage(p);
+      if (p > 30) {
+        return;
+      }
       dispatch(
         getBookList({
           category: genre,
           page: p,
+          sort: "count",
         })
       );
     },

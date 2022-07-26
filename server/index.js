@@ -18,6 +18,7 @@ app.use(
   cors({
     origin: clientUrl,
     credentials: true,
+    exposedHeaders: ['total-count'],
   })
 ); //cors 설정을 한다..
 
