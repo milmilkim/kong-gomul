@@ -205,6 +205,26 @@ class RegexHelper {
     }
     return true; // 성공했음을 리턴
   }
+
+  /**
+   * 두 값이 동일한지 검사
+   * @param {string}  origin  원본에 대한 CSS 선택자
+   * @param {string}  compare 검사 대상에 대한 CSS 선택자
+   * @param {string}  msg     검사에 실패할 경우 표시할 메시지
+   */
+  compareTo(origin, compare, msg) {
+    this.value(origin, msg);
+    this.value(compare, msg);
+
+    let src = origin.trim(); // 원본값을 가져온다.
+    let dsc = compare.trim(); // 비교할 값을 가져온다.
+
+    if (src !== dsc) {
+      throw new BadRequestException(msg, origin);
+    }
+
+    return true; // 성공했음을 리턴
+  }
 }
 
 export default new RegexHelper();

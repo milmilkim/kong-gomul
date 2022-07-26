@@ -29,15 +29,18 @@ export const join = async (req, res, next) => {
   const newMember = req.body;
 
   //유효성 검사
-  const { user_id, password, email, birth_year, gender } = newMember;
+  const { user_id, password, password_check, email, birth_year, gender } = newMember;
 
   try {
     regexHelper.value(user_id, 'id를 입력하세요');
-    regexHelper.value(password, '비밀번호를 입력하세요');
+    regexHelper.id(user_id, '아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)로만 입력할 수 있습니다');
     regexHelper.value(email, '이메일을 입력하세요');
     regexHelper.email(email, '이메일 형식이 잘못되었습니다');
-    regexHelper.id(user_id, '아이디는 5~20자의 영문 소문자, 숫자와 특수기호(_),(-)로만 입력할 수 있습니다');
+    regexHelper.value(password, '비밀번호를 입력하세요');
     regexHelper.password(password, '비밀번호는 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다');
+    regexHelper.value(password_check, '비밀번호 확인을 입력하세요');
+    regexHelper.password(password_check, '비밀번호 확인은 8자 이상 16자 이하, 문자, 특수문자, 숫자를 포함해야 합니다');
+    regexHelper.compareTo(password, password_check, '비밀번호가 일치하지 않습니다.');
 
     //선택 입력
 
