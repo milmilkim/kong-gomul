@@ -180,8 +180,7 @@ const Join = memo(() => {
         } else if (e.field === gender) {
           setBirthSexMessage(e.message);
           inputRef.current[5].focus();
-        }
-        if (e.field === personal) {
+        } else if (e.field === personal) {
           setTermMessage(e.message);
           inputRef.current[6].focus();
         }
