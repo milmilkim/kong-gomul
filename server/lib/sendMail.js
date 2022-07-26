@@ -38,3 +38,13 @@ export const sendPassword = async (receiverEmail, password) => {
   await smtp.sendMail(mailInfo);
 };
 
+export const sendEmailCode = async (receiverEmail, emailCode) => {
+  const mailInfo = {
+    from: writerName + ' <' + writerEmail + '>',
+    to: receiverEmail,
+    subject: '[콩고물] 이메일 인증번호',
+    html: `<h1>이메일 인증번호가 발급되었습니다</h1><p>이메일 인증번호: ${emailCode}</p>`,
+  };
+
+  await smtp.sendMail(mailInfo);
+};
