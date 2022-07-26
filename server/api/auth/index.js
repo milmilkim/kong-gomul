@@ -1,5 +1,5 @@
 import express from 'express';
-import { join, login, check, loginWithKakao, loginWithGoogle, checkRefresh } from './auth.ctrl.js';
+import { join, login, check, loginWithKakao, loginWithGoogle, checkRefresh, getEmailCode } from './auth.ctrl.js';
 import authMiddleware from '../../middlewares/auth.js';
 
 const router = express.Router();
@@ -19,5 +19,7 @@ router.get('/check', check);
 
 router.use('/refresh', authMiddleware);
 router.get('/refresh', checkRefresh);
+
+router.get('/email', getEmailCode);
 
 export default router;
