@@ -33,6 +33,26 @@ export const join = createAsyncThunk("AuthSlice/join", async (payload, { rejectW
       email: payload.email,
       birth_year: payload.birth_year,
       gender: payload.gender,
+      code: payload.code,
+      code_check: payload.code_check,
+      personal: payload.personal,
+    });
+  } catch (err) {
+    result = rejectWithValue(err.response);
+  }
+
+  return result;
+});
+
+/**
+ * getEmailCode() : 이메일 인증코드를 메일로 보낸다.
+ */
+export const getEmailCode = createAsyncThunk("AuthSlice/getEmailCode", async (payload, { rejectWithValue }) => {
+  let result = null;
+
+  try {
+    result = await axios.get("api/auth/email", {
+      params: { email: payload.email },
     });
   } catch (err) {
     result = rejectWithValue(err.response);
@@ -96,6 +116,26 @@ const AuthSlice = createSlice({
       };
     },
     [join.rejected]: (state, { payload }) => {
+      return {
+        data: payload?.data,
+        isLoading: false,
+        error: {
+          code: payload?.status ? payload.status : 500,
+          message: payload?.statusText ? payload.statusText : "ServerError",
+        },
+      };
+    },
+    [getEmailCode.pending]: (state, { payload }) => {
+      return { ...state, isLoading: true };
+    },
+    [getEmailCode.fulfilled]: (state, { payload }) => {
+      return {
+        data: payload?.data,
+        isLoading: false,
+        error: null,
+      };
+    },
+    [getEmailCode.rejected]: (state, { payload }) => {
       return {
         data: payload?.data,
         isLoading: false,
