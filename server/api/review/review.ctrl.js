@@ -70,7 +70,7 @@ export const getReview = async (req, res) => {
         {
           model: book,
           as: 'book',
-          attributes: ['id', 'title', 'thumbnail'],
+          attributes: ['id', 'title', 'thumbnail', 'book_id'],
         },
       ],
     });
