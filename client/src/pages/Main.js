@@ -29,7 +29,7 @@ const CategoryGenres = memo(() => {
       } = await dispatch(
         getBookList({
           category,
-          sort: "random",
+          sort: "count",
         })
       );
       setBookData((bookData) => {
