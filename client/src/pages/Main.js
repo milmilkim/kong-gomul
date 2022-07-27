@@ -66,10 +66,10 @@ const CategoryGenres = memo(() => {
             data={reco}
           ></CategorySwiper>
         )}
-        {bookData["만화 e북"] && <CategorySwiper title={"만화 e북"} clsName="test" data={bookData["만화 e북"]} />}
-        {bookData["로판 e북"] && <CategorySwiper title={"로판 e북"} clsName="test" data={bookData["로판 e북"]} />}
+        {bookData["만화 e북"] && <CategorySwiper title={"만화 e북"} clsName="comic" data={bookData["만화 e북"]} />}
+        {bookData["로판 e북"] && <CategorySwiper title={"로판 e북"} clsName="romance" data={bookData["로판 e북"]} />}
         {bookData["판타지 웹소설"] && (
-          <CategorySwiper title={"판타지 웹소설"} clsName="test" data={bookData["판타지 웹소설"]} />
+          <CategorySwiper title={"판타지 웹소설"} clsName="fantasy" data={bookData["판타지 웹소설"]} />
         )}
       </CategoryGenreContainer>
     </>

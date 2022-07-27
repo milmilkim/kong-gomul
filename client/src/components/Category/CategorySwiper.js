@@ -1,7 +1,7 @@
 import { useRef } from "react";
 
 /* Swiper */
-import { Swiper, SwiperSlide } from "swiper/react";
+import { SwiperSlide, Swiper } from "swiper/react";
 import { Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/navigation";
@@ -10,7 +10,7 @@ import BooksItem from "../BooksItem";
 import { FaAngleLeft, FaAngleRight, FaStar } from "react-icons/fa";
 
 /* Swiper 컴포넌트 */
-const CategorySwiper = ({ title, data, clsName, chiledren }) => {
+const CategorySwiper = ({ title, data, clsName }) => {
   const prevRef = useRef(null);
   const nextRef = useRef(null);
 
@@ -21,13 +21,16 @@ const CategorySwiper = ({ title, data, clsName, chiledren }) => {
         <Swiper
           slidesPerView={5}
           navigation={{
-            prevEl: prevRef.current ? prevRef.current : undefined,
-            nextEl: nextRef.current ? nextRef.current : undefined,
+            // prevEl: prevRef.current ? prevRef.current : undefined,
+            // nextEl: nextRef.current ? nextRef.current : undefined,
+            prevEl: `.${clsName}-button-prev`,
+            nextEl: `.${clsName}-button-next`,
+            clickable: true,
           }}
           onSwiper={(swiper) => {
             swiper.params.navigation.prevEl = prevRef.current;
             swiper.params.navigation.nextEl = nextRef.current;
-            swiper.navigation.destroy();
+            // swiper.navigation.destroy();
             swiper.navigation.init();
             swiper.navigation.update();
           }}
