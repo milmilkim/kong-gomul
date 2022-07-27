@@ -38,7 +38,6 @@ const CategoryGenresComponent = memo(({ genre }) => {
         getBookList({
           category: genre,
           page: p,
-          sort: "count",
         })
       );
     },
