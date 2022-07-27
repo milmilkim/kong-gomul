@@ -12,6 +12,7 @@ import KeywordCloud from "../../components/Analysis/KeywordCloud";
 import { useParams } from "react-router-dom";
 import { shareTwitter } from "../../lib/Share";
 import Meta from "../../Meta";
+import { FaTwitter } from "react-icons/fa";
 
 const AnalysisContainer = styled.div`
   max-width: 640px;
@@ -46,6 +47,11 @@ const AnalysisContainer = styled.div`
         margin-right: 10px;
       }
     }
+  }
+
+  .twitter {
+    cursor: pointer;
+    margin: 10px;
   }
 `;
 
@@ -158,6 +164,7 @@ const Analysis = () => {
               );
             }}
           >
+            <FaTwitter />
             공유
           </div>
         </>
