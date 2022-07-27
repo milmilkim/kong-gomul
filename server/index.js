@@ -13,10 +13,9 @@ const app = express();
 
 dotenv.config();
 
-const clientUrl = process.env.CLIENT_URL || 'http://localhost:3000';
 app.use(
   cors({
-    origin: clientUrl,
+    origin: [process.env.LOCAL, process.env.CLIENT_URL, 'http://localhost:3000'],
     credentials: true,
     exposedHeaders: ['total-count'],
   })
