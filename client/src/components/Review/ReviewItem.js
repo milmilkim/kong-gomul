@@ -52,7 +52,7 @@ const ReviewItemContainter = styled.div`
   }
 `;
 
-const ReviewItem = ({ data, inview }) => {
+const ReviewItem = ({ data, inview = null }) => {
   return (
     <ReviewItemContainter ref={inview}>
       <Link to={`/member/${data.member.id}`}>
@@ -74,10 +74,10 @@ const ReviewItem = ({ data, inview }) => {
         {data.is_spoiler ? (
           <details>
             <summary>스포일러 보기</summary>
-            <Link to="/">{data.contents}</Link>
+            <Link to={`/review/${data.id}`}>{data.contents}</Link>
           </details>
         ) : (
-          <Link to="/">{data.contents}</Link>
+          <Link to={`/review/${data.id}`}>{data.contents}</Link>
         )}
       </div>
     </ReviewItemContainter>

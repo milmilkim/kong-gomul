@@ -26,7 +26,7 @@ import Analysis from "../pages/Personal/Analysis";
 
 /* 책 상세페이지 */
 import BookInfo from "../pages/Book/BookInfo";
-import Review from "../pages/Book/Review";
+import Review from "../pages/Review/Review";
 
 /* 내 서재 페이지 */
 import Library from "../pages/Library/Library";
@@ -101,7 +101,7 @@ const Router = () => {
           {/*리뷰 목록페이지 */}
           <Route path="/bookinfo/:id/review" element={<ReviewList />} />
           {/*리뷰 상세페이지 */}
-          <Route path="/review" element={<Review />} />
+          <Route path="/review/:id" element={<Review />} />
 
           {/* 내 서재 페이지 */}
           <Route path="/library" element={<Library />}>

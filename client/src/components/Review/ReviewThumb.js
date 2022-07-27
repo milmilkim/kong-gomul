@@ -54,7 +54,7 @@ const ReviewThumbContainer = styled.div`
 `;
 
 const ReviewThumb = ({ review }) => {
-  const { contents, member } = review;
+  const { contents, member, id } = review;
 
   return (
     <ReviewThumbContainer>
@@ -75,10 +75,10 @@ const ReviewThumb = ({ review }) => {
         {review.is_spoiler ? (
           <details>
             <summary>스포일러 보기</summary>
-            <Link to="/">{contents}</Link>
+            <Link to={`/review/${id}`}>{contents}</Link>
           </details>
         ) : (
-          <Link to="/">{contents}</Link>
+          <Link to={`/review/${id}`}>{contents}</Link>
         )}
       </div>
     </ReviewThumbContainer>
