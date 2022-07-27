@@ -36,7 +36,6 @@ const LibraryRatingsMore = memo(() => {
         payload: { data: reviewData },
       } = await dispatch(
         getLibrary({
-          id: memberId,
           rating: parseFloat(rating),
         })
       ); // 가져온 멤버 아이디와 일치하는 회원이 작성한 리뷰 목록을 가져온다.
