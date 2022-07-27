@@ -1,10 +1,10 @@
 import Modal from "../Modal";
 import styled from "styled-components";
 import { useNavigate, Link } from "react-router-dom";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useDispatch } from "react-redux";
 import { updateProfile } from "../../slices/MemberSlice";
-import { setIsLogin } from "../../slices/AuthSlice";
+import { setIsLogin, setProfileImg } from "../../slices/AuthSlice";
 import ProfileImage from "../ProfileImage";
 import Switch from "../Form/Switch";
 import TextArea from "../Form/TextArea";
@@ -15,6 +15,8 @@ import axios from "../../config/axios";
 const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  //로딩
+  const [isLoading, setIsLoading] = useState(false);
 
   const logout = () => {
     window.localStorage.removeItem("accessToken");
@@ -46,18 +48,53 @@ const ProfileEdit = ({ isOpen, setIsOpen, data }) => {
     setIsOpen(false);
   };
 
+  const [image, setImage] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
+
+  const onChange = (e) => {
+    setImage(e.target.files[0]);
+  };
+
+  const uploadImage = async (e) => {
+    e.preventDefault();
+
+    try {
+      setIsLoading(true);
+      const formData = new FormData();
+      formData.append("img", image);
+      const res = await axios.post("api/image/upload", formData);
+      Swal.fire("업로드 성공!", "", "success");
+      setImageUrl(res.data);
+      dispatch(setProfileImg(res.data));
+    } catch (err) {
+      console.error(err);
+      Swal.fire(err.reponse.data.message);
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (data?.profile_image) {
+      setImageUrl(data.profile_image);
+    }
+  }, [data.profile_image]);
+
   //비밀번호 변경 모달
   const [pwdEditIsOpen, setPwdEditIsOpen] = useState(false);
-  //로딩
-  const [isLoading, setIsLoading] = useState(false);
 
   return (
     <Modal isOpen={isOpen} setIsOpen={setIsOpen} background={true} width={550} height={550}>
       <EditContainer>
-        {/* <Spinner visible={isLoading} /> */}
+        <Spinner visible={isLoading} />
         <div className="profile">
-          <ProfileImage src={data.profile_image} alt={data.nickname} />
+          {imageUrl && <ProfileImage src={imageUrl} alt={data.nickname} />}
           <p className="email">{data.email}</p>
+
+          <form onSubmit={uploadImage} className="image_uploader">
+            <input type="file" onChange={onChange} accept="image/png, image/gif, image/jpeg" />
+            <button type="submit">프로필 이미지 업로드</button>
+          </form>
         </div>
         <form onChange={handleChange}>
           <input type="text" placeholder="닉네임" maxLength={20} defaultValue={data.nickname} name="nickname" />
@@ -162,6 +199,13 @@ const EditContainer = styled.div`
         background-color: #ffc0cb;
         color: #fff;
       }
+    }
+  }
+
+  form.image_uploader {
+    display: flex;
+    input {
+      background-color: #fff;
     }
   }
 `;
