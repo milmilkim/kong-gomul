@@ -107,7 +107,7 @@ const Join = memo(() => {
   const navigate = useNavigate();
 
   const dispatch = useDispatch();
-  const { loading } = useSelector((state) => state.auth);
+  const { isLoading } = useSelector((state) => state.auth);
 
   const inputRef = useRef([]);
   const [inputs, setInputs] = useState({
@@ -155,7 +155,7 @@ const Join = memo(() => {
   const changeCheckBox = (e) => {
     setInputs({
       ...inputs,
-      personal: e.target.checked,
+      [e.target.name]: e.target.checked,
     });
   };
 
@@ -204,14 +204,15 @@ const Join = memo(() => {
         } else if (e.field === personal) {
           setTermMessage(e.message);
           inputRef.current[6].focus();
+        } else if (e.field === personal2) {
+          setTermMessage(e.message);
+          inputRef.current[7].focus();
         }
       }
 
       // 회원가입 요청
       const {
-        payload: {
-          data: { message },
-        },
+        payload: { data },
       } = await dispatch(
         join({
           user_id: id,
@@ -223,16 +224,15 @@ const Join = memo(() => {
           code: code,
           code_check: codeCheck,
           personal: personal,
+          personal2: personal2,
         })
       );
-
-      if (message === "ok") {
-        window.alert("저장되었습니다.");
+      if (data.message === "ok") {
         navigate("/");
       }
     },
 
-    [navigate, dispatch, id, pw, pwCheck, email, birth, gender, personal, code, codeCheck]
+    [navigate, dispatch, id, pw, pwCheck, email, birth, gender, personal, personal2, code, codeCheck]
   );
 
   const clickEmailCode = async () => {
@@ -243,10 +243,10 @@ const Join = memo(() => {
     } = await dispatch(getEmailCode({ email }));
     setCode(email_code);
   };
-
+  
   return (
     <>
-      <Spinner visible={loading} />
+      <Spinner visible={isLoading} />
 
       <JoinContainer>
         <div className="inner">
@@ -339,6 +339,7 @@ const Join = memo(() => {
               <input
                 type="checkbox"
                 id="personal"
+                name={"personal"}
                 checked={personal}
                 onChange={changeCheckBox}
                 ref={(el) => (inputRef.current[6] = el)}
@@ -349,9 +350,10 @@ const Join = memo(() => {
               <input type="text" defaultValue="여기에 약관" className="terms-infobox" />
               <input
                 type="checkbox"
-                id="birthdate"
+                id="personal2"
+                name={"personal2"}
                 checked={personal2}
-                onChange={changeInput}
+                onChange={changeCheckBox}
                 ref={(el) => (inputRef.current[7] = el)}
               />
               <label htmlFor="birthdate">성별, 생년 정보 제공 동의(선택)</label>

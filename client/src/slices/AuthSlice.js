@@ -36,6 +36,7 @@ export const join = createAsyncThunk("AuthSlice/join", async (payload, { rejectW
       code: payload.code,
       code_check: payload.code_check,
       personal: payload.personal,
+      personal2: payload.personal2,
     });
   } catch (err) {
     result = rejectWithValue(err.response);
