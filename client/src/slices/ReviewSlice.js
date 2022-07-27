@@ -22,7 +22,7 @@ export const getReviewList = createAsyncThunk("ReviewSlice/getReviewList", async
 });
 
 export const getReviewListByBookId = createAsyncThunk(
-  "ReviewSlice/getReviewListByBooKId",
+  "ReviewSlice/getReviewListByBookId",
   async (payload, { rejectWithValue }) => {
     let result = null;
     try {
@@ -53,38 +53,39 @@ export const addReviewItem = createAsyncThunk("ReviewSlice/addReviewItem", async
   return result;
 });
 
+export const deleteReviewContents = createAsyncThunk(
+  "ReviewSlice/deleteReviewItem",
+  async (payload, { rejectWithValue }) => {
+    let result = null;
+    try {
+      result = await axios.post(`/api/review/${payload.book_id}`, { contents: null });
+    } catch (err) {
+      result = rejectWithValue(err.response);
+      console.log(err);
+      Swal.fire(err.response.data.message);
+    }
+
+    return result;
+  }
+);
+
 const ReviewSlice = createSlice({
   name: "review",
   initialState: {
+    myReview: null,
     data: null,
     loading: false,
     error: null,
   },
   reducers: {},
   extraReducers: {
-    [getReviewList.pending]: (state, { payload }) => {
-      return { ...state, loading: true };
-    },
-    [getReviewList.fulfilled]: (state, { payload }) => {
-      return {
-        data: payload?.data,
-        loading: false,
-        error: null,
-      };
-    },
-    [getReviewList.rejected]: (state, { payload }) => {
-      return {
-        data: payload?.data,
-        loading: false,
-        error: {
-          code: payload?.status ? payload.status : 500,
-          message: payload?.statusText ? payload.statusText : "ServerError",
-        },
-      };
-    },
+    [getReviewList.pending]: pending,
+    [getReviewList.fulfilled]: fulfilled,
+    [getReviewList.rejected]: rejected,
+
     [addReviewItem.pending]: pending,
     [addReviewItem.fulfilled]: (state, { payload }) => {
-      if (payload.data.result) {
+      if (payload?.data?.result) {
         // 기존의 상태값을 복사한다.(원본이 JSON이므로 깊은 복사를 수행해야 한다)
         const data = cloneDeep(state.data);
 
@@ -94,11 +95,8 @@ const ReviewSlice = createSlice({
         // 새로 저장된 결과를 기존 상태값 배열의 맨 앞에 추가한다.
         filterdData.unshift({ ...payload.data.item });
 
-        if (filterdData.length > 4) {
-          filterdData.pop();
-        }
-
         return {
+          ...state,
           data: filterdData,
           loading: false,
           error: null,
@@ -111,6 +109,24 @@ const ReviewSlice = createSlice({
       }
     },
     [addReviewItem.rejected]: rejected,
+
+    [deleteReviewContents.pending]: pending,
+    [deleteReviewContents.fulfilled]: (state, { payload }) => {
+      // 기존의 상태값을 복사한다.(원본이 JSON이므로 깊은 복사를 수행해야 한다)
+      const data = cloneDeep(state.data);
+
+      //내가 작성한 글은 제외
+      const filterdData = data.filter((v) => v.member_id !== payload.data.item.member_id);
+
+      return {
+        ...state,
+        data: filterdData,
+        loading: false,
+        error: null,
+      };
+    },
+    [deleteReviewContents.rejected]: rejected,
+
     [getReviewListByBookId.pending]: pending,
     [getReviewListByBookId.fulfilled]: fulfilled,
     [getReviewListByBookId.rejected]: rejected,

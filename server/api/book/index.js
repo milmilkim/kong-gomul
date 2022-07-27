@@ -1,5 +1,13 @@
 import express from 'express';
-import { getBookList, getBook, addBook, deleteBook, getBookReview, getRecommendations } from './book.ctrl.js';
+import {
+  getBookList,
+  getBook,
+  addBook,
+  deleteBook,
+  getBookReview,
+  getRecommendations,
+  getSimilarBook,
+} from './book.ctrl.js';
 import authMiddleware from '../../middlewares/auth.js';
 const router = express.Router();
 
@@ -7,6 +15,8 @@ const router = express.Router();
 
 router.use('/recommendations', authMiddleware);
 router.get('/recommendations', getRecommendations);
+
+router.get('/keyword', getSimilarBook);
 
 router.get('/', getBookList);
 

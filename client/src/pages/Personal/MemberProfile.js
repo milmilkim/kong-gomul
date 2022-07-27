@@ -1,10 +1,9 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 
 import styled from "styled-components";
 
 import { useSelector, useDispatch } from "react-redux";
-import { getMemberProfile, getMyProfile } from "../../slices/MemberSlice";
-import { getRecents } from "../../slices/RecentsSlice";
+import { getMemberProfile } from "../../slices/MemberSlice";
 
 import Profile from "../../components/Profile/Profile";
 import LibraryIcons from "../../components/Profile/LibraryIcons";

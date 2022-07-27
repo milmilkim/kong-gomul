@@ -87,6 +87,9 @@ export const getReview = async (req, res) => {
  */
 export const addReview = async (req, res, next) => {
   try {
+    if (req.body.contents?.trim() === '') {
+      throw new Error('contents를 확인하세요');
+    }
     const newReview = await review.upsert({
       book_id: req.params.book_id,
       member_id: req.decoded.id,
@@ -100,6 +103,7 @@ export const addReview = async (req, res, next) => {
     if (!reviewId) {
       res.send({ result: false });
     }
+
     const item = await review.findOne({
       where: { id: reviewId },
       include: [

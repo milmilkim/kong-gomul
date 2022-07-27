@@ -1,13 +1,44 @@
 import ReactStars from "react-rating-stars-component";
+import axios from "../config/axios";
+import { useState } from "react";
+import Swal from "sweetalert2";
 
-export default function Star({ rating, onChange }) {
+export default function Star({ prevRating, book_id }) {
+  const [rating, setRating] = useState(prevRating);
+  const onStarChange = async (value) => {
+    if (rating === value) {
+      return;
+    }
+    try {
+      setRating(value);
+      await axios.post(`api/review/${book_id}`, { rating: value });
+    } catch (err) {
+      console.erorr(err);
+      Swal.fire(err.response.data.message);
+    }
+  };
+
+  const deleteRating = async () => {
+    if (rating === null) {
+      return;
+    }
+    try {
+      await axios.post(`api/review/${book_id}`, { rating: null });
+      setRating(null);
+    } catch (err) {
+      console.erorr(err);
+      Swal.fire(err.response.data.message);
+    }
+  };
+
   const config = {
     size: 48,
-    value: rating,
     isHalf: true,
     a11y: true,
     activeColor: "rgb(255, 221, 99)",
-    onChange: onChange,
+    onChange: onStarChange,
+    edit: true,
+    value: rating,
   };
 
   const getComment = (rating) => {
@@ -55,6 +86,9 @@ export default function Star({ rating, onChange }) {
       case 0.5:
         comment = "최악이에요";
         break;
+
+      default:
+        comment = "";
     }
 
     return comment;
@@ -63,7 +97,10 @@ export default function Star({ rating, onChange }) {
   return (
     <>
       <span style={{ display: "block", color: "#b4b4b4" }}>{getComment(rating)}</span>
-      <ReactStars {...config} />
+      <ReactStars {...config}>{rating}</ReactStars>
+      <span style={{ cursor: "pointer" }} onClick={deleteRating}>
+        취소
+      </span>
     </>
   );
 }

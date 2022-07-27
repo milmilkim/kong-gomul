@@ -17,7 +17,7 @@ const Test = memo(() => {
     try {
       const formData = new FormData();
       formData.append("img", image);
-      const res = await axios.post("http://localhost:3001/api/image/upload", formData);
+      const res = await axios.post("api/image/upload", formData);
       alert("업로드 성공!");
       setImageUrl(res.data);
       dispatch(setProfileImg(res.data));

@@ -4,6 +4,7 @@ const pending = (state, { payload }) => {
 
 const fulfilled = (state, { payload }) => {
   return {
+    ...state,
     data: payload?.data,
     loading: false,
     error: null,
@@ -19,7 +20,7 @@ const rejected = (state, { payload }) => {
       loading: false,
       error: {
         code: payload?.status ? payload.status : 500,
-        message: payload?.statusText ? payload.statusText : "ServerError",
+        message: payload?.data?.message ? payload?.data?.message : "Server Error",
       },
     },
   };
