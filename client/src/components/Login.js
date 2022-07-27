@@ -204,7 +204,7 @@ const Login = ({ isOpen, setIsOpen }) => {
                 },
               });
               setIsLoading(false);
-              Swal.fire("입력한 이메일로 아이디를 전송해드렸습니다");
+              Swal.fire("입력한 이메일로 아이디를 전송해드렸습니다", "", "success");
               setIsOpen2(false);
             } catch (err) {
               setIsLoading(false);
@@ -231,7 +231,7 @@ const Login = ({ isOpen, setIsOpen }) => {
                 },
               });
               setIsLoading(false);
-              Swal.fire("입력한 이메일로 아이디를 전송해드렸습니다");
+              Swal.fire("입력한 이메일로 아이디를 전송해드렸습니다", "", "success");
               setIsOpen2(false);
             } catch (err) {
               setIsLoading(false);

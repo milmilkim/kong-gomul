@@ -12,6 +12,9 @@ import { getEmailCode, join } from "../slices/AuthSlice";
 /* Components */
 import Spinner from "../components/spinner";
 
+/* alert */
+import Swal from "sweetalert2";
+
 /* Styled Components */
 const JoinContainer = styled.div`
   form {
@@ -135,6 +138,8 @@ const Join = memo(() => {
 
   // 이메일 인증코드
   const [code, setCode] = useState("");
+  // 이메일 로딩
+  const [emailLoading, setEmailLoading] = useState(false);
 
   const changeInput = useCallback(
     (e) => {
@@ -228,6 +233,7 @@ const Join = memo(() => {
         })
       );
       if (data.message === "ok") {
+        Swal.fire("가입 완료", "", "success");
         navigate("/");
       }
     },
@@ -236,17 +242,25 @@ const Join = memo(() => {
   );
 
   const clickEmailCode = async () => {
-    const {
-      payload: {
-        data: { email_code },
-      },
-    } = await dispatch(getEmailCode({ email }));
-    setCode(email_code);
+    try {
+      setEmailLoading(true);
+      const {
+        payload: {
+          data: { email_code },
+        },
+      } = await dispatch(getEmailCode({ email }));
+      setCode(email_code);
+      Swal.fire("입력하신 이메일로 인증 코드를 보내드렸습니다", "", "success");
+    } catch (err) {
+      Swal.fire(err.reponse.data.message, "", "error");
+    } finally {
+      setEmailLoading(false);
+    }
   };
-  
+
   return (
     <>
-      <Spinner visible={isLoading} />
+      <Spinner visible={isLoading || emailLoading} />
 
       <JoinContainer>
         <div className="inner">
